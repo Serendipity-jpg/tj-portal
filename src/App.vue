@@ -1,13 +1,25 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
+<!-- 主页面 -->
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <router-view />
 </template>
+
+<script setup>
+// import { computed, onMounted } from 'vue';
+// import config from '@/config/style';
+// import { useSettingStore } from '@/store';
+
+// const store = useSettingStore();
+
+// const mode = computed(() => {
+//   console.log(33)
+//   return store.displayMode;
+// });
+
+// onMounted(() => {
+//   store.updateConfig({ ...config });
+// });
+
+</script>
 
 <style>
 #app {

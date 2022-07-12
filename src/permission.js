@@ -1,3 +1,4 @@
+// 权限配置页面
 // import { MessagePlugin } from 'tdesign-vue-next';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style
@@ -7,11 +8,11 @@ import router from '@/router';
 
 const permissionStore = getPermissionStore();
 const userStore = getUserStore();
-
+// 页面加载进度
 NProgress.configure({ showSpinner: false });
 
 const { whiteListRouters } = permissionStore;
-
+// 登录状态效验
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
 
@@ -48,7 +49,8 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    /* white list router */
+    // '无登录信息，跳转到登录页面'
+    console.log('无登录信息，跳转到登录页面');
     if (whiteListRouters.indexOf(to.path) !== -1) {
       next();
     } else {

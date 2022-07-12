@@ -1,7 +1,6 @@
 <template>
 <div class="wrapper">
-  <div>这里是头部</div>
-    <router-view />
+  <div>这里是首页</div>
   </div>
 </template>
 <style lang="scss" scoped>

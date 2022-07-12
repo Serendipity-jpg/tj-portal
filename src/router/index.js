@@ -19,7 +19,7 @@ const defaultRouterList = [
   },
   {
     path: '/',
-    redirect: '/dashboard/base',
+    redirect: '/main/index',
     component: () => import('@/pages/layouts/index.vue'),
   },
   {
@@ -47,6 +47,7 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: allRoutes,
   scrollBehavior() {
+    console.log(111)
     return {
       el: '#app',
       top: 0,

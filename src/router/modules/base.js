@@ -1,26 +1,20 @@
-import Layout from '@/layouts';
+import Layout from '@/pages/layouts/index.vue';
 import DashboardIcon from '@/assets/assets-slide-dashboard.svg';
 
 export default [
-  // {
-  //   path: '/dashboard',
-  //   component: Layout,
-  //   redirect: '/dashboard/base',
-  //   name: 'dashboard',
-  //   meta: { title: '仪表盘', icon: DashboardIcon },
-  //   children: [
-  //     {
-  //       path: 'base',
-  //       name: 'DashboardBase',
-  //       component: () => import('@/pages/dashboard/base/index.vue'),
-  //       meta: { title: '概览仪表盘' },
-  //     },
-  //     {
-  //       path: 'detail',
-  //       name: 'DashboardDetail',
-  //       component: () => import('@/pages/dashboard/detail/index.vue'),
-  //       meta: { title: '统计报表' },
-  //     },
-  //   ],
-  // },
+  {
+    path: '/main',
+    component: Layout,
+    redirect: '/main/index',
+    name: 'main',
+    meta: { title: '仪表盘', icon: DashboardIcon },
+    children: [
+      {
+        path: 'index',
+        name: 'index',
+        component: () => import('@/pages/main/index.vue'),
+        meta: { title: '首页' },
+      }
+    ],
+  },
 ];

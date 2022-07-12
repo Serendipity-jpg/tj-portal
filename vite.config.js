@@ -26,7 +26,7 @@ export default defineConfig((mode) => {
       port: 3002,
       host: '0.0.0.0',
       proxy: {
-        '/api': 'http://www.eehp.cn',
+        '/api': '',
       },
     },
   }

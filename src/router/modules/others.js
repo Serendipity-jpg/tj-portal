@@ -1,5 +1,5 @@
-import Layout from '@/layouts';
-import LogoutIcon from '@/assets/assets-slide-logout.svg';
+// import Layout from '@/layouts';
+// import LogoutIcon from '@/assets/assets-slide-logout.svg';
 
 export default [
   // {
