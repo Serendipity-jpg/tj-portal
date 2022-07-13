@@ -3,11 +3,12 @@
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style
 
-import { getPermissionStore, getUserStore } from '@/store';
+import { getPermissionStore, getToken } from '@/store';
 import router from '@/router';
 
 const permissionStore = getPermissionStore();
-const userStore = getUserStore();
+const userStore = getToken();
+
 // 页面加载进度
 NProgress.configure({ showSpinner: false });
 
@@ -15,8 +16,8 @@ const { whiteListRouters } = permissionStore;
 // 登录状态效验
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
-
   const { token } = userStore;
+  
   if (token) {
     if (to.path === '/login') {
       userStore.logout();
@@ -24,30 +25,31 @@ router.beforeEach(async (to, from, next) => {
       next();
       return;
     }
+    // token 存在 进入下一页
+    next();
+    // const { roles } = userStore;
 
-    const { roles } = userStore;
+    // if (roles && roles.length > 0) {
+    //   next();
+    // } else {
+    //   try {
+    //     await userStore.getUserInfo();
 
-    if (roles && roles.length > 0) {
-      next();
-    } else {
-      try {
-        await userStore.getUserInfo();
+    //     const { roles } = userStore;
 
-        const { roles } = userStore;
+    //     await permissionStore.initRoutes(roles);
 
-        await permissionStore.initRoutes(roles);
-
-        if (router.hasRoute(to.name)) {
-          next();
-        } else {
-          next(`/`);
-        }
-      } catch (error) {
-        MessagePlugin.error(error);
-        next(`/login?redirect=${to.path}`);
-        NProgress.done();
-      }
-    }
+    //     if (router.hasRoute(to.name)) {
+    //       next();
+    //     } else {
+    //       next(`/`);
+    //     }
+    //   } catch (error) {
+    //     // MessagePlugin.error(error);
+    //     next(`/login?redirect=${to.path}`);
+    //     NProgress.done();
+    //   }
+    // }
   } else {
     // '无登录信息，跳转到登录页面'
     console.log('无登录信息，跳转到登录页面');

@@ -1,6 +1,5 @@
 <template>
 <div class="wrapper">
-  <div>这里是头部</div>
     <router-view />
   </div>
 </template>

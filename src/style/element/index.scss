@@ -1,0 +1,22 @@
+/* 只需要重写你需要的即可 */
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #2080F7,
+    ),
+  ),
+);
+.el-form-item{
+  margin-bottom: 20px;
+}
+.el-form-item__error{
+  left: auto;
+  top: 4;
+  right: 0;
+}
+.el-input__wrapper{
+  padding: 5px 11px;
+}
+.el-input__wrapper.is-focus{
+  box-shadow:0 0 0 1px var(--color-font1) inset;
+}

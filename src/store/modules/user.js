@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { TOKEN_NAME } from '@/config/global';
 import { store } from '@/store';
+import { getUserInfo } from "@/api/user"
 
 const InitUserInfo = {
   roles: [],
@@ -12,63 +13,22 @@ export const useUserStore = defineStore('user', {
     userInfo: InitUserInfo,
   }),
   getters: {
-    roles: (state) => {
-      return state.userInfo?.roles;
+    getToken: (state) => {
+      return state.token;
+    },
+    getUserInfo: (state) => {
+      return state.userInfo;
     },
   },
   actions: {
-    async login(userInfo) {
-      const mockLogin = async (userInfo) => {
-        // 登录请求流程
-        console.log(userInfo);
-        // const { account, password } = userInfo;
-        // if (account !== 'td') {
-        //   return {
-        //     code: 401,
-        //     message: '账号不存在',
-        //   };
-        // }
-        // if (['main_', 'dev_'].indexOf(password) === -1) {
-        //   return {
-        //     code: 401,
-        //     message: '密码错误',
-        //   };
-        // }
-        // const token = {
-        //   main_: 'main_token',
-        //   dev_: 'dev_token',
-        // }[password];
-        return {
-          code: 200,
-          message: '登陆成功',
-          data: 'main_token',
-        };
-      };
-
-      const res = await mockLogin(userInfo);
-      if (res.code === 200) {
-        this.token = res.data;
-      } else {
-        throw res;
-      }
+    // 记录用户token
+    async setToken(token) {
+      this.token = token;
+      localStorage.setItem(TOKEN_NAME, token)
     },
-    async getUserInfo() {
-      const mockRemoteUserInfo = async (token) => {
-        if (token === 'main_token') {
-          return {
-            name: 'td_main',
-            roles: ['all'],
-          };
-        }
-        return {
-          name: 'td_dev',
-          roles: ['UserIndex', 'DashboardBase', 'login'],
-        };
-      };
-
-      const res = await mockRemoteUserInfo(this.token);
-
-      this.userInfo = res;
+    // 记录登录时获取的用户信息
+    async setUserInfo(userInfo) {
+      this.userInfo = userInfo;
     },
     async logout() {
       localStorage.removeItem(TOKEN_NAME);
@@ -81,6 +41,6 @@ export const useUserStore = defineStore('user', {
   },
 });
 
-export function getUserStore() {
+export function getToken() {
   return useUserStore(store);
 }

@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 // 组件库
-// import TDesign from 'tdesign-vue-next';
-// import 'tdesign-vue-next/es/style/index.css';
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 import App from './App.vue'
 // 全局样式
@@ -14,7 +14,7 @@ import router from './router';
 
 const app = createApp(App);
 
-// app.use(TDesign);
+app.use(ElementPlus);
 app.use(store);
 app.use(router);
 

@@ -8,7 +8,7 @@
     <slot />
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue';
 import Result403Icon from '@/assets/assets-result-403.svg?component';
 import Result404Icon from '@/assets/assets-result-404.svg?component';
@@ -44,7 +44,7 @@ const dynamicComponent = computed(() => {
 });
 </script>
 <style lang="scss" scoped>
-@import '@/style/items';
+@import '@/style/theme';
 
 .result {
 

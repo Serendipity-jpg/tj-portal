@@ -47,7 +47,6 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: allRoutes,
   scrollBehavior() {
-    console.log(111)
     return {
       el: '#app',
       top: 0,

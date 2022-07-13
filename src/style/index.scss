@@ -1,0 +1,148 @@
+@import './theme.scss';
+@import './element/index.scss';
+
+html, body {
+    color: var(--color-font1);
+    background-color: var(--color-background);
+    font-family: -apple-system, BlinkMacSystemFont;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    min-width: 1220px;
+  }
+ul,
+dl,
+li,
+dd,
+dt {
+margin: 0;
+padding: 0;
+list-style: none;
+}  
+
+figure,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a{
+    text-decoration: none;
+    color: var(--color-main);
+    &:active{
+        color: var(--color-font1);
+    }
+    &:hover{
+        color: var(--color-font1);
+    }
+}
+// 全局容器
+.container{
+  width: 80%;
+  max-width: 1440px;
+  min-width: 1220px;
+  margin: 0 auto;
+}
+@media screen and (max-width: 1300px){
+  .container{
+    width: 1220px;
+    padding:0 60px;
+    margin: 0 auto;
+  }
+}
+.logo img{
+  width: 144px;
+  height: 48px;
+}
+
+
+
+// 原子化CSS定义 将高频使用的样式单独抽离 使用时拼合到calss里
+
+// 按钮
+.bt{
+  display: block;
+  line-height: 40px;
+  width: 100%;
+  font-size: 16px;
+  background: var(--color-main);
+  color: var(--color-white);
+  border-radius: 2px;
+  text-align: center;
+  cursor: pointer;
+  &:hover{
+    background-color: var(--color-hover);
+  }
+  &:active{
+    background-color: var(--color-active);
+  }
+}
+// 文字按钮
+.font-bt{
+  color: var(--color-main);
+  cursor: pointer;
+  &:hover, &:active{
+    color: var(--color-hover);
+  }
+}
+
+// 背景
+.bg{
+  background-color: var(--color-background);
+}
+.bg-wt{
+  background-color: var(--color-white);
+}
+
+// flex 布局
+.fx{
+  display: flex;
+}
+.fx-fd-col{
+  display: flex;
+  flex-direction: column;
+}
+.fx-1{
+  flex: 1;
+}
+.fx-sb{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.fx-ct{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fx-al-ct{
+  display: flex;
+  align-items: center;
+}
+
+// 定位
+.marg-b-0{
+  margin-bottom: 0;
+}
+.marg-b-10{
+  margin-bottom: 10px;
+}
+.marg-bt-15{
+  margin-bottom: 15px;
+}
+.marg-lr-40{
+  margin:0 15px;
+}
+// 文字
+.text-center{
+  text-align: center;
+}
