@@ -41,7 +41,7 @@ header {
     height: 40px;
     background: #edf0f4;
     border-radius: 8px;
-    .el-input__wrapper{
+    :deep(.el-input__wrapper){
       background-color: transparent;
     }
   }
