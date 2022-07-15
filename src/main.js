@@ -2,7 +2,8 @@ import { createApp } from 'vue'
 // 组件库
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-
+import 'swiper/scss';
+import 'swiper/scss/pagination';
 import App from './App.vue'
 // 全局样式
 import '@/style/index.scss';

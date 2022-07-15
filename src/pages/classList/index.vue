@@ -1,4 +1,4 @@
-<!-- 首页 -->
+<!-- 课程列表 -->
 <template>
   <div class="mainWrapper">
     <div class="container banner fx">
@@ -126,4 +126,35 @@ const getGoodClassListData = async () => {
     });
 };
 </script>
-<style lang="scss" src="./index.scss"> </style>
+<style lang="scss" scoped>
+.mainWrapper {
+  border: 1px solid #eeeeee;
+  .banner {
+    padding: 20px 0;
+    .categorys {
+      position: relative;
+      width: 236px;
+      height: 388px;
+      border-radius: 8px;
+      z-index: 9;
+    }
+  }
+  .globalTopBanner{
+      width: 100%;
+      min-width: 1152px;
+      max-width: 2560px;
+      height: 72px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      img{
+        height: 100%;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+  }
+}
+</style>

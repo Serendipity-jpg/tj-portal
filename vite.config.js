@@ -25,6 +25,9 @@ export default defineConfig((mode) => {
     server: {
       port: 3002,
       host: '0.0.0.0',
+      cors: true,
+			open: false,
+			hmr: true,
       proxy: {
         '/api': '',
       },

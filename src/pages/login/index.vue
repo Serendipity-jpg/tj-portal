@@ -18,8 +18,8 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import Footer from '@/components/Footer/index.vue'
-import Header from '@/components/Header/index.vue';
+import Footer from '@/components/Footer.vue'
+import Header from '@/components/Header.vue';
 import LoginPass from './components/LoginPass.vue';
 import LoginPhone from './components/LoginPhone.vue';
 

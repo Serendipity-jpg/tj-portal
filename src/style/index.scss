@@ -128,22 +128,42 @@ a{
   display: flex;
   align-items: center;
 }
+.fx-wp{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 
 // 位置
-.marg-b-0{
+.marg-bt-0{
   margin-bottom: 0;
 }
-.marg-b-10{
+.marg-bt-10{
   margin-bottom: 10px;
 }
 .marg-bt-15{
   margin-bottom: 15px;
 }
+.marg-bt-20{
+  margin-bottom: 20px;
+}
+.marg-rt-10{
+  margin-right: 10px;
+}
 .marg-lr-40{
   margin:0 15px;
 }
+.pd-10{
+  padding: 10px;
+}
 .pd-tp-10{
   padding-top: 10px;
+}
+.pd-tp-30{
+  padding-top: 30px;
+}
+.pd-bt-10{
+  padding-bottom: 10px;
 }
 .pd-bt-10{
   padding-bottom: 10px;
@@ -173,6 +193,12 @@ a{
 .ft-14{
   font-size: 14px;
 }
+.ft-16{
+  font-size: 14px;
+}
 .ft-cl-des{
   color: var(--color-font3);
+}
+.ft-cl-err{
+  color: var(--color-error);
 }

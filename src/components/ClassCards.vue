@@ -1,0 +1,59 @@
+<template>
+  <div class="classCards" >
+    <div class="image">
+        <span class="label">录播</span>
+        <img :src="data.coverUrl" alt="" />
+    </div>
+    <div class="pd-10">
+        <div class="title marg-bt-10 ft-14">{{data.name}}</div>
+        <div class="ft-cl-des"><span>讲师：</span> {{data.teacher}}</div>
+        <div class="ft-cl-des"><span>共</span> {{data.sections}} <span>节</span></div>
+        <div class="ft-cl-des fx-sb"><span>有{{data.sections}}人在学习</span> <span class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span> </div>
+    </div>
+    
+  </div>
+</template>
+<script setup>
+import router from '../router';
+const props = defineProps({
+  data:{
+    type: Object,
+    default:{}
+  }
+})
+</script>
+<style lang="scss" scoped>
+.classCards{
+    width: 23%;
+    background: #FFFFFF;
+    border: 1px solid #EEEEEE;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 24px;
+    .title{
+        line-height: 22px;
+    }
+    .image{
+        width: 100%;
+        height: 160px;
+        overflow: hidden;
+        position: relative;
+        .label{
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          font-size: 12px;
+          background: rgba(0,0,0,0.49);
+          padding:2px 5px;
+          color: #fff;
+          border-radius: 3px;
+        }
+        img{
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+        }
+    }
+    
+}
+
+</style>

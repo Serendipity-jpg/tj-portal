@@ -1,38 +1,30 @@
-.loginWrapper{
-    height: 100vh;
-    .login{
-      margin: 0 auto;
-      padding:40px 45px;
-      width: 400px;
-      background: #FFFFFF;
-      box-shadow: 0 2px 5px 3px rgba(0,0,0,0.10);
+.mainWrapper {
+  border: 1px solid #eeeeee;
+  .banner {
+    padding: 20px 0;
+    .categorys {
+      position: relative;
+      width: 236px;
+      height: 388px;
       border-radius: 8px;
-      .title{
-        font-size: 16px;
-        color: var(--color-font3);
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        span{
-          cursor: pointer;
-        }
-        .active{
-          font-weight: 600;
-          font-size: 16px;
-          color: var(--color-font1);
-          position: relative;
-          &::before{
-            content: "";
-            width: 33px;
-            position: absolute;
-            left: 50%;
-            transform: translate(-50%);
-            top: 30px;
-            height: 4px;
-            background-color: var(--color-main);
-            border-radius: 4px;
-          }
-        }
-      }
+      z-index: 9;
     }
   }
+  .globalTopBanner{
+      width: 100%;
+      min-width: 1152px;
+      max-width: 2560px;
+      height: 72px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      img{
+        height: 100%;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+  }
+}

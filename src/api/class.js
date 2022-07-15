@@ -8,3 +8,10 @@ export const getClassCategorys = (params) =>
 		params
 	})
  
+// 获取公开课接口
+export const getFreeClassList = (params) =>
+	request({
+		url: `courses/TOP5/free`,
+		method: 'get',
+		params
+	})
