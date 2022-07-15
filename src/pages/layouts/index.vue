@@ -1,8 +1,8 @@
 <!-- 架构页面 -->
 <template>
-<div class="wrapper">
+<div class="layoutsWrapper fx-fd-col">
   <Header></Header>
-    <router-view />
+    <router-view class="fx-1"/>
   <Footer></Footer>
   </div>
 </template>
@@ -11,9 +11,7 @@ import Footer from '@/components/Footer/index.vue';
 import Header from '@/components/Header/index.vue';
 </script>
 <style lang="scss" scoped>
-.tdesign-wrapper {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+.layoutsWrapper {
+  min-height: 100vh;
 }
 </style>

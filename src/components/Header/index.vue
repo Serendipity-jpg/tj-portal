@@ -18,16 +18,32 @@
           <img src="@/assets/icon-gwc-nor.png" alt="" /> 购物车
         </div>
         <router-link class="marg-lr-40" to="/">学习中心</router-link>
-        <div><span>注册</span><span>/</span><span>登录</span></div>
+        <div></div>
+        <div v-if="!isToken"><span>注册</span><span>/</span><span @click="">登录</span></div>
+        <div class="fx-al-ct" v-if="isToken && userInfo">
+          <img class="headIcon" :src="userInfo.icon" alt="">
+          <div>{{userInfo.name}}</div>
+        </div>
       </div>
     </div>
   </header>
 </template>
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
 
+import { useUserStore } from '@/store'
+
+const store = useUserStore();
+const userInfo = ref()
+const isToken = localStorage.getItem('token') ? true : false
 const input = ref();
+
+onMounted(() => {
+  userInfo.value = store.getUserInfo
+})
+
+
 </script>
 <style lang="scss" scoped>
 header {
@@ -51,6 +67,12 @@ header {
       height: 25px;
       margin-right: 6px;
     }
+  }
+  .headIcon{
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    margin-right: 10px;
   }
 }
 </style>

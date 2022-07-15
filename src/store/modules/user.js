@@ -1,17 +1,21 @@
 import { defineStore } from 'pinia';
 import { TOKEN_NAME } from '@/config/global';
-import { store } from '@/store';
-import { getUserInfo } from "@/api/user"
+import  store  from '@/store';
 
-const InitUserInfo = {
-  roles: [],
-};
+const InitUserInfo = {};
 
 export const useUserStore = defineStore('user', {
+  id:"userInfo",
   state: () => ({
-    token: localStorage.getItem(TOKEN_NAME) || 'main_token', // 默认token不走权限
-    userInfo: InitUserInfo,
+    token: localStorage.getItem(TOKEN_NAME) , // 使用 || 'main_token' 默认token不走权限
+    userInfo: JSON.parse(localStorage.getItem("userInfo")),
   }),
+  persist: {
+    enabled: true,
+    strategies: [
+      { storage: localStorage, paths: ["token", "userInfo"] },
+    ],
+  },
   getters: {
     getToken: (state) => {
       return state.token;
@@ -29,9 +33,11 @@ export const useUserStore = defineStore('user', {
     // 记录登录时获取的用户信息
     async setUserInfo(userInfo) {
       this.userInfo = userInfo;
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
     },
     async logout() {
       localStorage.removeItem(TOKEN_NAME);
+      localStorage.removeItem('userInfo');
       this.token = '';
       this.userInfo = InitUserInfo;
     },
@@ -39,6 +45,7 @@ export const useUserStore = defineStore('user', {
       this.token = '';
     },
   },
+  
 });
 
 export function getToken() {
