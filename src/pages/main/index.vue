@@ -9,6 +9,11 @@
       <!-- 头部幻灯片 -->
       <Swiper :data="imags"></Swiper>
     </div>
+    <!-- 兴趣模块  -->
+    <div class="container" v-if="interest.size > 0">
+      <Interest  :data="interest"></Interest>
+    </div>
+    <!-- 兴趣模块 -->
     <!-- 直播公开课 -->
     <div class="bg-wt pd-tp-30">
       <OpenClass
@@ -29,13 +34,41 @@
     <div class="globalTopBanner" style="display: block;">
       <img src="@/assets/adv.jpg" />
     </div>
-    <!-- 精品好课 -->
+    <!-- 精品好课 -- start -->
     <div class="bg-wt pd-tp-30">
       <OpenClass
         title="精品好课"
         class="container bg-wt"
         :data="freeClassData"
       ></OpenClass>
+    </div>
+    <!-- 精品好课 -- end -->
+    <!-- 兴趣选择设置 -- start -->
+    <div class="interest">
+      <el-dialog
+        v-model="interestDialog"
+        width="80%"
+        :show-close="false"
+      >
+      <template #header="{ close, titleId }">
+        <div class="dialogHead fx-sb">
+          <div>
+          <span class="titleClass marg-rt-10">设置学习兴趣</span> 
+          <span class="ft-cl-des">打造你的专属在线学习平台</span>
+          </div>
+          <div class="butCont fx">
+            <span class="bt-grey marg-rt-15" @click="close">下次再选</span>
+            <span class="bt" @click="saveInterest">保存</span>
+          </div>
+        </div>
+      </template>
+      <CheckInterest :data="classCategorys" @setInterestList="setInterestList" ></CheckInterest>
+      </el-dialog>
+    </div>
+    <div class="floatCont fx-fd-col fx-ct">
+      <router-link to="/main/coupon"> <img src="@/assets/btn_youhuiquan.png" alt="" /> </router-link> 
+      <img src="@/assets/btn_wentifankui.png" alt="" />
+      <img src="@/assets/btn_backtop.png" alt="" />
     </div>
   </div>
 </template>
@@ -44,8 +77,10 @@
 
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { getClassCategorys, getFreeClassList } from "@/api/class.js";
+import { getClassCategorys, getFreeClassList, setInterests, getInterests } from "@/api/class.js";
 import ClassCategory from "./components/ClassCategory.vue";
+import CheckInterest from "./components/CheckInterest.vue";
+import Interest from "./components/Interest.vue";
 import OpenClass from "./components/OpenClass.vue";
 import Swiper from "./components/Swiper.vue";
 import banner1 from "@/assets/banner1.jpg";
@@ -58,6 +93,8 @@ const classCategorys = ref([]);
 const imags = [banner1, banner2, banner3];
 // 直播公开课的数据
 const freeClassData = ref([]);
+// 兴趣弹窗
+const interestDialog = ref(false)
 
 // mounted生命周期
 onMounted(() => {
@@ -65,22 +102,30 @@ onMounted(() => {
   getClassCategoryData();
   // 获取精品公开课
   getFreeClassListData();
+  // 获取兴趣列表 （二级分类）
+  getInterestData()
 });
 
 /** 方法定义 **/
 
-// 获取三级分类信息
+// 获取一、二、三级分类信息
 const getClassCategoryData = async () => {
   await getClassCategorys()
     .then((res) => {
       if (res.code == 200) {
         classCategorys.value = res.data;
       } else {
-        ElMessage(res.meg);
+        ElMessage({
+          message:res.msg,
+          type: 'error'
+        });
       }
     })
     .catch(() => {
-      ElMessage("分类请求出错！");
+      ElMessage({
+        message: "分类请求出错！",
+        type: 'error'
+      });
     });
 };
 // 精品公开课接口
@@ -90,11 +135,17 @@ const getFreeClassListData = async () => {
       if (res.code == 200) {
         freeClassData.value = res.data;
       } else {
-        ElMessage(res.meg);
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
       }
     })
     .catch(() => {
-      ElMessage("分类请求出错！");
+      ElMessage({
+        message: "分类请求出错！",
+        type: 'error'
+      });
     });
 };
 // 新课推荐
@@ -122,8 +173,65 @@ const getGoodClassListData = async () => {
       }
     })
     .catch(() => {
-      ElMessage("分类请求出错！");
+      ElMessage({
+        message: "分类请求出错！",
+        type: 'error'
+      });
     });
 };
+// 保存设置的兴趣变量
+const interest = ref(new Set())
+
+// 获取兴趣
+const getInterestData = async () => {
+  await getInterests()
+    .then((res) => {
+      if (res.code == 200) {
+        interest.value = new Set(res.data)
+      } else {
+        ElMessage({
+        message: res.msg,
+        type: 'error'
+      });
+        interestDialog.value(true);
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "兴趣列表获取失败！",
+        type: 'error'
+      });
+    });
+} 
+
+// 更改兴趣的时候记录
+const setInterestList = list =>{
+  interest.value = list
+}
+
+// 保存兴趣
+const saveInterest = async () => {
+  await setInterests()
+    .then((res) => {
+      if (res.code == 200) {
+        ElMessage({
+          message: "兴趣保存成功！",
+          type: 'success'
+        });
+        interestDialog.value = false
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "兴趣保存出错！",
+        type: 'error'
+      });
+    });
+}
 </script>
 <style lang="scss" src="./index.scss"> </style>

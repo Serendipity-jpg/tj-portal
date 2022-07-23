@@ -95,12 +95,12 @@ export default [
     redirect: '/result/success',
     meta: { title: '结果页', icon: 'check-circle' },
     children: [
-      // {
-      //   path: 'success',
-      //   name: 'ResultSuccess',
-      //   component: () => import('@/pages/result/success/index.vue'),
-      //   meta: { title: '成功页' },
-      // },
+      {
+        path: 'success',
+        name: 'ResultSuccess',
+        component: () => import('@/pages/result/success/index.vue'),
+        meta: { title: '成功页' },
+      },
       // {
       //   path: 'fail',
       //   name: 'ResultFail',

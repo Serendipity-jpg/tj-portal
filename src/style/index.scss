@@ -59,6 +59,7 @@ a{
     margin: 0 auto;
   }
 }
+// logo定义 - 
 .logo img{
   width: 144px;
   height: 48px;
@@ -69,7 +70,7 @@ a{
 // 原子化CSS定义 将高频使用的样式单独抽离 使用时拼合到calss里
 
 // 按钮
-.bt{
+.bt, .bt-grey{
   display: block;
   line-height: 40px;
   width: 100%;
@@ -86,12 +87,79 @@ a{
     background-color: var(--color-active);
   }
 }
+.bt-grey{
+  color: var(--color-font1);
+  background: var(--color-background3);
+  cursor: pointer;
+  &:hover{
+    background-color: var(--color-hover);
+  }
+  &:active{
+    background-color: var(--color-active);
+  }
+}
+.bt-red{
+  color: var(--color-white);
+  background: var(--color-error);
+  cursor: pointer;
+  &:hover{
+    background-color: var(--color-error1);
+  }
+  &:active{
+    background-color: var(--color-error2);
+  }
+}
+.bt-red1{
+  color: var(--color-error);
+  background: var(--color-error3);
+  cursor: pointer;
+  &:hover{
+    color: var(--color-white);
+    background-color: var(--color-error1);
+  }
+  &:active{
+    color: var(--color-white);
+    background-color: var(--color-error2);
+  }
+}
+.bt-wt{
+  color: var(--color-font1);
+  background: var(--color-white);
+  padding: 5px 20px;
+  cursor: pointer;
+  &:hover{
+    background-color: var(--color-background3);
+  }
+  &:active{
+    background-color: var(--color-background4);
+  }
+}
+.bt-round{
+  border-radius: 40px;
+}
+.bt-dis{
+  background: var(--color-font7);
+  &:hover, &:active{
+    background: var(--color-font7);
+  }
+}
+
 // 文字按钮
 .font-bt{
   color: var(--color-main);
   cursor: pointer;
   &:hover, &:active{
     color: var(--color-hover);
+  }
+}
+.font-bt1{
+  color: var(--color-main);
+  cursor: pointer;
+  &:hover{
+    color: var(--color-hover);
+  }
+  &:active{
+    color: var(--color-active);
   }
 }
 
@@ -135,6 +203,14 @@ a{
 }
 
 // 位置
+
+.pt-rt{
+  position: relative;
+}
+.pt-at{
+  position: absolute;
+}
+
 .marg-bt-0{
   margin-bottom: 0;
 }
@@ -149,6 +225,12 @@ a{
 }
 .marg-rt-10{
   margin-right: 10px;
+}
+.marg-rt-15{
+  margin-right: 15px;
+}
+.marg-rt-20{
+  margin-right: 20px;
 }
 .marg-lr-40{
   margin:0 15px;
@@ -201,4 +283,15 @@ a{
 }
 .ft-cl-err{
   color: var(--color-error);
+}
+.ft-cl-wt{
+  color: var(--color-white);
+}
+
+.cur-pt{
+  cursor: pointer;
+}
+
+.bd-non{
+  border:none !important;
 }

@@ -128,7 +128,6 @@ const getGoodClassListData = async () => {
 </script>
 <style lang="scss" scoped>
 .mainWrapper {
-  border: 1px solid #eeeeee;
   .banner {
     padding: 20px 0;
     .categorys {

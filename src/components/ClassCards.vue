@@ -6,9 +6,12 @@
     </div>
     <div class="pd-10">
         <div class="title marg-bt-10 ft-14">{{data.name}}</div>
-        <div class="ft-cl-des"><span>讲师：</span> {{data.teacher}}</div>
-        <div class="ft-cl-des"><span>共</span> {{data.sections}} <span>节</span></div>
-        <div class="ft-cl-des fx-sb"><span>有{{data.sections}}人在学习</span> <span class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span> </div>
+        <div class="ft-cl-des" v-if="type == 'default' || type == 'search'"><span>讲师：</span> {{data.teacher}}</div>
+        <div class="ft-cl-des" v-if="type == 'default'"><span>共</span> {{data.sections}} <span>节</span></div>
+        <div class="ft-cl-des fx-sb" v-if="type == 'default'"><span>有{{data.sections}}人在学习</span> <span class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span> </div>
+        <div class="ft-cl-des fx-sb" v-if="type == 'search'"><span>共{{data.sections}}节 <em>.</em> 有{{data.sections}}人在学习</span> <span class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span> </div>
+        <div class="ft-cl-des"><span>评分：</span> 4.9</div>
+        <div class="ft-cl-des fx-sb" v-if="type == 'like'"><span>{{data.sections}} 次播放 </span> <span class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span> </div>
     </div>
     
   </div>
@@ -19,6 +22,10 @@ const props = defineProps({
   data:{
     type: Object,
     default:{}
+  },
+  type:{
+    type: String,
+    default:'default'
   }
 })
 </script>
@@ -53,7 +60,10 @@ const props = defineProps({
             border-radius: 8px 8px 0 0;
         }
     }
-    
+    em{
+      position: relative;
+      top: -3px;
+    }
 }
 
 </style>

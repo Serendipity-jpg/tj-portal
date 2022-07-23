@@ -38,6 +38,7 @@
 footer {
   width: 100%;
   background-color: var(--color-white);
+  border-top: 1px solid #EEEEEE;
   text-align: left;
   padding: 35px 0;
   font-size: 14px;

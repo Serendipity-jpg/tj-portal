@@ -1,0 +1,111 @@
+<!-- 常见问题模块 -->
+<template>
+  <div class="classAbout">
+    <div class="title">课程简介</div>
+    <div class="marg-bt-20">{{baseDetailsData.introduce}}</div>
+    <div class="title">适学人群</div>
+    <div class="marg-bt-20">{{baseDetailsData.usePeople}}</div>
+    <div class="title">授课老师</div>
+    <div class="classTeacher">
+      <swiper
+          :modules="[ Pagination ]"
+          :space-between="20"
+          
+        >
+          <swiper-slide
+            class="swiper-slide"
+            v-for="(item, i) in baseClassTeacher"
+            :key="i"
+          >
+          <div class="cards fx">
+            <div class="teacherInfo" v-for="(it, ind) in item" :key="ind">
+              <div class="teach">
+                <img :src="it.icon" alt="">
+                <div>
+                  <div class="name">{{it.name}}</div> 
+                  <div>{{it.job}}</div>
+                </div>
+              </div>
+              <div class="about">
+                {{it.introduce}}
+              </div>
+            </div>
+          </div>
+          </swiper-slide>
+        </swiper>
+    </div>
+    <div class="title">课程详情</div>
+    <div class="marg-bt-20">{{baseDetailsData.detail}}</div>
+  </div>
+</template>
+<script setup>
+// 讲师信息轮播插件
+import { Swiper, SwiperSlide } from "swiper/vue";
+import {  Pagination } from 'swiper';
+import 'swiper/css/navigation';
+
+// 引入父级传参
+defineProps({
+  baseDetailsData:{
+    type: Object,
+    default:{}
+  },
+  baseClassTeacher:{
+    type: Object,
+    default:{}
+  }
+})
+</script>
+<style lang="scss" scoped>
+.classAbout{
+    margin-top: 40px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 30px;
+    .title{
+        font-weight: 600;
+        font-size: 20px; 
+        margin: 10px 0;
+    }
+    .classTeacher{
+        position: relative;
+        width: calc(80vw - 425px);
+        left: 50%;
+        transform: translate(-50%);
+        max-width: 1015px;
+        min-width: 795px; 
+        margin-top: 20px;
+        :deep(.swiper-button-next, .swiper-button-prev){
+            top: 0;
+        }
+        .teacherInfo{
+            height: 255px;
+            overflow: hidden;
+            width: 50%;
+            background-color: var(--color-background5);
+            padding: 20px 30px;
+            margin-right: 20px;
+            border-radius: 8px;
+            .teach{
+                display: flex;
+                margin-bottom: 10px;
+                img{
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 64px;
+                    margin-right: 15px;
+                }
+                .name{
+                    font-weight: 600;
+                }
+            }
+            .about{
+                font-size: 14px;
+            }
+            &:last-child{
+                margin-right: 0;
+            }
+        }
+    }
+}
+</style>

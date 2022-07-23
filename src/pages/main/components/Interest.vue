@@ -1,0 +1,172 @@
+<!-- 首页兴趣模块组件 -->
+<template>
+<div class="Interest">
+  <div class="head">
+    <span :class="{title:true, act:actId == item.id}" @click="checkHandle(item.id)" v-for="(item, index) in data" :key="index">
+      {{item.name}}
+    </span>
+  </div>
+  <div class="classInfo fx">
+    <div class="teacherInfo fx-1" :style="{background: `url(${teacherInfo.coverUrl})`}">
+      <div class="info fx-sb">
+        <div class="fx-al-ct fx-1 ">
+          <img :src="teacherInfo.icon" alt="" srcset=""> 讲师：<span>{{teacherInfo.teacher}}</span>
+        </div>
+        <div class=""><span class="bt">立即报名</span></div>
+      </div>
+    </div>
+    <div class="classList fx-1 bg-wt">
+      <div class="box">
+        <div class="fx-sb item" v-for="(item, index) in classList" :key="index">
+          <span class="title">{{item.name}}</span>
+          <span class="desc">共{{item.sections}}节 <i>.</i> {{item.sold}}人正在学习 </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+<script setup>
+import { onMounted, ref } from 'vue'
+import { getClassList } from "@/api/class.js";
+import { ElMessage } from "element-plus";
+// 引入父级传参
+const props = defineProps({
+  data:{
+    type: Set,
+    default:[]
+  }
+})
+// 当前兴趣课程 - 默认展示选中
+const actId=ref('')
+// 课程讲师信息
+const teacherInfo = ref({})
+const classList = ref({})
+// 初始化首选项并获取其课程数据
+onMounted(() => {
+  const data = props.data[Symbol.iterator]()
+  actId.value = data.next().value.id
+  // 通过二级分类id 获取对应课程列表
+  getClassListData(actId.value)
+})
+// 点击切换效果
+const checkHandle = (id) => {
+  actId.value = id
+  getClassListData(id)
+}
+// 通过二级分类id 获取对应课程列表
+const getClassListData = async (id) => {
+  await getClassList(id)
+    .then((res) => {
+      if (res.code == 200) {
+        classList.value = res.data;
+
+        // 真实接口数据处理方式
+        // teacherInfo.value = res.data.filter(n => n.id === actId.value);
+        // MOCK 数据处理
+        teacherInfo.value = res.data[0]
+      } else {
+        ElMessage({
+          message:res.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "课程列表数据获取失败",
+        type: 'error'
+      });
+    });
+}
+
+
+</script>
+<style lang="scss" scoped>
+.Interest {
+  .head{
+    .title{
+      display: inline-block;
+      margin-right: 20px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+    .act{
+      font-weight: 600;
+      position: relative;
+      &::before{
+        position: absolute;
+        content: '';
+        width: 33px;
+        height: 4px;
+        border-radius: 4px;
+        bottom: -8px;
+        background: var(--color-main);
+      }
+    }
+  }
+  .classInfo{
+    height: 331px;
+    padding-top: 30px;
+    margin-bottom: 40px;
+    .teacherInfo{
+      position: relative;
+      background-size: cover;
+      border-radius: 8px 0 0 8px;
+      .info{
+        background: rgba(0,0,0,0.45);
+        border-radius: 0 0 0 8px;
+        padding: 20px;
+        position: absolute;
+        line-height: 30px;
+        width: 100%;
+        bottom: 0;
+        color: #fff;
+        img{
+          width: 30px;
+          height: 30px;
+          border-radius: 100%;
+          margin-right: 10px;
+        }
+        .bt{
+          line-height: 32px;
+          padding: 0 20px;
+          font-size: 14px;
+        }
+      }
+    }
+    .classList{
+      padding: 20px 21px 20px 18px;
+      
+      .box{
+        height: 260px;
+        overflow: hidden;
+      }
+      .item{
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        .desc{
+          display: none;
+          font-size: 12px;
+          i{
+            position: relative;
+            font-size: 16px;
+            top: -3px;
+          }
+        }
+        &:hover{
+          background-color: #F5F6F9;
+          color: var(--color-main);
+          font-weight: 600;
+           .desc{
+              display: block;
+              color: var(--color-font3);
+              font-weight: 400;
+           }
+        }
+      }
+    }
+  }
+}
+</style>

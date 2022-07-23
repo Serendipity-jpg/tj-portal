@@ -1,0 +1,82 @@
+<!-- 课程目录模块 -->
+<template>
+  <div class="classList">
+    <el-collapse v-model="activeNames" accordion @change="handleChange">
+      <el-collapse-item v-for="(item, index) in data"  :name="index">
+          <template #title>
+            <div class="fx-sb">
+              <span>{{item.name}}</span>
+              <span class="time">{{(item.mediaDuration/60).toFixed(2)}}</span>
+            </div>
+          </template>
+          <div class="item fx-sb" v-for="(it, ind) in item.sections">
+            <div><iconVideo v-if="it.type == 2" class="icon" /> <iconJdks v-if="it.type == 3" class="icon" /> {{it.index}}、{{it.name}}</div>
+            <div class="time">{{(it.mediaDuration/60).toFixed(2)}}</div>
+          </div>
+        </el-collapse-item>
+    </el-collapse>
+  </div>
+</template>
+<script setup>
+import { onMounted, ref } from "vue";
+import iconVideo from '@/assets/ico-video.svg'
+import iconJdks from '@/assets/ico-jdks.svg'
+// 引入父级传参
+defineProps({
+  data:{
+    type: Object,
+    default:{}
+  }
+})
+
+const activeNames = ref([0])
+const handleChange = (val) => {
+  console.log(val)
+}
+</script>
+<style lang="scss" scoped>
+.classList{
+  padding-top: 10px;
+  .time{
+      font-size: 14px;
+      color: #80878C;
+      font-weight: 400;
+      padding-right: 20px;
+      line-height: 50px;
+    }
+  .item{
+    line-height: 50px;
+    padding: 0 20px;
+    cursor: pointer;
+    .time{
+      padding-right: 0px;
+    }
+    .icon{
+      position: relative;
+      top: 3px;
+      width: 16px;
+      height: 16px;
+      margin-right: 10px;
+    }
+  }
+  :deep(.el-collapse-item__header){
+    background: #F5F6F9;
+    border:none;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 0 10px 0 25px;
+  }
+  :deep(.el-collapse){
+    border: none;
+  }
+  :deep(.el-collapse-item__wrap){
+    border: none;
+  }
+  :deep(.el-collapse-item__content){
+    padding-bottom: 0;
+  }
+
+}
+</style>

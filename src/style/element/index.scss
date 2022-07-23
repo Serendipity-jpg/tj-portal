@@ -6,6 +6,13 @@
     ),
   ),
 );
+// Elmessage 
+.el-button{
+  background: #2080F7 !important;
+  border-radius: 4px;
+}
+
+// 表单 相关
 .el-form-item{
   margin-bottom: 20px;
 }
@@ -19,4 +26,9 @@
 }
 .el-input__wrapper.is-focus{
   box-shadow:0 0 0 1px var(--color-font1) inset;
+}
+// 弹框 dialog
+.el-dialog__header{
+  // padding-bottom: 0;
+  margin-right: 0;
 }

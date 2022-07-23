@@ -33,6 +33,7 @@ instance.interceptors.response.use(
   (response) => {
     if (response.status === 200) {
       const { data } = response;
+      // console.log(666, data, data.code === CODE.REQUEST_SUCCESS)
       if (data.code === CODE.REQUEST_SUCCESS) {
         return data;
       }

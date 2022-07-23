@@ -1,4 +1,4 @@
-<!-- 顶部Banner区域左侧列表 -->
+<!-- 首页头部课程分类 -->
 <template>
     <div class="classCategory ft-14">
       <div @mouseout="mouseoutHandle()">
@@ -17,8 +17,11 @@
         </div>
         <!-- 展示详情 -->
         <div class="allCategory" v-show="isDetails" @mouseover="mouseoverHandle()">
-          <div class="ft-wt-600 pd-bt-20" v-for="item in categorys" :key="item.id">
-            <span class="tit">{{item.name}} :</span> <span class="ft-wt-400" v-for="it in item.children" :key="it.id">{{it.name}}</span>
+          <div class="fx ft-wt-600 pd-bt-20" v-for="item in categorys" :key="item.id">
+            <span class="tit">{{item.name}} :</span> 
+            <div>
+              <span class="ft-wt-400 cur-pt" v-for="it in item.children" :key="it.id">{{it.name}}</span>
+            </div>
           </div>
         </div>
       </div>
