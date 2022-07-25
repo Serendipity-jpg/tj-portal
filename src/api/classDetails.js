@@ -21,3 +21,20 @@ export const getClassList = (id) =>
 		method: 'get',
 		params:id,
 	})	
+// 获取课程小节	
+export const getClassChapter = (id) =>
+	request({
+		url: `/course/catas/index/list/${id}`,
+		method: 'get',
+		params:id,
+	})	
+
+	
+// 问答相关
+
+export const getAskList = (params) =>
+	request({
+		url: `/questions`,
+		method: 'get',
+		params,
+	})	
