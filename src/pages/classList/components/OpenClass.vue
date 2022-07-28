@@ -8,7 +8,7 @@
 </div>
 </template>
 <script setup>
-import MainTitle from '@/components/Maintitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 import ClassCards from '@/components/ClassCards.vue'
 const props = defineProps({
   title:{
