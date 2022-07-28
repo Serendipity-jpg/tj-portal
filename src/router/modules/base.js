@@ -1,5 +1,4 @@
 import Layout from '@/pages/layouts/index.vue';
-import DashboardIcon from '@/assets/assets-slide-dashboard.svg';
 
 export default [
   {
@@ -39,18 +38,33 @@ export default [
     ],
   },
   {
+    path: '/askDetails',
+    component: Layout,
+    name: 'askDetails',
+    redirect: '/askDetails/index',
+    meta: { title: '问题回复详情' },
+    children: [
+      {
+        path: 'index',
+        name: 'askDetails',
+        component: () => import('@/pages/ask/askDetails.vue'),
+        meta: { title: '问题回复详情' },
+      }
+    ],
+  },
+  {
     path: '/details',
     component: Layout,
     name: 'details',
     redirect: '/details/index',
-    meta: { title: '课程详情' },
+    meta: { title: '问题详情' },
     children: [
       {
         path: 'index',
         name: 'details',
         component: () => import('@/pages/classDetails/index.vue'),
-        meta: { title: '课程搜索' },
+        meta: { title: '问题详情' },
       }
     ],
-  },
+  }
 ];

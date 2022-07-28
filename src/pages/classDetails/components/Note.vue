@@ -1,30 +1,30 @@
-<!-- 问答模块 -->
+<!-- 笔记模块 -->
 <template>
-  <div class="classAsk bg-wt marg-bt-20">
+  <div class="note bg-wt marg-bt-20">
     <div class="tabLab fx-sb">
       <div class="lable">
-        <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部问答</span> 
-        <span @click="askCheck('my')" :class="{act:askType == 'my'}">我的问答</span>
+        <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部笔记</span> 
+        <span @click="askCheck('my')" :class="{act:askType == 'my'}">我的笔记</span>
       </div> 
-      <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: '2334', title: '程序语言开发与设计'}})" class="bt bt-round ft-14">提问</span></div>
     </div>
     <AskChapterItems :data="chapterData" @checkCahpter="checkCahpter"></AskChapterItems>
     <div class="askCont">
       <div class="askLists" v-for="item in askListsDataes">
         <div class="userInfo fx">
-          <img :src="item.user.icon" alt="" srcset="">
-          {{item.user.name}}
+          <img :src="item.author.icon" alt="" srcset="">
+          {{item.author.name}}
         </div>
         <div class="ask">
-          <div class="ft-16">{{item.title}}</div>
-          <div class="font-bt2" @click="goDetails(item)" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
+          <div class="ft-16">{{item.content}}</div>
+          <div class="font-bt" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
         </div>
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="font-bt marg-rt-20" @click="() => $router.push({path:'/ask', query:{id:item.id,type:'edit',title:item.title}})" v-if="userInfo.id == item.user.id"><btnBj class="btnIcon"></btnBj> 编辑</span>
-            <span class="font-bt marg-rt-20" @click="delQuestionsHandle(item.id)" v-if="userInfo.id == item.user.id"><btnDel  class="btnIcon"></btnDel> 删除 </span>
-            <span class="font-bt2" @click="goDetails(item)"><i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 回答 {{item.answerAmount}}</span>
+            <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-btn_pinglun_nor1"></i> 编辑</span>
+            <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-btn_backtop" ></i> 删除 </span>
+            <span class="marg-rt-20" v-if="userInfo.id != item.author.id "><i class="iconfont zhy-icon_shoucang"></i> 采集 {{item.answerAmount}}</span>
+            <span><i class="iconfont zhy-btn_zan_nor"></i> 点赞 {{item.answerAmount}}</span>
           </div>
         </div>
       </div>
@@ -45,15 +45,11 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue"
-import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
+import { ElMessage } from "element-plus";
+import { getClassChapter } from "@/api/classDetails.js"
+import { getAllNotes, getMyNotes } from "@/api/notes.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
-import { useUserStore, dataCacheSrore } from '@/store'
-import btnBj from '@/assets/btn_bj.svg'
-import btnDel from '@/assets/btn_del.svg'
-import { useRouter } from "vue-router";
-const router = useRouter()
-const store = useUserStore();
-const dataCache = dataCacheSrore();
+import { useUserStore } from '@/store'
 // 引入父级传参
 const props = defineProps({
   id:{
@@ -61,12 +57,13 @@ const props = defineProps({
     default:{}
   }
 })
-
+const store = useUserStore();
 // 用户信息
 const userInfo = ref();
 onMounted(() => {
   // 获取登录信息中的我的信息
   userInfo.value = store.getUserInfo
+  console.log(90, userInfo.value)
   // 获取小节数据
   getClassChapterData()
   // 获取问答列表
@@ -99,7 +96,7 @@ const checkCahpter = (id) => {
 }
 // 获取问答列表
 const getAskListsDataes = async () => {
-  const questFun = askType.value == 'all' ? getAskList : getMyAskList
+  const questFun = askType.value == 'all' ? getAllNotes : getMyNotes
   await questFun(params)
     .then((res) => {
       if (res.code == 200) {
@@ -107,10 +104,11 @@ const getAskListsDataes = async () => {
           askListsDataes.value = res.data.list
         } else {
           askListsDataes.value = res.data.list.map(n => {
-            n.user = {...userInfo.value}
+            n.author = {...userInfo.value}
             return n
           })
         }
+        console.log(454545, askListsDataes.value)
         total.value = res.data.total
       } else {
         ElMessage({
@@ -126,31 +124,7 @@ const getAskListsDataes = async () => {
       });
     });
 }
-// 删除问题
-const delQuestionsHandle = async id => {
-await delQuestions(id)
-    .then((res) => {
-      if (res.code == 200) {
-        // 删除成功
-      } else {
-        ElMessage({
-          message:res.msg,
-          type: 'error'
-        });
-      }
-    })
-    .catch(() => {
-      ElMessage({
-        message: "课程章节数据请求出错！",
-        type: 'error'
-      });
-    });
-}
-// 去往详情页面
-const goDetails = (item) => {
-  dataCache.setAskDetails(item)
-  router.push({path: '/askDetails', query:{id:item.id}})
-}
+
 // 小节数据
 const chapterData = ref([])
 
@@ -188,7 +162,7 @@ const handleCurrentChange = (val) => {
 
 </script>
 <style lang="scss" scoped>
-.classAsk{
+.note{
   padding-top: 30px;
   .tabLab{
     margin-bottom: 20px;

@@ -20,7 +20,7 @@
           <div class="fx ft-wt-600 pd-bt-20" v-for="item in categorys" :key="item.id">
             <span class="tit">{{item.name}} :</span> 
             <div>
-              <span class="ft-wt-400 cur-pt" v-for="it in item.children" :key="it.id">{{it.name}}</span>
+              <span class="ft-wt-400 cur-pt" @click="() => $router.push('/search')" v-for="it in item.children" :key="it.id">{{it.name}}</span>
             </div>
           </div>
         </div>
@@ -80,6 +80,7 @@ import {onMounted, ref} from 'vue';
     top: 0;
     left: 236px;
     width: 537px;
+    overflow: hidden;
     height: 388px;
     padding: 20px 30px;
     background: #FFFFFF;
@@ -87,7 +88,7 @@ import {onMounted, ref} from 'vue';
     border-radius: 8px;
     .tit{
       display: inline-block;
-      width: 110px;
+      width: 120px;
     }
     span{
       display: inline-block;

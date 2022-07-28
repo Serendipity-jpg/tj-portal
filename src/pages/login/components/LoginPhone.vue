@@ -37,8 +37,8 @@ import { reactive, ref } from "vue";
 
 const formRef = ref();
 const fromData = reactive({
-  userName: "",
-  password: "",
+  username: "13500010003",
+  password: "123",
 });
 
 const rules = reactive({

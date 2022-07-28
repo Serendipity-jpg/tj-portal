@@ -65,8 +65,6 @@ a{
   height: 48px;
 }
 
-
-
 // 原子化CSS定义 将高频使用的样式单独抽离 使用时拼合到calss里
 
 // 按钮
@@ -160,6 +158,13 @@ a{
   }
   &:active{
     color: var(--color-active);
+  }
+}
+.font-bt2{
+  color: var(--color-font1);
+  cursor: pointer;
+  &:hover, &:active{
+    color: var(--color-hover);
   }
 }
 
@@ -276,7 +281,10 @@ a{
   font-size: 14px;
 }
 .ft-16{
-  font-size: 14px;
+  font-size: 16px;
+}
+.ft-20{
+  font-size: 20px;
 }
 .ft-cl-des{
   color: var(--color-font3);
@@ -294,4 +302,12 @@ a{
 
 .bd-non{
   border:none !important;
+}
+
+// 公用图片头像
+.img{
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  margin-right: 10px;
 }

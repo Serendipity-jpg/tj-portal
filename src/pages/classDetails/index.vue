@@ -2,11 +2,11 @@
 <template>
   <div class="classDetailsWrapper">
     <div class="detailHead">
-      <div class="backGround"><img :src="baseDetailsData.corverUrl" width="100%" alt=""/></div>
+      <div class="backGround"><img :src="baseDetailsData.coverUrl" width="100%" alt=""/></div>
       <div class="container">
         <Breadcrumb title="一级分类"></Breadcrumb>
         <div class="topInfo fx">
-          <div class=""><img :src="baseDetailsData.corverUrl" width="380" alt="" /></div>
+          <div class=""><img :src="baseDetailsData.coverUrl" width="380" alt="" /></div>
           <div class="fx-1">
               <div class="title">{{baseDetailsData.name}}</div>
               <div class="item fx">
@@ -52,6 +52,8 @@
         <ClassCatalogue v-show="actId == 2" :data="classListData"></ClassCatalogue>
         <!-- 问答模块 -->
         <ClassAsk v-show="actId == 3" :id="detailsId"></ClassAsk>
+        <!-- 笔记模块 -->
+        <Note v-show="actId == 4" :id="detailsId"></Note>
       </div>
       <div class="ritCont">
         <!-- 常见问题 -->
@@ -77,6 +79,7 @@ import ClassAbout from "./components/ClassAbout.vue";
 import LikeCards from "./components/LikeCards.vue";
 import Ask from "./components/Ask.vue";
 import ClassAsk from "./components/ClassAsk.vue";
+import Note from "./components/Note.vue";
 import ClassCatalogue from "./components/ClassCatalogue.vue";
 
 const route = useRoute()
@@ -119,7 +122,7 @@ const LikeData = [{
   }
 ]
 // 当前table选项
-const actId = ref(3)
+const actId = ref(1)
 
 // 常见问题 - 静态数据
 const askData = [

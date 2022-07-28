@@ -5,6 +5,7 @@ import 'element-plus/dist/index.css'
 import 'swiper/scss';
 import 'swiper/scss/pagination';
 import App from './App.vue'
+import '@/style/font_style/iconfont.css';
 // 全局样式
 import '@/style/index.scss';
 // 权限-路由拦截

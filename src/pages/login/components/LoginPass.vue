@@ -9,8 +9,8 @@
       label-width="0px"
       class="demo-dynamic"
     >
-      <el-form-item prop="userName" label="">
-        <el-input v-model="fromData.userName" placeholder="请输入用户名" />
+      <el-form-item prop="username" label="">
+        <el-input v-model="fromData.username" placeholder="请输入用户名" />
       </el-form-item>
       <el-form-item prop="password" label="">
         <el-input type="pass" :show-password="true" v-model="fromData.password" placeholder="请输入密码" />
@@ -44,13 +44,13 @@ const router = useRouter()
 const formRef = ref();
 const checked = ref(false)
 const fromData = reactive({
-  userName: "admin",
-  password: "123456",
+  username: "jack",
+  password: "123",
   type: 1
 });
 
 const rules = reactive({
-  userName: [
+  username: [
     { required: true, message: "请输入正确的用户名", trigger: "blur" },
   ],
   password: [
@@ -69,12 +69,13 @@ const submitForm = (formEl) => {
                     // 用户token写入 pinia
 					store.setToken(res.data);
 					// 获取用户信息
-                    const data = await getUserInfo()
-                    if (data.code == 200) {
-                        // 记录到store 并调转到首页
-                        store.setUserInfo(data.data)
-                        router.push('/main/index')
-                    } 
+          debugger
+          const data = await getUserInfo()
+          if (data.code == 200) {
+              // 记录到store 并调转到首页
+              store.setUserInfo(data.data)
+              router.push('/main/index')
+          } 
 					// 跳转到首页
 				} else {
 					console.log('登录失败')

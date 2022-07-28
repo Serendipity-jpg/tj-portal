@@ -21,7 +21,14 @@ export const getClassList = (id) =>
 		method: 'get',
 		params:id,
 	})	
-// 获取课程小节	
+// 获取课程章节 下拉数据展示
+export const getClassCourses = (id) =>
+request({
+	url: `/courses/catas/${id}`,
+	method: 'get',
+	params:id,
+})	
+// 获取课程小节 - 问答详情使用
 export const getClassChapter = (id) =>
 	request({
 		url: `/course/catas/index/list/${id}`,
@@ -31,10 +38,58 @@ export const getClassChapter = (id) =>
 
 	
 // 问答相关
-
+// 获取问答列表-全部
 export const getAskList = (params) =>
 	request({
 		url: `/questions`,
 		method: 'get',
 		params,
 	})	
+// 获取问答列表
+export const getMyAskList = (params) =>
+	request({
+		url: `/questions/me`,
+		method: 'get',
+		params,
+	})	
+// 新增提问
+export const postQuestions = (params) =>
+	request({
+		url: `/questions`,
+		method: 'post',
+		params,
+	})	
+// 获取问题详情
+export const getQuestionsDetails = (id) =>
+request({
+	url: `/questions/${id}`,
+	method: 'get',
+})	
+// 编辑提问
+export const putQuestions = (params) =>
+	request({
+		url: `/questions/${id}`,
+		method: 'put',
+		params,
+	})			
+// 删除提问
+export const delQuestions = (id) =>
+	request({
+		url: `/course/delete/${id}`,
+		method: 'delete',
+	})		
+// 回复
+export const postAnswers = params =>
+	request({
+		url: `/answers`,
+		method: 'post',
+		params
+	})			
+// 根据问题的Id获取问题的
+export const getAllQuestions = params =>
+	request({
+		url: `/questions/${params.id}/answers`,
+		method: 'get',
+		params
+	})
+	

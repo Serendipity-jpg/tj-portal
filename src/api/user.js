@@ -12,7 +12,7 @@ export const userLogins = (params) =>
 	request({
 		url: `/accounts/login`,
 		method: 'post',
-		params
+		data:params
 	})
 // 获取用户信息
 export const getUserInfo = (params) =>

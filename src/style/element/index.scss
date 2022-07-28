@@ -32,3 +32,13 @@
   // padding-bottom: 0;
   margin-right: 0;
 }
+
+.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+  background-color: #fff;
+  border: 1px solid #D9D9D9;
+  border-radius: 2px;
+}
+.el-pagination__sizes .el-input__wrapper{
+  padding: 1px 11px;
+  margin-left: 16px;
+}

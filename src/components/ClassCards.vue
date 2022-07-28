@@ -1,5 +1,5 @@
 <template>
-  <div class="classCards" >
+  <div class="classCards" @click="goDetails(data.id)">
     <div class="image">
         <span class="label">录播</span>
         <img :src="data.coverUrl" alt="" />
@@ -28,6 +28,9 @@ const props = defineProps({
     default:'default'
   }
 })
+const goDetails = id => {
+  router.push({path: '/details', query:{id}})
+}
 </script>
 <style lang="scss" scoped>
 .classCards{

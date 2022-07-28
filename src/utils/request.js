@@ -3,7 +3,8 @@ import proxy from '../config/proxy';
 
 const env = import.meta.env.MODE || 'development';
 
-const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
+// const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
+const host = 'http://172.17.2.134/api-test';
 
 const CODE = {
   LOGIN_TIMEOUT: 1000,
@@ -11,7 +12,7 @@ const CODE = {
   REQUEST_FOBID: 1001,
 };
 
-const TOKEN = localStorage.getItem('token'); 
+
 
 const instance = axios.create({
   baseURL: host,
@@ -20,6 +21,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
+  const TOKEN = localStorage.getItem('token'); 
   config.headers = {
     "Content-Type": "application/json",
     "authorization": TOKEN
@@ -33,7 +35,6 @@ instance.interceptors.response.use(
   (response) => {
     if (response.status === 200) {
       const { data } = response;
-      // console.log(666, data, data.code === CODE.REQUEST_SUCCESS)
       if (data.code === CODE.REQUEST_SUCCESS) {
         return data;
       }
