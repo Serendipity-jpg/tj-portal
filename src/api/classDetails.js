@@ -92,4 +92,10 @@ export const getAllQuestions = params =>
 		method: 'get',
 		params
 	})
-	
+// 根据答案id分页查询回复列表
+export const getReply = params =>
+request({
+	url: `/answers/${params.id}/replies`,
+	method: 'get',
+	params
+})

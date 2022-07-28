@@ -53,25 +53,27 @@
                   <!-- 插入回复框的位置 -->
                   <div :id="item.id"> </div>
                   <!-- 回复列表 -->
-                  <div v-if="replyData" class="items" v-for="item in replyData" :key="item.id">
-                    <div class="fx-al-ct">
-                      <img class="img" :src="item.replier.icon" alt="">
-                      <span class="ft-cl-des">{{item.replier.name}}</span>
-                    </div>
-                    <div class="cont">
-                      <div class="marg-bt-10">{{item.content}}</div>
-                      <div class="fx-sb">
-                        <div class="ft-cl-des">{{item.createTime}}</div>
-                        <div>
-                          <span> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{item.replyTimes}} </span> 
-                          <span> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes}}</span>
+                  <div class="replyCont" v-if="replyData && isReplay">
+                    <div class="items" v-for="it in replyData" :key="it.id">
+                      <div class="fx-al-ct">
+                        <img class="img" :src="it.replier.icon" alt="">
+                        <span class="ft-cl-des">{{it.replier.name}}</span>
+                      </div>
+                      <div class="cont">
+                        <div class="marg-bt-10">{{it.content}}</div>
+                        <div class="fx-sb">
+                          <div class="ft-cl-des">{{it.createTime}}</div>
+                          <div>
+                            <span> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
+                            <span> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                          </div>
                         </div>
                       </div>
+                      <!-- 插入回复框的位置 -->
+                      <div :id="item.id"> </div>
+                    <!-- 回复列表 -->
                     </div>
-                    <!-- 插入回复框的位置 -->
-                    <div :id="item.id"> </div>
-                  <!-- 回复列表 -->
-                </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -88,7 +90,7 @@ import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from '@/store'
-import { getQuestionsDetails, postAnswers, getAllQuestions } from "@/api/classDetails.js";
+import { getQuestionsDetails, postAnswers, getAllQuestions, getReply } from "@/api/classDetails.js";
 import RelatedQuestions from './components/RelatedQuestions.vue'
 
 const store = useUserStore();
@@ -99,7 +101,10 @@ const askInfo = ref()
 onMounted(() => {
   // 获取问题详情
   getQuestionsDetailsData()
+  // 获取回答的列表
   getAllQuestionsData()
+  // 获取回答的答复的列表
+  getReplyData()
 })
 // 获取问题详情
 const getQuestionsDetailsData = async () => {
@@ -162,9 +167,26 @@ const ruleshandle = () => {
 }
 // 回复数据
 const replyData = ref();
-
-const getReplyData = function(){
-  
+const replyCont = ref();
+const getReplyData = async () => {
+    await getReply(questParams)
+    .then((res) => {
+      if (res.code == 200) {
+       replyData.value = res.data.list
+       replyCont.value = res.data.total
+      } else {
+        ElMessage({
+          message:res.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "课程问题数据请求出错！",
+        type: 'error'
+      });
+    });
 }
 // 提交数据
 const params = reactive({
