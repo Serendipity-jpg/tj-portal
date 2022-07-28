@@ -69,7 +69,6 @@ const submitForm = (formEl) => {
                     // 用户token写入 pinia
 					store.setToken(res.data);
 					// 获取用户信息
-          debugger
           const data = await getUserInfo()
           if (data.code == 200) {
               // 记录到store 并调转到首页
