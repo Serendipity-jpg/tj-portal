@@ -15,7 +15,7 @@ const CODE = {
 
 
 const instance = axios.create({
-  baseURL: 'http://172.17.2.134/api-test',
+  baseURL:  'http://172.17.2.134/api-test',
   timeout: 1000,
   withCredentials: true,
 });

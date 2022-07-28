@@ -58,8 +58,8 @@ const dataCache = dataCacheSrore();
 // 引入父级传参
 const props = defineProps({
   id:{
-    type: Object,
-    default:{}
+    type: String,
+    default:''
   }
 })
 
