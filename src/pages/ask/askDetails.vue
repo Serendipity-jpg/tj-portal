@@ -163,7 +163,9 @@ const ruleshandle = () => {
 // 回复数据
 const replyData = ref();
 
-getReplyData
+const getReplyData = function(){
+  
+}
 // 提交数据
 const params = reactive({
   answerId:'', 
