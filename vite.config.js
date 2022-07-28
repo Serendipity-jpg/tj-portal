@@ -9,7 +9,7 @@ const CWD = process.cwd();
 
 //配置参考 https://vitejs.dev/config/
 export default defineConfig((mode) => {
-  const { VITE_BASE_URL } = loadEnv(mode, CWD);
+  // const { VITE_BASE_URL } = loadEnv(mode, CWD);
   return {
     base: './',
     resolve: {
