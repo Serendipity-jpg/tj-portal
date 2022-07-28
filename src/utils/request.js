@@ -3,7 +3,7 @@ import proxy from '../config/proxy';
 
 const env = import.meta.env.MODE || 'development';
 
-const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
+// const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
 // const host = 'http://172.17.2.134/api-test';
 
 const CODE = {
