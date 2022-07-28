@@ -10,7 +10,6 @@
   </div>
 </template>
 <script setup>
-import router from '../router';
 
 const props = defineProps({
   title: {
