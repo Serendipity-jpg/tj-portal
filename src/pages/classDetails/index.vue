@@ -84,7 +84,7 @@ import ClassCatalogue from "./components/ClassCatalogue.vue";
 
 const route = useRoute()
 // 结果 - 详情Id
-const detailsId = ref([])
+const detailsId = ref()
 // 课程信息及讲师信息
 const baseDetailsData = ref({})
 const baseClassTeacher = ref([])
@@ -137,6 +137,7 @@ const classListData = ref([])
 // mounted生命周期
 onMounted(() => {
   detailsId.value = route.query.id
+  console.log(88,detailsId.value)
   // 获取课程信息
   getClassDetailsData()
   // 获取课程老师信息

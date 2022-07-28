@@ -57,7 +57,7 @@
                     <div class="items" v-for="it in replyData" :key="it.id">
                       <div class="fx-al-ct">
                         <img class="img" :src="it.replier.icon" alt="">
-                        <span class="ft-cl-des">{{it.replier.name}} 88 </span>
+                        <span class="ft-cl-des"> {{it.replier.name}} </span>
                       </div>
                       <div class="cont">
                         <div class="marg-bt-10">{{it.content}}</div>
