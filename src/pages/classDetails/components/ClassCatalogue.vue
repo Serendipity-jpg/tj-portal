@@ -18,7 +18,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import iconVideo from '@/assets/ico-video.svg'
 import iconJdks from '@/assets/ico-jdks.svg'
 // 引入父级传参
