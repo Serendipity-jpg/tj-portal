@@ -89,7 +89,7 @@ import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from '@/store'
 import { getQuestionsDetails, postAnswers, getAllQuestions } from "@/api/classDetails.js";
-import RelatedQuestions from './components/relatedQuestions.vue'
+import RelatedQuestions from './components/RelatedQuestions.vue'
 
 const store = useUserStore();
 
