@@ -11,7 +11,7 @@ const CWD = process.cwd();
 export default defineConfig((mode) => {
   const { VITE_BASE_URL } = loadEnv(mode, CWD);
   return {
-    base: VITE_BASE_URL,
+    base: './',
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
