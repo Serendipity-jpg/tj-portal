@@ -45,7 +45,7 @@
                     <div class="fx-sb">
                       <div class="ft-cl-des">{{item.createTime}}</div>
                       <div>
-                        <span> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{item.replyTimes}} </span> 
+                        <span @click="openReply"> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{item.replyTimes}} </span> 
                         <span> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes}}</span>
                       </div>
                     </div>
@@ -53,11 +53,11 @@
                   <!-- 插入回复框的位置 -->
                   <div :id="item.id"> </div>
                   <!-- 回复列表 -->
-                  <div class="replyCont" v-if="replyData && isReplay">
+                  <div class="replyCont" v-show="replyData && isReplay == item.id">
                     <div class="items" v-for="it in replyData" :key="it.id">
                       <div class="fx-al-ct">
                         <img class="img" :src="it.replier.icon" alt="">
-                        <span class="ft-cl-des">{{it.replier.name}}</span>
+                        <span class="ft-cl-des">{{it.replier.name}} 88 </span>
                       </div>
                       <div class="cont">
                         <div class="marg-bt-10">{{it.content}}</div>
@@ -103,8 +103,6 @@ onMounted(() => {
   getQuestionsDetailsData()
   // 获取回答的列表
   getAllQuestionsData()
-  // 获取回答的答复的列表
-  getReplyData()
 })
 // 获取问题详情
 const getQuestionsDetailsData = async () => {
@@ -165,15 +163,27 @@ const isSend = ref(false)
 const ruleshandle = () => {
   isSend.value = description.value != '' ?  true : false
 }
+// 打开当前的回答的全部回复
+const isReplay = ref();
+const openReply = (item) => {
+  // 获取回答的答复的列表
+  getReplyData(item.id)
+}
 // 回复数据
 const replyData = ref();
 const replyCont = ref();
-const getReplyData = async () => {
+const getReplyData = async (id) => {
+    const questParams = {
+      id,
+      pageNo:1,
+      pageSize:10,
+    }
     await getReply(questParams)
     .then((res) => {
       if (res.code == 200) {
        replyData.value = res.data.list
        replyCont.value = res.data.total
+       isReplay.value = id
       } else {
         ElMessage({
           message:res.msg,
@@ -183,11 +193,13 @@ const getReplyData = async () => {
     })
     .catch(() => {
       ElMessage({
-        message: "课程问题数据请求出错！",
+        message: "回复数据请求出错！",
         type: 'error'
       });
     });
 }
+
+
 // 提交数据
 const params = reactive({
   answerId:'', 
