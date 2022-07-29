@@ -1,5 +1,6 @@
 import axios from 'axios';
 import proxy from '../config/proxy';
+import store from '@/store'
 
 const env = import.meta.env.MODE || 'development';
 
@@ -32,12 +33,16 @@ instance.defaults.timeout = 5000;
 
 instance.interceptors.response.use(
   (response) => {
+    if (response.status === 200 && response.data.code == 401){
+      localStorage.removeItem('token')
+      return false 
+    }
     if (response.status === 200) {
       const { data } = response;
       if (data.code === CODE.REQUEST_SUCCESS) {
         return data;
       }
-    }
+    } 
     return response;
   },
   (err) => {

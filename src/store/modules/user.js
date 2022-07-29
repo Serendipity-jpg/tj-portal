@@ -51,3 +51,6 @@ export const useUserStore = defineStore('user', {
 export function getToken() {
   return useUserStore(store);
 }
+export function isLogin(token) {
+  return localStorage.setItem(TOKEN_NAME, token) != undefined 
+}

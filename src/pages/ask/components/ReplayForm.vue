@@ -47,7 +47,7 @@ const params = reactive({
 const answerHandle = async () => {
     params.content = description.value
     params.anonymity = anonymity.value
- await postAnswers(params)
+ await postAnswers(params.value)
     .then((res) => {
       if (res.code == 200) {
         ElMessage({

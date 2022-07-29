@@ -31,7 +31,7 @@ request({
 // 获取课程小节 - 问答详情使用
 export const getClassChapter = (id) =>
 	request({
-		url: `/course/catas/index/list/${id}`,
+		url: `/courses/catas/index/list/${id}`,
 		method: 'get',
 		params:id,
 	})	

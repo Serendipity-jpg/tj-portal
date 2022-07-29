@@ -76,6 +76,7 @@
 /** 数据导入 **/
 
 import { onMounted, ref } from "vue";
+import { isLogin } from "@/store";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, getFreeClassList, setInterests, getInterests } from "@/api/class.js";
 import ClassCategory from "./components/ClassCategory.vue";
@@ -103,7 +104,9 @@ onMounted(() => {
   // 获取精品公开课
   getFreeClassListData();
   // 获取兴趣列表 （二级分类）
-  getInterestData()
+  if (isLogin()) {
+    getInterestData()
+  }
 });
 
 /** 方法定义 **/
@@ -202,10 +205,10 @@ const getInterestData = async () => {
       }
     })
     .catch(() => {
-      ElMessage({
-        message: "兴趣列表获取失败！",
-        type: 'error'
-      });
+        ElMessage({
+          message: "兴趣列表获取失败！",
+          type: 'error'
+        });
     });
 } 
 

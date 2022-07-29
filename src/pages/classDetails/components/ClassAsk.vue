@@ -103,7 +103,7 @@ const checkCahpter = (id) => {
 // 获取问答列表
 const getAskListsDataes = async () => {
   const questFun = askType.value == 'all' ? getAskList : getMyAskList
-  await questFun(params)
+  await questFun(params.value)
     .then((res) => {
       if (res.code == 200) {
         if (askType.value == 'all'){

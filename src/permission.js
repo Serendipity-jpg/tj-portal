@@ -13,6 +13,7 @@ const userStore = getToken();
 NProgress.configure({ showSpinner: false });
 
 const { whiteListRouters } = permissionStore;
+
 // 登录状态效验
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
@@ -25,8 +26,10 @@ router.beforeEach(async (to, from, next) => {
       next();
       return;
     }
+    if (to.path !== '/login'){
+      next();
+    }
     // token 存在 进入下一页
-    next();
     // const { roles } = userStore;
 
     // if (roles && roles.length > 0) {
@@ -52,13 +55,15 @@ router.beforeEach(async (to, from, next) => {
     // }
   } else {
     // '无登录信息，跳转到登录页面'
-    console.log('无登录信息，跳转到登录页面');
-    if (whiteListRouters.indexOf(to.path) !== -1) {
-      next();
-    } else {
-      next(`/login?redirect=${to.path}`);
-    }
-    NProgress.done();
+    // console.log('无登录信息，跳转到登录页面');
+    // if (whiteListRouters.indexOf(to.path) !== -1) {
+    //   next();
+    // } else {
+    //   next(`/login?redirect=${to.path}`);
+    // }
+    // NProgress.done();
+    // 学成项目 不登录也可以流量 
+    next()
   }
 });
 

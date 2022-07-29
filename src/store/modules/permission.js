@@ -32,7 +32,6 @@ export const usePermissionStore = defineStore('permission', {
   actions: {
     async initRoutes(roles) {
       let accessedRouters = [];
-
       let removeRoutes = [];
       // special token
       if (roles.includes('all')) {
