@@ -50,6 +50,8 @@ import { getClassChapter } from "@/api/classDetails.js"
 import { getAllNotes, getMyNotes } from "@/api/notes.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore } from '@/store'
+import { useRoute } from "vue-router";
+const route = useRoute()
 // 引入父级传参
 const props = defineProps({
   id:{
@@ -63,7 +65,7 @@ onMounted(() => {
   // 获取登录信息中的我的信息
   userInfo.value = store.getUserInfo
   // 获取小节数据
-  getClassChapterData()
+  getClassChapterData(route.query.id)
   // 获取问答列表
   getAskListsDataes()
 })
@@ -127,8 +129,8 @@ const getAskListsDataes = async () => {
 const chapterData = ref([])
 
 // 获取小节数据
-const getClassChapterData = async () => {
-  await getClassChapter(props.id)
+const getClassChapterData = async (id) => {
+  await getClassChapter(id)
     .then((res) => {
       if (res.code == 200) {
         chapterData.value = [{id:'all', index: '全部'},...res.data]

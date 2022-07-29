@@ -50,8 +50,9 @@ import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore, dataCacheSrore } from '@/store'
 import btnBj from '@/assets/btn_bj.svg'
 import btnDel from '@/assets/btn_del.svg'
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
+const route = useRoute()
 const router = useRouter()
 const store = useUserStore();
 const dataCache = dataCacheSrore();
@@ -59,16 +60,18 @@ const dataCache = dataCacheSrore();
 const props = defineProps({
   id:{
     type: String,
+    default: ''
   }
 })
 
 // 用户信息
 const userInfo = ref();
+const id = ref();
 onMounted(() => {
   // 获取登录信息中的我的信息
   userInfo.value = store.getUserInfo
   // 获取小节数据
-  getClassChapterData()
+  getClassChapterData(route.query.id)
   // 获取问答列表
   getAskListsDataes()
 })
@@ -155,8 +158,8 @@ const goDetails = (item) => {
 const chapterData = ref([])
 
 // 获取小节数据
-const getClassChapterData = async () => {
-  await getClassChapter(props.id)
+const getClassChapterData = async (id) => {
+  await getClassChapter(id)
     .then((res) => {
       if (res.code == 200) {
         chapterData.value = [{id:'all', index: '全部'},...res.data]
