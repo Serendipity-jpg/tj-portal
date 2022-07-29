@@ -26,9 +26,12 @@ const props = defineProps({
 .openClass {
   padding-bottom: 40px;
   .classCont{
-    justify-content: flex-start;
     .items{
-      margin-right: 2%;
+      margin-right: 20px;
+      width: calc(25% - 15px);
+    }
+    .items:nth-child(4n){
+      margin-right: 0;
     }
   }
 }

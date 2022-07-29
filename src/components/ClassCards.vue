@@ -5,7 +5,7 @@
         <img :src="data.coverUrl" alt="" />
     </div>
     <div class="pd-10">
-        <div class="title marg-bt-10 ft-14">{{data.name}}</div>
+        <div class="title marg-bt-10 ft-14" v-html="data.name"></div>
         <div class="ft-cl-des" v-if="type == 'default' || type == 'search'"><span>讲师：</span> {{data.teacher}}</div>
         <div class="ft-cl-des" v-if="type == 'default'"><span>共</span> {{data.sections}} <span>节</span></div>
         <div class="ft-cl-des fx-sb" v-if="type == 'default'"><span>有{{data.sections}}人在学习</span> <span class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span> </div>
@@ -40,8 +40,16 @@ const goDetails = id => {
     border-radius: 8px;
     font-size: 12px;
     line-height: 24px;
+    cursor: pointer;
+    &:hover{
+      box-shadow: 0 4px 6px 2px rgba(108,112,118,0.17);
+    }
     .title{
         line-height: 22px;
+        :deep(em){
+          font-style: normal;
+          color:var(--color-main);
+        }
     }
     .image{
         width: 100%;

@@ -3,7 +3,7 @@
   <div class="classSearchWrapper">
     <div class="container searchBar">
       <!-- 结果统计 -->
-      <div class="result"><span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> </span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程</div>
+      <div class="result" v-if="isLogin() && searchParams.keyword != ''"><span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> </span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程</div>
       <!-- 筛选条件 -->
       <div class="title">全部课程</div>
       <SearchKey :data="searchType" @searchKey="searchKey"></SearchKey>
@@ -24,7 +24,7 @@
         </div>
         <!-- 搜索课程列表 -->
         <div class="content fx-wp">
-           <ClassCards type="search" class="marg-bt-20" v-for="(item, index) in searchResultData" :data="item" :key="index"></ClassCards>
+           <ClassCards type="search" class="items marg-bt-20" v-for="(item, index) in searchResultData" :data="item" :key="index"></ClassCards>
         </div>
       </div>
     </div>
@@ -41,6 +41,7 @@ import SearchKey from './components/SearchKey.vue'
 import SortBar from './components/SortBar.vue'
 import ClassCards from '@/components/ClassCards.vue'
 import { useRoute } from "vue-router";
+import {isLogin} from '@/store'
 
 const searchType = ref({subKey: 'categoryIdLv1', title: "课程分类", searchKeys:[]});   
 const searchCost = ref({subKey: 'free', title: "收付费", searchKeys:[{id:'all', name: '全部'},{id: '1', name: '免费'},{id: '0', name: '付费'}]});    
