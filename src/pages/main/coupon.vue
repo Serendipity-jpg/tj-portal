@@ -46,7 +46,7 @@ const getCollectableCouponData = async () => {
         couponData.value = res.data;
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -65,12 +65,12 @@ const getCouponData = async (id) => {
   .then((res) => {
       if (res.code == 200) {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: '优惠券领取成功！'
         });
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }

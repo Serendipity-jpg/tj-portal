@@ -86,4 +86,14 @@
       }
     }
   }
+  .dialogReplyCont{
+    height: 80vh;
+    overflow: auto;
+    .items{
+      .cont{
+        padding: 10px 10px 20px 34px;
+        line-height: 24px;
+      }
+    }
+  }
 }

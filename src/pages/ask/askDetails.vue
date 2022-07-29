@@ -45,65 +45,101 @@
                     <div class="fx-sb">
                       <div class="ft-cl-des">{{item.createTime}}</div>
                       <div>
-                        <span @click="openReply(item)"> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{item.replyTimes}} </span> 
-                        <span> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes}}</span>
+                        <span class="marg-rt-10 cur-pt" @click="openReply(item)"> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{item.replyTimes}} </span> 
+                        <span class=" cur-pt"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes}}</span>
                       </div>
                     </div>
                   </div>
                   <!-- 插入回复框的位置 -->
-                  <div :id="item.id"> </div>
+                  <component :is="openReplyFormId == item.id ? ReplayForm : null" :key="item.id" :name="item.replier.name" :askInfoId="askInfo.id"></component>
                   <!-- 回复列表 -->
                   <div class="replyCont" v-show="replyData && isReplay == item.id">
                     <div class="items" v-for="it in replyData" :key="it.id">
                       <div class="fx-al-ct">
                         <img class="img" :src="it.replier.icon" alt="">
-                        <span class="ft-cl-des"> {{it.replier.name}} </span>
+                        <span class="ft-cl-des"> {{it.replier.name}} 回复 {{it.targetUserName}} </span>
                       </div>
                       <div class="cont">
                         <div class="marg-bt-10">{{it.content}}</div>
                         <div class="fx-sb">
                           <div class="ft-cl-des">{{it.createTime}}</div>
                           <div>
-                            <span> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                            <span> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                            <span class="marg-rt-10 cur-pt" @click="replayHandle(it)" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
+                            <span class="cur-pt"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
                           </div>
                         </div>
                       </div>
                       <!-- 插入回复框的位置 -->
-                      <div :id="item.id"> </div>
+                      <!-- <ReplayForm v-if="isReplay == it.id"></ReplayForm> -->
+                      <component :is="openReplyFormId == it.id ? ReplayForm : null" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"></component>
                     <!-- 回复列表 -->
                     </div>
+                    <div @click="() => {dialogTableVisible = true}" class="fx-ct ft-14 ft-cl-des cur-pt" v-if="replyCont">点击查看全部{{replyCont}}条回复</div>
                   </div>
                 </div>
+                <div></div>
+                <p @click="clickLoad" v-if="!noMore" class="fx-ct ft-14 ft-cl-des">点击查看更多</p>
+                <!-- <p v-infinite-scroll="load" style="overflow: auto" :infinite-scroll-disabled="disabled"
+                 class="fx-ct ft-14 ft-cl-des" v-if="loading">Loading...</p> -->
+                <p class="fx-ct ft-14 ft-cl-des" v-if="noMore">没有更多了</p>
               </div>
             </div>
           </div>
           <!-- 相关问题 写死 -->
-          <RelatedQuestions></RelatedQuestions>
+          <RelatedQuestions :id="askInfo.id" :title="askInfo.title"></RelatedQuestions>
       </div>
     </div>
+    <el-dialog v-model="dialogTableVisible" :title="`全部回复(${replyCont})`" width="80%" top="5vh" >
+      <div class="dialogReplyCont" v-infinite-scroll="load" style="overflow: auto" :infinite-scroll-disabled="disabled">
+        <div class="items" v-for="it in replyData" :key="`ss${it.id}`">
+          <div class="fx-al-ct">
+            <img class="img" :src="it.replier.icon" alt="">
+            <span class="ft-cl-des"> {{it.replier.name}} 回复 {{it.targetUserName}} </span>
+          </div>
+          <div class="cont">
+            <div class="marg-bt-10">{{it.content}}</div>
+            <div class="fx-sb">
+              <div class="ft-cl-des">{{it.createTime}}</div>
+              <div>
+                <span class="marg-rt-10 cur-pt" @click="replayHandle(it)" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
+                <span class="cur-pt"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+              </div>
+            </div>
+          </div>
+          <!-- 插入回复框的位置 -->
+          <component :is="openReplyFormId == it.id ? ReplayForm : null" :key="it.id" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"></component>
+        <!-- 回复列表 -->
+        </div>
+         <p class="fx-ct ft-14 ft-cl-des" v-if="replayloading">Loading...</p>
+         <p class="fx-ct ft-14 ft-cl-des" v-if="replaynoMore">没有更多了</p>
+      </div>
+  </el-dialog>
   </div>
 </template>
 <script setup>
 /** 数据导入 **/
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
-import { useUserStore } from '@/store'
 import { getQuestionsDetails, postAnswers, getAllQuestions, getReply } from "@/api/classDetails.js";
 import RelatedQuestions from './components/RelatedQuestions.vue'
-
+import ReplayForm from './components/ReplayForm.vue'
+import { useUserStore } from '@/store'
 const store = useUserStore();
 
 const route = useRoute()
 const router = useRouter()
 const askInfo = ref()
+
 onMounted(() => {
   // 获取问题详情
   getQuestionsDetailsData()
   // 获取回答的列表
+  // debugger
   getAllQuestionsData()
+
 })
+const dialogTableVisible = ref(false)
 // 获取问题详情
 const getQuestionsDetailsData = async () => {
   await getQuestionsDetails(route.query.id)
@@ -113,7 +149,7 @@ const getQuestionsDetailsData = async () => {
         askInfo.value = data
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -126,23 +162,33 @@ const getQuestionsDetailsData = async () => {
     });
 } 
 // 获取全部回答
-const questParams = {
+const questParams = reactive({
   id: route.query.id,
   pageNo: 1,
   pageSize: 10
+})
+// 数据加载相关变量
+const count = ref(0)
+const loading = ref(false)
+const questionData = ref([])
+const noMore = computed(() => questionData.value.length >= count.value)
+const clickLoad = () => {
+  loading.value = false
+  questParams.pageNo++
+  getAllQuestionsData()
 }
 // 获取回答列表
-const count = ref(0)
-const questionData = ref([])
+
 const getAllQuestionsData = async () => {
   await getAllQuestions(questParams)
     .then((res) => {
       if (res.code == 200) {
-        questionData.value = res.data.list
+        questionData.value = questionData.value.concat(res.data.list)
         count.value = res.data.total
+        loading.value = false
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -154,6 +200,7 @@ const getAllQuestionsData = async () => {
       });
     });
 } 
+
 // 我要回答 - 回答题主
 const description = ref('')
 // 是否匿名
@@ -167,26 +214,48 @@ const ruleshandle = () => {
 const isReplay = ref();
 const openReply = (item) => {
   // 获取回答的答复的列表
-  getReplyData(item.id)
+  if (item.id != isReplay) {
+    getReplyData(item.id)
+    replayHandle(item)
+  }
 }
-// 回复数据
-const replyData = ref();
+// 展示回复窗口
+const openReplyFormId = ref()
+const replayHandle = (item) => {
+  openReplyFormId.value = item.id
+}
+
+// 回复数据请求参数
+const replyParams = reactive({
+  pageNo:1,
+  pageSize:10,
+})
+const replyData = ref([]);
 const replyCont = ref();
+const replyLoding = ref(true)
+const replaynoMore = computed(() => replyData.value.length >= replyCont.value)
+const disabled = computed(() => replyLoding.value || replaynoMore.value)
+
+// 弹窗滚动加载- 回复数据
+const load = () => {
+  replyLoding.value = false
+  replyParams.pageNo++
+  getReplyData()
+}
+// 获取回复数据
 const getReplyData = async (id) => {
-    const questParams = {
-      id,
-      pageNo:1,
-      pageSize:10,
-    }
-    await getReply(questParams)
+  replyLoding.value = true
+    replyParams.id = id
+    await getReply(replyParams)
     .then((res) => {
       if (res.code == 200) {
-       replyData.value = res.data.list
+       replyLoding.value = false
+       replyData.value = replyData.value.concat(res.data.list)
        replyCont.value = res.data.total
        isReplay.value = id
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -199,8 +268,7 @@ const getReplyData = async (id) => {
     });
 }
 
-
-// 提交数据
+// 提交回复数据
 const params = reactive({
   answerId:'', 
   questionId: askInfo.id, // 当前问题的ID
@@ -212,8 +280,8 @@ const params = reactive({
 })
 // 提交回复
 const answerHandle = async () => {
-  params.content = description
-  params.anonymity = anonymity
+  params.content = description.value
+  params.anonymity = anonymity.value
  await postAnswers(params)
     .then((res) => {
       if (res.code == 200) {
@@ -223,7 +291,7 @@ const answerHandle = async () => {
         });
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }

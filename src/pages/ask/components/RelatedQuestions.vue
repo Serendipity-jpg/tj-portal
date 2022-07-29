@@ -1,7 +1,7 @@
 <!-- 选择兴趣弹窗 -->
 <template>
   <div class="relatedQuestions">
-    <div class="but"><span class="bt bt-round" @click="() => {$router.push({path:'ask', id})}"> 发新问题 </span></div>
+    <div class="but"><span class="bt bt-round" @click="() => {$router.push({path:'/ask', query:{id, title}})}"> 发新问题 </span></div>
     <div class="tit">相关问题</div>
     <div>
     <p>自学 Java 怎么入门？</p> 
@@ -22,6 +22,10 @@ defineProps({
     default:[]
   },
   id:{
+    type:String,
+    default:''
+  },
+  title:{
     type:String,
     default:''
   }

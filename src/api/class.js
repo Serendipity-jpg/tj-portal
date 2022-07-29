@@ -38,6 +38,7 @@ export const setInterests = (params) =>
 	request({
 		url: `/interests`,
 		method: 'post',
+		data:params,
 		params
 	})	
 // 查询我的兴趣爱好

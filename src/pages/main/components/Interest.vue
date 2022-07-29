@@ -1,35 +1,45 @@
 <!-- 首页兴趣模块组件 -->
 <template>
-<div class="Interest">
-  <div class="head">
-    <span :class="{title:true, act:actId == item.id}" @click="checkHandle(item.id)" v-for="(item, index) in data" :key="index">
-      {{item.name}}
-    </span>
+<div class="Interest" >
+  <div class="head fx-sb">
+    <TableSwitchBar :data="[...data]" @changeTable="checkHandle"></TableSwitchBar>
+    <!-- <div>
+      <span :class="{title:true, act:actId == item.id}" @click="checkHandle(item.id)" v-for="(item, index) in data" :key="index">
+        {{item.name}}
+      </span>
+    </div> -->
+    <div class="ft-14 font-bt"><span @click="changeHandle">修改兴趣</span></div>
   </div>
-  <div class="classInfo fx">
+  <div class="classInfo fx" v-if="teacherInfo">
     <div class="teacherInfo fx-1" :style="{background: `url(${teacherInfo.coverUrl})`}">
       <div class="info fx-sb">
         <div class="fx-al-ct fx-1 ">
           <img :src="teacherInfo.icon" alt="" srcset=""> 讲师：<span>{{teacherInfo.teacher}}</span>
         </div>
-        <div class=""><span class="bt">立即报名</span></div>
+        <div class="" @click="$router.push({path:'/details',query:{id:teacherInfo.id}})"><span class="bt">立即报名</span></div>
       </div>
     </div>
     <div class="classList fx-1 bg-wt">
       <div class="box">
-        <div class="fx-sb item" v-for="(item, index) in classList" :key="index">
+        <div class="fx-sb item" v-for="(item, index) in classList" :key="index" @click="$router.push({path:'/details',query:({id: item.id})})">
           <span class="title">{{item.name}}</span>
           <span class="desc">共{{item.sections}}节 <i>.</i> {{item.sold}}人正在学习 </span>
         </div>
       </div>
     </div>
   </div>
+  <div class="classInfo " v-else>
+    <div class="nodata bg-wt fx-ct">
+      <span>该兴趣分类下无课程</span>
+    </div>
+  </div>
 </div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { getClassList } from "@/api/class.js";
 import { ElMessage } from "element-plus";
+import TableSwitchBar from "@/components/TableSwitchBar.vue"
 // 引入父级传参
 const props = defineProps({
   data:{
@@ -38,21 +48,31 @@ const props = defineProps({
   }
 })
 // 当前兴趣课程 - 默认展示选中
-const actId=ref('')
+const actId=ref()
 // 课程讲师信息
 const teacherInfo = ref({})
 const classList = ref({})
+watchEffect((val) => {
+    console.log(333, props.data)
+  } )
 // 初始化首选项并获取其课程数据
 onMounted(() => {
   const data = props.data[Symbol.iterator]()
   actId.value = data.next().value.id
+  console.log(999, actId.value)
   // 通过二级分类id 获取对应课程列表
   getClassListData(actId.value)
 })
+
 // 点击切换效果
 const checkHandle = (id) => {
   actId.value = id
   getClassListData(id)
+}
+const emit = defineEmits(['setInterest'])
+// 打开修改兴趣弹窗
+const changeHandle = () => {
+  emit('setInterest', true)
 }
 // 通过二级分类id 获取对应课程列表
 const getClassListData = async (id) => {
@@ -67,7 +87,7 @@ const getClassListData = async (id) => {
         teacherInfo.value = res.data[0]
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -166,6 +186,11 @@ const getClassListData = async (id) => {
            }
         }
       }
+    }
+    .nodata{
+      width: 100%;
+      height: calc( 100% - 0px);
+      margin-top: 0px;
     }
   }
 }

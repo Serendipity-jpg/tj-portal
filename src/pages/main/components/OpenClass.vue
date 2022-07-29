@@ -3,7 +3,7 @@
 <div class="openClass">
    <MainTitle class="marg-bt-20" :title="title"></MainTitle>
    <div class="classCont fx-wp">
-     <ClassCards class="marg-bt-20" v-for="(item, index) in data" :data="item" :key="index"></ClassCards>
+     <ClassCards class="items marg-bt-20" v-for="(item, index) in data" :data="item" :key="index"></ClassCards>
    </div>
 </div>
 </template>
@@ -25,5 +25,11 @@ const props = defineProps({
 <style lang="scss" scoped>
 .openClass {
   padding-bottom: 40px;
+  .classCont{
+    justify-content: flex-start;
+    .items{
+      margin-right: 2%;
+    }
+  }
 }
 </style>

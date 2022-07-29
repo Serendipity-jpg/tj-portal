@@ -59,7 +59,6 @@ const dataCache = dataCacheSrore();
 const props = defineProps({
   id:{
     type: String,
-    default:''
   }
 })
 
@@ -115,7 +114,7 @@ const getAskListsDataes = async () => {
         total.value = res.data.total
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -135,7 +134,7 @@ await delQuestions(id)
         // 删除成功
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -163,7 +162,7 @@ const getClassChapterData = async () => {
         chapterData.value = [{id:'all', index: '全部'},...res.data]
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }

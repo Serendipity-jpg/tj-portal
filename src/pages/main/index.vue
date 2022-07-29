@@ -1,7 +1,7 @@
 <!-- 首页 -->
 <template>
   <div class="mainWrapper">
-    <div class="container banner fx">
+    <div class="container banner fx" style="overflow: hidden;">
       <div class="categorys bg-wt">
         <!-- 头部分类 -->
         <ClassCategory :data="classCategorys"></ClassCategory>
@@ -11,19 +11,19 @@
     </div>
     <!-- 兴趣模块  -->
     <div class="container" v-if="interest.size > 0">
-      <Interest  :data="interest"></Interest>
+      <Interest :data="interest" :key="intKey" @setInterest = setInterest ></Interest>
     </div>
     <!-- 兴趣模块 -->
     <!-- 直播公开课 -->
-    <div class="bg-wt pd-tp-30">
+    <!-- <div class="bg-wt pd-tp-30">
       <OpenClass
         title="直播公开课"
         class="container bg-wt"
         :data="freeClassData"
       ></OpenClass>
-    </div>
+    </div> -->
     <!-- 新课推荐 -->
-    <div class="pd-tp-30">
+    <div class="pd-tp-30 bg-wt">
       <OpenClass
         title="新课推荐"
         class="container"
@@ -32,13 +32,13 @@
     </div>
     <!-- 广告位 -->
     <div class="globalTopBanner" style="display: block;">
-      <img src="@/assets/adv.jpg" />
+      <img src="@/assets/adv.png" />
     </div>
     <!-- 精品好课 -- start -->
-    <div class="bg-wt pd-tp-30">
+    <div class="pd-tp-30">
       <OpenClass
         title="精品好课"
-        class="container bg-wt"
+        class="container"
         :data="freeClassData"
       ></OpenClass>
     </div>
@@ -62,7 +62,7 @@
           </div>
         </div>
       </template>
-      <CheckInterest :data="classCategorys" @setInterestList="setInterestList" ></CheckInterest>
+      <CheckInterest :data="classCategorys" :initValue="interest" @setInterestList="setInterestList" ></CheckInterest>
       </el-dialog>
     </div>
     <div class="floatCont fx-fd-col fx-ct">
@@ -116,7 +116,7 @@ const getClassCategoryData = async () => {
         classCategorys.value = res.data;
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -128,6 +128,11 @@ const getClassCategoryData = async () => {
       });
     });
 };
+// 打开修改兴趣弹窗
+const setInterest = (val) => {
+  interestCatch.value = interest.value
+  interestDialog.value = val
+}
 // 精品公开课接口
 const getFreeClassListData = async () => {
   await getFreeClassList()
@@ -136,7 +141,7 @@ const getFreeClassListData = async () => {
         freeClassData.value = res.data;
       } else {
         ElMessage({
-          message: res.msg,
+          message: res.data.msg,
           type: 'error'
         });
       }
@@ -181,7 +186,7 @@ const getGoodClassListData = async () => {
 };
 // 保存设置的兴趣变量
 const interest = ref(new Set())
-
+const intKey = ref(1)
 // 获取兴趣
 const getInterestData = async () => {
   await getInterests()
@@ -190,7 +195,7 @@ const getInterestData = async () => {
         interest.value = new Set(res.data)
       } else {
         ElMessage({
-        message: res.msg,
+        message: res.data.msg,
         type: 'error'
       });
         interestDialog.value(true);
@@ -205,23 +210,27 @@ const getInterestData = async () => {
 } 
 
 // 更改兴趣的时候记录
+const interestCatch = ref(new Set())
 const setInterestList = list =>{
-  interest.value = list
+  interestCatch.value = list
 }
 
 // 保存兴趣
 const saveInterest = async () => {
-  await setInterests()
+  await setInterests({interestedIds:[...interestCatch.value].toString()})
     .then((res) => {
       if (res.code == 200) {
         ElMessage({
           message: "兴趣保存成功！",
           type: 'success'
         });
+        getInterestData()
+        intKey.value++
         interestDialog.value = false
       } else {
+        console.log(res)
         ElMessage({
-          message: res.msg,
+          message: res.data.msg,
           type: 'error'
         });
       }

@@ -27,7 +27,7 @@
     </div>
     <!-- 广告位 -->
     <div class="globalTopBanner" style="display: block;">
-      <img src="@/assets/adv.jpg" />
+      <img src="@/assets/adv.png" />
     </div>
     <!-- 精品好课 -->
     <div class="bg-wt pd-tp-30">

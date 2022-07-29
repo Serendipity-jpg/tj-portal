@@ -17,9 +17,9 @@
         </div>
         <!-- 展示详情 -->
         <div class="allCategory" v-show="isDetails" @mouseover="mouseoverHandle()">
-          <div class="fx ft-wt-600 pd-bt-20" v-for="item in categorys" :key="item.id">
+          <div class="fx ft-wt-600 pd-bt-10" v-for="item in categorys" :key="item.id">
             <span class="tit">{{item.name}} :</span> 
-            <div>
+            <div class="name fx-1">
               <span class="ft-wt-400 cur-pt" @click="() => $router.push('/search')" v-for="it in item.children" :key="it.id">{{it.name}}</span>
             </div>
           </div>
@@ -89,13 +89,17 @@ import {onMounted, ref} from 'vue';
     .tit{
       display: inline-block;
       width: 120px;
+      overflow: hidden;
+      height: 20px;
+      border-right:none;
     }
     span{
       display: inline-block;
-      padding: 0 10px;
+      padding: 0 10px 0 10px;
       border-right: solid 1px var(--color-font5);
-      line-height: 20px;
-      &:first-child, &:last-child{
+      line-height: 16px;
+      margin-bottom: 10px;
+      &:last-child{
         border-right:none;
       }
     }

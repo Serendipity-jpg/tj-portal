@@ -31,7 +31,7 @@
         <div></div>
         <div v-if="!isToken"><span>注册</span><span>/</span><span @click="">登录</span></div>
         <div class="fx-al-ct" v-if="isToken && userInfo">
-          <img class="headIcon" :src="userInfo.icon" alt="">
+          <img class="headIcon" :src="userInfo.icon" :onerror="onerrorImg" alt="">
           <div>{{userInfo.name}}</div>
         </div>
       </div>
@@ -39,6 +39,7 @@
   </header>
 </template>
 <script setup>
+import defaultImage from '@/assets/icon.jpeg'
 import { onMounted, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
 
@@ -59,6 +60,10 @@ onMounted(() => {
   }
 })
 
+const onerrorImg = () => {
+  userInfo.value.icon=defaultImage;
+}
+// 搜索事件
 const SearchHandle = () => {
   if (input.value == ''){
     ElMessage({

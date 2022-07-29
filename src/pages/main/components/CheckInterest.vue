@@ -16,25 +16,37 @@ import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 // 引入父级传参
-defineProps({
+const props = defineProps({
   data:{
     type: Array,
     default:[]
+  }, 
+  initValue:{
+    type: Set,
+    default: new Set()
   }
 })
 const emit = defineEmits(['setInterestList'])
-const activeList = ref(new Set())
+const activeList = ref(fileterinit(props.initValue))
+// 处理initValue
+function fileterinit(item){
+  let catchData = new Set()
+  for(const val of item){
+    catchData.add(val.id)
+  }
+  return catchData
+}
 // 点击选中
 const activeHandle = id => {
-  let {value} = activeList
-  // 效验 
-  if (value.size >= 6){
+  let { value } = activeList
+  const n = value.has(id)
+  console.log(n, value)
+  if (value.size >= 6 && !n){
     // 提示
     ElMessageBox.alert('最多可以选择6个兴趣哦', '提示：',{confirmButtonText: '知道了', callback:() => {}})
     return false
   }
-  const n = value.has(id)
-  n?value.delete(id):value.add(id)
+  n ? value.delete(id) : value.add(id)
   emit('setInterestList', value)
 }
 </script>

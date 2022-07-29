@@ -53,8 +53,7 @@ import { useUserStore } from '@/store'
 // 引入父级传参
 const props = defineProps({
   id:{
-    type: Object,
-    default:{}
+    type: String
   }
 })
 const store = useUserStore();
@@ -63,7 +62,6 @@ const userInfo = ref();
 onMounted(() => {
   // 获取登录信息中的我的信息
   userInfo.value = store.getUserInfo
-  console.log(90, userInfo.value)
   // 获取小节数据
   getClassChapterData()
   // 获取问答列表
@@ -112,7 +110,7 @@ const getAskListsDataes = async () => {
         total.value = res.data.total
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -136,7 +134,7 @@ const getClassChapterData = async () => {
         chapterData.value = [{id:'all', index: '全部'},...res.data]
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }

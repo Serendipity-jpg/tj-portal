@@ -137,7 +137,6 @@ const classListData = ref([])
 // mounted生命周期
 onMounted(() => {
   detailsId.value = route.query.id
-  console.log(88,detailsId.value)
   // 获取课程信息
   getClassDetailsData()
   // 获取课程老师信息
@@ -156,7 +155,7 @@ const getClassDetailsData = async () => {
         baseDetailsData.value = res.data
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -194,7 +193,7 @@ const getClassTeachersData = async () => {
         baseClassTeacher.value = catchArr
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
@@ -215,7 +214,7 @@ const getClassListData = async () => {
         classListData.value = res.data
       } else {
         ElMessage({
-          message:res.msg,
+          message:res.data.msg,
           type: 'error'
         });
       }
