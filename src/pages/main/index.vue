@@ -104,6 +104,7 @@ onMounted(() => {
   // 获取精品公开课
   getFreeClassListData();
   // 获取兴趣列表 （二级分类）
+  console.log(isLogin())
   if (isLogin()) {
     getInterestData()
   }

@@ -29,10 +29,11 @@
         </div>
         <router-link class="marg-lr-40" to="/">学习中心</router-link>
         <div></div>
-        <div v-if="!isToken"><span>注册</span><span>/</span><span @click="">登录</span></div>
+        <div v-if="!isToken"><span>注册</span><span>/</span><span @click="() => $router.push('/login')">登录</span></div>
         <div class="fx-al-ct" v-if="isToken && userInfo">
           <img class="headIcon" :src="userInfo.icon" :onerror="onerrorImg" alt="">
-          <div>{{userInfo.name}}</div>
+          <div >{{userInfo.name}} |</div>
+          <div class="font-bt2 pd-lf-10" @click="() => $router.push('/login')"> 退出 </div>
         </div>
       </div>
     </div>
