@@ -6,7 +6,7 @@
         <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部问答</span> 
         <span @click="askCheck('my')" :class="{act:askType == 'my'}">我的问答</span>
       </div> 
-      <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: $props.id, title: $props.title}})" class="bt bt-round ft-14">提问 {{$props.title}}</span></div>
+      <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: $props.id, title: $props.title}})" class="bt bt-round ft-14">提问</span></div>
     </div>
     <AskChapterItems :data="chapterData" @checkCahpter="checkCahpter"></AskChapterItems>
     <div class="askCont">
@@ -22,8 +22,10 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="font-bt marg-rt-20" @click="() => $router.push({path:'/ask', query:{id:item.id,type:'edit',title:item.title}})" v-if="userInfo.id == item.user.id"><btnBj class="btnIcon"></btnBj> 编辑</span>
-            <span class="font-bt marg-rt-20" @click="delQuestionsHandle(item.id)" v-if="userInfo.id == item.user.id"><btnDel  class="btnIcon"></btnDel> 删除 </span>
+            <span class="font-bt2 marg-rt-20" @click="() => $router.push({path:'/ask', query:{id:$props.id,queryId:item.id,type:'edit',title:item.title}})" v-if="userInfo.id == item.user.id">
+              <i class="iconfont zhy-a-icon_kaoshi2x"></i> 编辑</span>
+            <span class="font-bt2 marg-rt-20" @click="delQuestionsHandle(item.id)" v-if="userInfo.id == item.user.id">
+              <i class="iconfont zhy-a-btn_delete_nor2x"></i> 删除 </span>
             <span class="font-bt2" @click="goDetails(item)"><i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 回答 {{item.answerAmount}}</span>
           </div>
         </div>
@@ -81,6 +83,7 @@ onMounted(() => {
 })
 // 问答列表参数
 const params = ref({
+  courseId: route.query.id,
   isAsc:true,
   pageNo: 1,
   pageSize: 10,
@@ -139,6 +142,11 @@ await delQuestions(id)
     .then((res) => {
       if (res.code == 200) {
         // 删除成功
+        ElMessage({
+          message:'问题删除成功！',
+          type: 'success'
+        });
+        getAskListsDataes()
       } else {
         ElMessage({
           message:res.data.msg,
@@ -251,6 +259,11 @@ const handleCurrentChange = (val) => {
         .actBut{
           color: #19232B;
           cursor: pointer;
+          .iconfont{
+            position: relative;
+            font-size: 20px;
+            top: 2px;
+          }
           .btnIcon{
             width: 21px;
             height: 21px;

@@ -70,7 +70,7 @@ export const putQuestions = (params) =>
 // 删除提问
 export const delQuestions = (id) =>
 	request({
-		url: `/course/delete/${id}`,
+		url: `/questions/${id}`,
 		method: 'delete',
 	})		
 // 回复

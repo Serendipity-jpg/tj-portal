@@ -21,10 +21,10 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-btn_pinglun_nor1"></i> 编辑</span>
-            <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-btn_backtop" ></i> 删除 </span>
-            <span class="marg-rt-20" v-if="userInfo.id != item.author.id "><i class="iconfont zhy-icon_shoucang"></i> 采集 {{item.answerAmount}}</span>
-            <span><i class="iconfont zhy-btn_zan_nor"></i> 点赞 {{item.answerAmount}}</span>
+            <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-icon_kaoshi2x"></i> 编辑</span>
+            <span @click="delNoteHandle(item.id)" class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-btn_delete_nor2x" ></i> 删除 </span>
+            <span @click="gathersHandle(item)" class="marg-rt-20" v-if="userInfo.id != item.author.id "><i class="iconfont zhy-a-btn_caiji_nor2x" :class="{gather:item.isGathered}"></i> 采集 {{item.answerAmount}}</span>
+            <span><i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.answerAmount}}</span>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
 import { ref, onMounted } from "vue"
 import { ElMessage } from "element-plus";
 import { getClassChapter } from "@/api/classDetails.js"
-import { getAllNotes, getMyNotes } from "@/api/notes.js"
+import { getAllNotes, getMyNotes, delNote, notesGathers, unNotesGathers } from "@/api/notes.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore } from '@/store'
 import { useRoute } from "vue-router";
@@ -76,6 +76,7 @@ const params = ref({
   pageNo: 1,
   pageSize: 10,
   sectionId: '',
+  courseId: route.query.id,
   sortBy: ''
 });
 // 列表数据
@@ -95,7 +96,7 @@ const checkCahpter = (id) => {
   params.value.sectionId = id
   getAskListsDataes()
 }
-// 获取问答列表
+// 获取笔记列表
 const getAskListsDataes = async () => {
   const questFun = askType.value == 'all' ? getAllNotes : getMyNotes
   await questFun(params.value)
@@ -125,7 +126,84 @@ const getAskListsDataes = async () => {
       });
     });
 }
-
+// 删除笔记
+const delNoteHandle = async id => {
+await delNote(id)
+    .then((res) => {
+      if (res.code == 200) {
+        // 删除成功
+        ElMessage({
+          message:'笔记删除成功！',
+          type: 'success'
+        });
+        getAskListsDataes()
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "课程章节数据请求出错！",
+        type: 'error'
+      });
+    });
+}
+const gathersHandle = async item => {
+  item.isGathered ?  unNotesGathersData(item) : notesGathersData(item) 
+}
+// 采集笔记
+const notesGathersData = async item => {
+await notesGathers(item.id)
+    .then((res) => {
+      if (res.code == 200) {
+        // 采集笔记成功
+        ElMessage({
+          message:'采集笔记成功！',
+          type: 'success'
+        });
+        getAskListsDataes()
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "采集笔记请求出错！",
+        type: 'error'
+      });
+    });
+} 
+// 取消采集笔记
+const unNotesGathersData = async item => {
+await unNotesGathers(item.id)
+    .then((res) => {
+      if (res.code == 200) {
+        // 取消采集笔记成功！
+        ElMessage({
+          message:'取消采集笔记成功！',
+          type: 'success'
+        });
+        getAskListsDataes()
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "采集笔记请求出错！",
+        type: 'error'
+      });
+    });
+} 
 // 小节数据
 const chapterData = ref([])
 
@@ -226,6 +304,9 @@ const handleCurrentChange = (val) => {
             top: 5px;
           }
         }
+      }
+      .gather{
+        color: var(--color-main)
       }
     }
   }

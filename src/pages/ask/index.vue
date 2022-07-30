@@ -65,13 +65,11 @@ const type = ref('add')
 onMounted(() => {
   // 获取章节列表 - 下拉选择
   getClassCoursesDataes()
-  console.log(classInfo.id)
   ruleForm.courseId = classInfo.id
   if (classInfo.type && classInfo.type == 'edit'){
     type.value = 'edit'
     // 编辑模式 获取问题详情
     getQuestionsDetailsData()
-    
   }
 })
 
@@ -95,6 +93,7 @@ const ruleForm = reactive({
 
 // 获取章节列表 - 下拉使用
 let options = ref([])
+
 const getClassCoursesDataes = async () => {
   await getClassCourses(classInfo.id)
     .then((res) => {
@@ -127,9 +126,9 @@ const getClassCoursesDataes = async () => {
       });
     });
 } 
-
+// 获取问题详情
 const getQuestionsDetailsData = async () => {
-  await getQuestionsDetails(classInfo.id)
+  await getQuestionsDetails(classInfo.queryId)
     .then((res) => {
       if (res.code == 200) {
         const { data } = res
