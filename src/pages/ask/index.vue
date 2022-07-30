@@ -65,6 +65,7 @@ const type = ref('add')
 onMounted(() => {
   // 获取章节列表 - 下拉选择
   getClassCoursesDataes()
+  console.log(classInfo.id)
   ruleForm.courseId = classInfo.id
   if (classInfo.type && classInfo.type == 'edit'){
     type.value = 'edit'
@@ -95,7 +96,7 @@ const ruleForm = reactive({
 // 获取章节列表 - 下拉使用
 let options = ref([])
 const getClassCoursesDataes = async () => {
-  await getClassCourses(classInfo.value.id)
+  await getClassCourses(classInfo.id)
     .then((res) => {
       if (res.code == 200) {
         const { data } = res
@@ -128,7 +129,7 @@ const getClassCoursesDataes = async () => {
 } 
 
 const getQuestionsDetailsData = async () => {
-  await getQuestionsDetails(classInfo.value.id)
+  await getQuestionsDetails(classInfo.id)
     .then((res) => {
       if (res.code == 200) {
         const { data } = res

@@ -5,7 +5,7 @@
     <div class="ft-14 marg-bt-20 ft-cl-des">
       请耐心等待，肯定会有很多热心的同学回答你的问题。
     </div>
-    <div class="ask bt ft-14">查看我的问题</div>
+    <div @click="() => $router.go(-2)" class="ask bt ft-14">查看我的课程</div>
   </div>
 </template>
 

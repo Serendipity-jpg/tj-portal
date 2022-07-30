@@ -51,7 +51,7 @@
         <!-- 课程目录 -->
         <ClassCatalogue v-show="actId == 2" :data="classListData"></ClassCatalogue>
         <!-- 问答模块 -->
-        <ClassAsk v-show="actId == 3" :id="detailsId"></ClassAsk>
+        <ClassAsk v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
         <!-- 笔记模块 -->
         <Note v-show="actId == 4" :id="detailsId"></Note>
         <div class="fx-ct ft-cl-des" style="height: 400px;" v-show="actId == 5" :id="detailsId">

@@ -6,7 +6,7 @@
         <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部问答</span> 
         <span @click="askCheck('my')" :class="{act:askType == 'my'}">我的问答</span>
       </div> 
-      <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: '2334', title: '程序语言开发与设计'}})" class="bt bt-round ft-14">提问</span></div>
+      <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: $props.id, title: $props.title}})" class="bt bt-round ft-14">提问 {{$props.title}}</span></div>
     </div>
     <AskChapterItems :data="chapterData" @checkCahpter="checkCahpter"></AskChapterItems>
     <div class="askCont">
@@ -59,6 +59,10 @@ const dataCache = dataCacheSrore();
 // 引入父级传参
 const props = defineProps({
   id:{
+    type: String,
+    default: ''
+  }, 
+  title:{
     type: String,
     default: ''
   }

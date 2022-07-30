@@ -5,35 +5,30 @@ export const getClassDetails = (id) =>
 	request({
 		url: `/courses/baseInfo/${id}`,
 		method: 'get',
-		params:id,
 	})
 // 查询课程老师
 export const getClassTeachers = (id) =>
 	request({
 		url: `/courses/teachers/${id}`,
 		method: 'get',
-		params:id,
 	})
 // 查询课程目录
 export const getClassList = (id) =>
 	request({
 		url: `/courses/catas/${id}`,
-		method: 'get',
-		params:id,
+		method: 'get'
 	})	
 // 获取课程章节 下拉数据展示
 export const getClassCourses = (id) =>
 request({
 	url: `/courses/catas/${id}`,
-	method: 'get',
-	params:id,
+	method: 'get'
 })	
 // 获取课程小节 - 问答详情使用
 export const getClassChapter = (id) =>
 	request({
 		url: `/courses/catas/index/list/${id}`,
-		method: 'get',
-		params:id,
+		method: 'get'
 	})	
 
 	
@@ -57,7 +52,7 @@ export const postQuestions = (params) =>
 	request({
 		url: `/questions`,
 		method: 'post',
-		params,
+		data:params,
 	})	
 // 获取问题详情
 export const getQuestionsDetails = (id) =>

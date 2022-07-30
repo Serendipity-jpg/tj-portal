@@ -1,4 +1,4 @@
-<!-- 常见问题模块 -->
+<!-- 课程介绍 -->
 <template>
   <div class="classAbout">
     <div class="title">课程简介</div>
