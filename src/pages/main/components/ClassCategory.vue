@@ -5,22 +5,22 @@
         <div class="item" v-for="item in data" :key="item.id" @mouseover="mouseoverHandle(item.children)" >
           <!-- 一级分类 -->
           <div class="fx-sb">
-            <div>{{item.name}}</div>
+            <div @click="() => $router.push({path:'/search', query:{type:'categoryIdLv1',id:item.id}})" class="font-bt2" >{{item.name}}</div>
             <img src="@/assets/icon_more.png" alt="">
           </div>
           <!-- 二级分类前两个 -->
           <div class="desc ft-12 ft-cl-des">
-            <span v-if="item.children.length > 0">{{ item.children[0].name}}</span>
+            <span @click="() => $router.push({path:'/search', query:{type:'categoryIdLv2',id:item.id}})" class="font-bt2 ft-cl-des" v-if="item.children.length > 0">{{ item.children[0].name}}</span>
             <span v-if="item.children.length > 1"> / </span>
-            <span v-if="item.children.length > 1">{{  item.children[1].name}}</span>
+            <span @click="() => $router.push({path:'/search', query:{type:'categoryIdLv2',id:item.id}})" v-if="item.children.length > 1" class="font-bt2 ft-cl-des">{{  item.children[1].name}}</span>
           </div>
         </div>
         <!-- 展示详情 -->
         <div class="allCategory" v-show="isDetails" @mouseover="mouseoverHandle()">
           <div class="fx ft-wt-600 pd-bt-10" v-for="item in categorys" :key="item.id">
-            <span class="tit">{{item.name}} :</span> 
+            <span class="tit" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv2',id:item.id}})">{{item.name}} :</span> 
             <div class="name fx-1">
-              <span class="ft-wt-400 cur-pt" @click="() => $router.push('/search')" v-for="it in item.children" :key="it.id">{{it.name}}</span>
+              <span class="ft-wt-400 cur-pt" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv3',id:item.id}})" v-for="it in item.children" :key="it.id">{{it.name}}</span>
             </div>
           </div>
         </div>

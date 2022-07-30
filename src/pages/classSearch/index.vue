@@ -3,7 +3,9 @@
   <div class="classSearchWrapper">
     <div class="container searchBar">
       <!-- 结果统计 -->
-      <div class="result" v-if="isLogin() && searchParams.keyword != ''"><span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> </span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程</div>
+      <div class="result" v-if="isLogin() && searchParams.keyword">
+        <span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> </span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程
+      </div>
       <!-- 筛选条件 -->
       <div class="title">全部课程</div>
       <SearchKey :data="searchType" @searchKey="searchKey"></SearchKey>
@@ -33,7 +35,7 @@
 <script setup>
 /** 数据导入 **/
 
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, classSeach } from "@/api/class.js";
 // 组件导入
@@ -47,7 +49,10 @@ const searchType = ref({subKey: 'categoryIdLv1', title: "课程分类", searchKe
 const searchCost = ref({subKey: 'free', title: "收付费", searchKeys:[{id:'all', name: '全部'},{id: '1', name: '免费'},{id: '0', name: '付费'}]});    
 const soleBar = ref([{key:'推荐', value:'all'},{key:'最新', value:'publishTime'}, {key:'最热', value:'sold'}])
 const searchParams = ref({  // 搜索参数定义
-  keyword: 'java',
+  keyword: '',
+  categoryIdLv1: '',
+  categoryIdLv2: '',
+  categoryIdLv3: '',
   pageNo: 1,
   pageSize: 12
 })
@@ -64,6 +69,13 @@ onMounted(() => {
   search()
   searchParams.value.keyword = route.query.key
 });
+// 监听搜索关键词
+watchEffect(() => {
+  searchParams.value.keyword = route.query.key
+  searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
+  searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
+  searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
+})
 
 /** 方法定义 **/
 
@@ -110,8 +122,9 @@ const pagesHandle = (item) => {
 }
 // 搜索
 const search = async () => {
-  const params  = searchParams.value
-  await classSeach(params)
+  // 将不纯在的参数干掉
+  const params  = JSON.stringify({...searchParams.value})
+  await classSeach(JSON.parse(params))
   .then((res) => {
       if (res.code == 200) {
         searchResultData.value = res.data.list

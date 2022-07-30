@@ -221,7 +221,13 @@ const setInterestList = list =>{
 
 // 保存兴趣
 const saveInterest = async () => {
-  await setInterests({interestedIds:[...interestCatch.value].toString()})
+  const str = ""
+  for(let val of interestCatch.value){
+    console.log(val.id)
+    //str+= `,${val.id}`;
+  }
+  
+  await setInterests({interestedIds:str})
     .then((res) => {
       if (res.code == 200) {
         ElMessage({

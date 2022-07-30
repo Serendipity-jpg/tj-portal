@@ -24,8 +24,8 @@
                 </div>
               </div>
               <div class="fx">
-                <div class="bt-wt bt-round marg-rt-15 ft-14">收藏</div>
-                <div class="bt-wt bt-round ft-14">分享</div>
+                <div class="bt-wt bt-round marg-rt-15 ft-14"> <i class="iconfont zhy-a-icon_shoucang2x"></i> 收藏</div>
+                <div class="bt-wt bt-round ft-14"><weixin class="wx"></weixin> 分享</div>
               </div>
           </div>
         </div>
@@ -54,6 +54,9 @@
         <ClassAsk v-show="actId == 3" :id="detailsId"></ClassAsk>
         <!-- 笔记模块 -->
         <Note v-show="actId == 4" :id="detailsId"></Note>
+        <div class="fx-ct ft-cl-des" style="height: 400px;" v-show="actId == 5" :id="detailsId">
+          暂无数据！
+        </div>
       </div>
       <div class="ritCont">
         <!-- 常见问题 -->
@@ -68,7 +71,7 @@
 <script setup>
 /** 数据导入 **/
 
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassDetails, getClassTeachers, getClassList } from "@/api/classDetails.js";
 import { useRoute } from "vue-router";
@@ -81,6 +84,8 @@ import Ask from "./components/Ask.vue";
 import ClassAsk from "./components/ClassAsk.vue";
 import Note from "./components/Note.vue";
 import ClassCatalogue from "./components/ClassCatalogue.vue";
+import { isLogin } from "../../store";
+import weixin from '@/assets/icon_weixin.svg'
 
 const route = useRoute()
 // 结果 - 详情Id
@@ -90,7 +95,11 @@ const baseDetailsData = ref({})
 const baseClassTeacher = ref([])
 
 // table切换数据 - 静态数据
-const tableBar = [{id: 1, name: '课程介绍'}, {id: 2, name: '课程目录'},{id: 3, name: '问答'},{id: 4, name: '笔记'}, {id: 5, name: '用户评价'}]
+const logData = [{id: 1, name: '课程介绍'}, {id: 2, name: '课程目录'},{id: 3, name: '问答'},{id: 4, name: '笔记'}, {id: 5, name: '用户评价'}]
+const noLogData = [{id: 1, name: '课程介绍'}, {id: 2, name: '课程目录'}, {id: 5, name: '用户评价'}]
+const tableBar = computed(() => {
+  return isLogin() ? logData : noLogData
+})
 // 猜你喜欢 - 静态数据
 const LikeData = [{
     sold: 234, 
