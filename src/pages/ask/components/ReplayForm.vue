@@ -52,7 +52,7 @@ const answerHandle = async () => {
       if (res.code == 200) {
         ElMessage({
           message:'回复成功！',
-          type: 'error'
+          type: 'success'
         });
       } else {
         ElMessage({

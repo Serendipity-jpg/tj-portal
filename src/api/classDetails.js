@@ -78,7 +78,7 @@ export const postAnswers = params =>
 	request({
 		url: `/answers`,
 		method: 'post',
-		params
+		data:params
 	})			
 // 根据问题的Id获取问题的
 export const getAllQuestions = params =>

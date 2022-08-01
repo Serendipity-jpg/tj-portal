@@ -66,7 +66,7 @@ const submitForm = (formEl) => {
       await userLogins(fromData)
 			.then(async res => {
 				if (res.code == 200) {
-                    // 用户token写入 pinia
+          // 用户token写入 pinia
 					store.setToken(res.data);
 					// 获取用户信息
           const data = await getUserInfo()

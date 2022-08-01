@@ -271,15 +271,17 @@ const getReplyData = async (id) => {
 // 提交回复数据
 const params = reactive({
   answerId:'', 
-  questionId: askInfo.id, // 当前问题的ID
+  questionId: '', // askInfo.value.id, // 当前问题的ID
   targetReplyId:'',
-  targetUserId:'',
+  targetUserId: '',
   answerId:'',
   content:'',
   anonymity:''
 })
 // 提交回复
 const answerHandle = async () => {
+  params.questionId = askInfo.value.id || ''
+  params.targetUserId = ''
   params.content = description.value
   params.anonymity = anonymity.value
  await postAnswers(params)
@@ -287,7 +289,7 @@ const answerHandle = async () => {
       if (res.code == 200) {
         ElMessage({
           message:'回复成功！',
-          type: 'error'
+          type: 'success'
         });
       } else {
         ElMessage({
