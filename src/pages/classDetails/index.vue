@@ -84,7 +84,7 @@ import Ask from "./components/Ask.vue";
 import ClassAsk from "./components/ClassAsk.vue";
 import Note from "./components/Note.vue";
 import ClassCatalogue from "./components/ClassCatalogue.vue";
-import { isLogin } from "../../store";
+import { isLogin } from "@/store";
 import weixin from '@/assets/icon_weixin.svg'
 
 const route = useRoute()

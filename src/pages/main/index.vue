@@ -104,7 +104,6 @@ onMounted(() => {
   // 获取精品公开课
   getFreeClassListData();
   // 获取兴趣列表 （二级分类）
-  console.log(isLogin())
   if (isLogin()) {
     getInterestData()
   }
@@ -196,6 +195,9 @@ const getInterestData = async () => {
   await getInterests()
     .then((res) => {
       if (res.code == 200) {
+        if (res.data.length == 0){
+          interestDialog.value = true;
+        }
         interest.value = new Set(res.data)
       } else {
         ElMessage({
@@ -221,12 +223,16 @@ const setInterestList = list =>{
 
 // 保存兴趣
 const saveInterest = async () => {
-  const str = ""
+  let str = ""
   for(let val of interestCatch.value){
-    console.log(val.id)
-    //str+= `,${val.id}`;
+    str == "" ? str = val : str+= `,${val}`;
   }
-  
+  if (str == ""){
+    ElMessage({
+          message: "您还没有选择兴趣，请先选择兴趣后再保存！",
+          type: 'success'
+        });
+  }
   await setInterests({interestedIds:str})
     .then((res) => {
       if (res.code == 200) {

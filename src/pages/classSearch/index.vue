@@ -16,7 +16,7 @@
         <!-- 排序及分页 -->
         <div class="fx-sb marg-bt-20">
           <SortBar :data="soleBar" @sortHandle="sortHandle"></SortBar>
-          <div class="pageAction fx">
+          <div class="pageAction fx" v-if="count > 0" >
             <img src="@/assets/page_act.png" class="iconTurn" v-if="page > 1" @click="pagesHandle('reduce')" alt="" />
             <img src="@/assets/page_act_nor.png"  v-if="page == 1" alt="" />
             <span v-if="count > 0"><em>{{page}}</em> / {{Math.ceil(count/searchParams.pageSize) }}</span>
@@ -25,8 +25,11 @@
           </div>
         </div>
         <!-- 搜索课程列表 -->
-        <div class="content fx-wp">
+        <div class="content fx-wp" v-if="count > 0">
            <ClassCards type="search" class="items marg-bt-20" v-for="(item, index) in searchResultData" :data="item" :key="index"></ClassCards>
+        </div>
+        <div class="content fx-ct noData" v-else>
+          搜索结果为空！
         </div>
       </div>
     </div>

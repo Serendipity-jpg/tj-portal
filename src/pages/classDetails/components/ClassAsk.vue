@@ -49,7 +49,7 @@
 import { ref, onMounted } from "vue"
 import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
-import { useUserStore, dataCacheSrore } from '@/store'
+import { useUserStore, dataCacheSrore, isLogin } from '@/store'
 import btnBj from '@/assets/btn_bj.svg'
 import btnDel from '@/assets/btn_del.svg'
 import { useRoute, useRouter } from "vue-router";
@@ -58,6 +58,7 @@ const route = useRoute()
 const router = useRouter()
 const store = useUserStore();
 const dataCache = dataCacheSrore();
+
 // 引入父级传参
 const props = defineProps({
   id:{
@@ -76,10 +77,12 @@ const id = ref();
 onMounted(() => {
   // 获取登录信息中的我的信息
   userInfo.value = store.getUserInfo
-  // 获取小节数据
-  getClassChapterData(route.query.id)
-  // 获取问答列表
-  getAskListsDataes()
+  if(isLogin()){
+    // 获取小节数据
+    getClassChapterData(route.query.id)
+    // 获取问答列表
+    getAskListsDataes()
+  }
 })
 // 问答列表参数
 const params = ref({
@@ -131,7 +134,7 @@ const getAskListsDataes = async () => {
     })
     .catch(() => {
       ElMessage({
-        message: "课程章节数据请求出错！",
+        message: "问答列表数据请求出错！",
         type: 'error'
       });
     });
@@ -156,7 +159,7 @@ await delQuestions(id)
     })
     .catch(() => {
       ElMessage({
-        message: "课程章节数据请求出错！",
+        message: "问题删除请求出错！",
         type: 'error'
       });
     });
