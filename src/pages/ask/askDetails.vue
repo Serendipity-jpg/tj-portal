@@ -24,7 +24,7 @@
                   <div class="fx-sb fx-al-ct">
                     <div><el-checkbox v-model="anonymity" label="是否匿名" size="large" /></div>
                     <div class="subCont">
-                      <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="answerHandle(ruleFormRef)">回答</span>
+                      <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="answerHandle('first')">回答</span>
                       </div>
                   </div> 
                 </div>
@@ -46,12 +46,12 @@
                       <div class="ft-cl-des">{{item.createTime}}</div>
                       <div>
                         <span class="marg-rt-10 cur-pt" @click="openReply(item)"> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{item.replyTimes}} </span> 
-                        <span class=" cur-pt"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes}}</span>
+                        <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes}}</span>
                       </div>
                     </div>
                   </div>
                   <!-- 插入回复框的位置 -->
-                  <component :is="openReplyFormId == item.id ? ReplayForm : null" :key="item.id" :name="item.replier.name" :askInfoId="askInfo.id"></component>
+                  <component :is="openReplyFormId == item.id ? ReplayForm : null" :key="item.id" :name="item.replier.name" :askInfoId="askInfo.id" @commentHandle="commentHandle"></component>
                   <!-- 回复列表 -->
                   <div class="replyCont" v-show="replyData && isReplay == item.id">
                     <div class="items" v-for="it in replyData" :key="it.id">
@@ -64,17 +64,17 @@
                         <div class="fx-sb">
                           <div class="ft-cl-des">{{it.createTime}}</div>
                           <div>
-                            <span class="marg-rt-10 cur-pt" @click="replayHandle(it)" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                            <span class="cur-pt"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                            <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'targe')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
+                            <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
                           </div>
                         </div>
                       </div>
                       <!-- 插入回复框的位置 -->
                       <!-- <ReplayForm v-if="isReplay == it.id"></ReplayForm> -->
-                      <component :is="openReplyFormId == it.id ? ReplayForm : null" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"></component>
+                      <component :is="openReplyFormId == it.id ? ReplayForm : null" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"  @commentHandle="commentHandle"></component>
                     <!-- 回复列表 -->
                     </div>
-                    <div @click="() => {dialogTableVisible = true}" class="fx-ct ft-14 ft-cl-des cur-pt" v-if="replyCont">点击查看全部{{replyCont}}条回复</div>
+                    <div @click="() => {dialogTableVisible = true}" class="fx-ct ft-14 ft-cl-des cur-pt" v-if="replyCont > 5">点击查看全部{{replyCont}}条回复</div>
                   </div>
                 </div>
                 <div></div>
@@ -101,13 +101,13 @@
             <div class="fx-sb">
               <div class="ft-cl-des">{{it.createTime}}</div>
               <div>
-                <span class="marg-rt-10 cur-pt" @click="replayHandle(it)" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                <span class="cur-pt"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'target')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
+                <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
               </div>
             </div>
           </div>
           <!-- 插入回复框的位置 -->
-          <component :is="openReplyFormId == it.id ? ReplayForm : null" :key="it.id" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"></component>
+          <component :is="openReplyFormId == it.id ? ReplayForm : null" :key="it.id" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id" @commentHandle="commentHandle"></component>
         <!-- 回复列表 -->
         </div>
          <p class="fx-ct ft-14 ft-cl-des" v-if="replayloading">Loading...</p>
@@ -121,7 +121,7 @@
 import { onMounted, reactive, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
-import { getQuestionsDetails, postAnswers, getAllQuestions, getReply } from "@/api/classDetails.js";
+import { getQuestionsDetails, postAnswers, getAllQuestions, getReply, putLiked } from "@/api/classDetails.js";
 import RelatedQuestions from './components/RelatedQuestions.vue'
 import ReplayForm from './components/ReplayForm.vue'
 import { useUserStore } from '@/store'
@@ -184,7 +184,7 @@ const getAllQuestionsData = async () => {
     .then((res) => {
       if (res.code == 200) {
         questionData.value = questionData.value.concat(res.data.list)
-        count.value = res.data.total
+        count.value = Number(res.data.total)
         loading.value = false
       } else {
         ElMessage({
@@ -214,15 +214,25 @@ const ruleshandle = () => {
 const isReplay = ref();
 const openReply = (item) => {
   // 获取回答的答复的列表
-  if (item.id != isReplay) {
+  if (item.id != isReplay.value) {
     getReplyData(item.id)
-    replayHandle(item)
+    replayHandle(item, 'answer')
   }
 }
+
 // 展示回复窗口
 const openReplyFormId = ref()
-const replayHandle = (item) => {
+// 存储一级回复数据
+const answerInfo = ref({id:''}) 
+// 存储二级以后的回复数据
+const targetInfo = ref({id:''}) 
+const replayHandle = (item, type) => {
   openReplyFormId.value = item.id
+  if (type == 'answer' ) {
+    answerInfo.value = item
+    targetInfo.value = {id:''}
+  };
+  if (type == 'target') targetInfo.value = item ;
 }
 
 // 回复数据请求参数
@@ -243,15 +253,15 @@ const load = () => {
   getReplyData()
 }
 // 获取回复数据
-const getReplyData = async (id) => {
-  replyLoding.value = true
+const getReplyData = async (id, st) => {
+    replyLoding.value = true
     replyParams.id = id
     await getReply(replyParams)
     .then((res) => {
       if (res.code == 200) {
        replyLoding.value = false
-       replyData.value = replyData.value.concat(res.data.list)
-       replyCont.value = res.data.total
+       replyData.value = st == 'one' ? res.data.list : replyData.value.concat(res.data.list)
+       replyCont.value = Number(res.data.total)
        isReplay.value = id
       } else {
         ElMessage({
@@ -278,12 +288,22 @@ const params = reactive({
   content:'',
   anonymity:''
 })
+// 子组件 emit 回调函数 提交评论数据
+function commentHandle (val){
+  params.content = val.content
+  params.anonymity = val.anonymity
+  answerHandle()
+}
 // 提交回复
-const answerHandle = async () => {
-  params.questionId = askInfo.value.id || ''
+const answerHandle = async (type) => {
+  params.questionId = askInfo.value.id
   params.targetUserId = ''
-  params.content = description.value
-  params.anonymity = anonymity.value
+  if(params.content == ''){
+    params.content = description.value
+    params.anonymity = anonymity.value
+  }
+  params.answerId = answerInfo.value.id
+  params.targetReplyId = targetInfo.value.id
  await postAnswers(params)
     .then((res) => {
       if (res.code == 200) {
@@ -291,6 +311,15 @@ const answerHandle = async () => {
           message:'回复成功！',
           type: 'success'
         });
+        description.value = ''
+        if (type == 'first'){
+          getAllQuestionsData()
+        } else if(dialogTableVisible) {
+          getReplyData(isReplay.value, 'one')
+        } else {
+          getReplyData(isReplay.value, 'one')
+          // replayHandle(item, 'answer')
+        }
       } else {
         ElMessage({
           message:res.data.msg,
@@ -305,6 +334,26 @@ const answerHandle = async () => {
       });
     });
 }
-
+// 点赞
+const likedHandle = async (item) => {
+await putLiked({id:item.id, liked:!item.liked})
+    .then((res) => {
+      if (res.code == 200) {
+        item.liked = !item.liked
+        item.liked ? item.likedTimes++ : item.likedTimes--
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "点赞请求出错！",
+        type: 'error'
+      });
+    });
+}
 </script>
 <style lang="scss" src="./index.scss"></style>

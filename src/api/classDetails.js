@@ -94,3 +94,11 @@ request({
 	method: 'get',
 	params
 })
+
+// 点赞接口
+export const putLiked = params =>
+request({
+	url: `/answers/${params.id}/liked/${params.liked}`,
+	method: 'put',
+	params
+})

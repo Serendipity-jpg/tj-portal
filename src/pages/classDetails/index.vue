@@ -24,7 +24,7 @@
                 </div>
               </div>
               <div class="fx">
-                <div class="bt-wt bt-round marg-rt-15 ft-14"> <i class="iconfont zhy-a-icon_shoucang2x"></i> 收藏</div>
+                <div @click="collectionHandle" class="bt-wt bt-round marg-rt-15 ft-14" :class="{isCollection:isCollection}"> <i class="iconfont zhy-a-icon_shoucang2x"></i> 收藏</div>
                 <div class="bt-wt bt-round ft-14"><weixin class="wx"></weixin> 分享</div>
               </div>
           </div>
@@ -130,6 +130,7 @@ const LikeData = [{
     teacher: "李老师"
   }
 ]
+const isCollection = ref(false);
 // 当前table选项
 const actId = ref(1)
 
@@ -238,7 +239,11 @@ const getClassListData = async () => {
 // table切换 当前展示信息 课程介绍、课程目录
 const changeTable = id => {
   actId.value = id
-  console.log(actId.value)
+}
+//收藏
+const collectionHandle = () => {
+  console.log(333333,isCollection)
+  isCollection.value = !isCollection.value
 }
 </script>
 <style lang="scss" src="./index.scss"> </style>

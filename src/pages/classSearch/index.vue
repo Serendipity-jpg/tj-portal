@@ -131,7 +131,7 @@ const search = async () => {
   .then((res) => {
       if (res.code == 200) {
         searchResultData.value = res.data.list
-        count.value = res.data.total
+        count.value =  Number(res.data.total)
       } else {
         ElMessage({
           message:res.data.msg,

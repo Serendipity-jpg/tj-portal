@@ -124,7 +124,7 @@ const getAskListsDataes = async () => {
             return n
           })
         }
-        total.value = res.data.total
+        total.value = Number(res.data.total)
       } else {
         ElMessage({
           message:res.data.msg,

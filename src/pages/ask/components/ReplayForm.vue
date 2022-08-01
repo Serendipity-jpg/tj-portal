@@ -1,106 +1,105 @@
 <template>
-<div class="answerCont bg-wt marg-bt-20">
+  <div class="answerCont bg-wt marg-bt-20">
     <div class="answer fx">
-    <img :src="store.getUserInfo.icon" alt="" srcset="">
-    <div class="fx-1">
-        <el-input v-model="description" rows="6" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit :placeholder="`回复：${name}`" />
+      <img :src="store.getUserInfo.icon" alt="" srcset="" />
+      <div class="fx-1">
+        <el-input
+          v-model="description"
+          rows="6"
+          type="textarea"
+          @input="ruleshandle"
+          maxlength="500"
+          show-word-limit
+          :placeholder="`回复：${name}`"
+        />
         <div class="fx-sb fx-al-ct">
-        <div><el-checkbox v-model="anonymity" label="是否匿名" size="large" /></div>
-        <div class="subCont">
-            <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="answerHandle(ruleFormRef)">回答</span>
+          <div>
+            <el-checkbox v-model="anonymity" label="是否匿名" size="large" />
+          </div>
+          <div class="subCont">
+            <span
+              class="bt ft-14"
+              :class="{ 'bt-dis': !isSend }"
+              @click="answerHandle(ruleFormRef)"
+              >评论</span
+            >
+          </div>
         </div>
-        </div> 
+      </div>
     </div>
-    </div>
-</div>
+  </div>
 </template>
 <script setup>
-    import {ref, reactive} from 'vue'
-    import { useUserStore } from '@/store'
-    import { postAnswers } from "@/api/classDetails.js";
-    import { ElMessage } from "element-plus";
-    const props = defineProps({
-        name: String,
-        askInfoId: String,
-        id:String
-    })
-    const store = useUserStore();
-    const anonymity = ref()
-    const isSend = ref(false)
-    const ruleFormRef = ref()
-    const description = ref()
-    const ruleshandle = () => {
-        isSend.value = description.value != '' ?  true : false
-    }
+import { ref, reactive } from "vue";
+import { useUserStore } from "@/store";
+import { postAnswers } from "@/api/classDetails.js";
+import { ElMessage } from "element-plus";
+
+const props = defineProps({
+  name: String,
+  askInfoId: String,
+  id: String,
+});
+const emit = defineEmits(['commentHandle'])
+const store = useUserStore();
+const anonymity = ref(false);
+const isSend = ref(false);
+const ruleFormRef = ref();
+const description = ref('');
+const ruleshandle = () => {
+  isSend.value = description.value != "" ? true : false;
+};
 
 // 提交回复数据
 const params = reactive({
-  answerId:'', 
+  answerId: "",
   questionId: props.askInfoId, // 当前问题的ID
-  targetReplyId:'',
-  targetUserId:'',
-  answerId:'',
-  content:'',
-  anonymity:''
-})
+  targetReplyId: "",
+  targetUserId: "",
+  answerId: "",
+  content: "",
+  anonymity: "",
+});
 // 提交回复
 const answerHandle = async () => {
-    params.content = description.value
-    params.anonymity = anonymity.value
- await postAnswers(params.value)
-    .then((res) => {
-      if (res.code == 200) {
-        ElMessage({
-          message:'回复成功！',
-          type: 'success'
-        });
-      } else {
-        ElMessage({
-          message:res.data.msg,
-          type: 'error'
-        });
-      }
-    })
-    .catch(() => {
-      ElMessage({
-        message: "课程问题数据请求出错！",
-        type: 'error'
-      });
-    });
-}
+  params.content = description.value
+  params.anonymity = anonymity.value
+  emit('commentHandle', params);
+  description.value = '';
+};
 </script>
 <style lang="scss">
-.answerCont{
-    padding: 20px 30px;
-    font-size: 14px;
-    border-radius: 8px;
-    .subCont {
-      margin-top: 20px;
-      .bt{
-        width: 103px;
-        height: 32px;
-        line-height: 32px;
-        border-radius: 25px;
-      }
-    }
-    .answer{
-      img{
-        width: 24px;
-        height: 24px;
-        border-radius: 24px;
-        margin-right: 10px;
-      }
-    }
-    .answerItems{
-      .items{
-        .cont{
-          padding: 10px 10px 20px 34px;
-          line-height: 24px;
-        }
-      }
-      .replyCont{
-        padding-left: 34px;
-      }
+.answerCont {
+  padding: 20px 30px;
+  font-size: 14px;
+  border-radius: 8px;
+  .subCont {
+    margin-top: 20px;
+    .bt {
+      width: 103px;
+      height: 32px;
+      line-height: 32px;
+      border-radius: 25px;
     }
   }
-  </style>
+  .answer {
+    img {
+      width: 24px;
+      height: 24px;
+      border-radius: 24px;
+      margin-right: 10px;
+    }
+  }
+  .answerItems {
+    .items {
+      .cont {
+        padding: 10px 10px 20px 34px;
+        line-height: 24px;
+      }
+    }
+    .replyCont {
+      padding-left: 34px;
+    }
+  }
+}
+</style>

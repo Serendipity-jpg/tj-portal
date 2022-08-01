@@ -23,8 +23,8 @@
           <div class="actBut">
             <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-icon_kaoshi2x"></i> 编辑</span>
             <span @click="delNoteHandle(item.id)" class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-btn_delete_nor2x" ></i> 删除 </span>
-            <span @click="gathersHandle(item)" class="marg-rt-20" v-if="userInfo.id != item.author.id "><i class="iconfont zhy-a-btn_caiji_nor2x" :class="{gather:item.isGathered}"></i> 采集 {{item.answerAmount}}</span>
-            <span><i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.answerAmount}}</span>
+            <span @click="gathersHandle(item)" class="marg-rt-20" :class="{activeLiked:item.isGathered}" v-if="userInfo.id != item.author.id "><i class="iconfont zhy-a-btn_caiji_nor2x" ></i> 采集 {{item.answerAmount}}</span>
+            <span @click="likedHandle(item)" :class="{activeLiked:item.liked}" ><i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞{{item.liked}} {{item.answerAmount}}</span>
           </div>
         </div>
       </div>
@@ -101,6 +101,7 @@ const checkCahpter = (id) => {
 // 获取笔记列表
 const getAskListsDataes = async () => {
   const questFun = askType.value == 'all' ? getAllNotes : getMyNotes
+  params.value.sectionId == 'all' ?  params.value.sectionId = undefined : null
   await questFun(params.value)
     .then((res) => {
       if (res.code == 200) {
@@ -112,8 +113,7 @@ const getAskListsDataes = async () => {
             return n
           })
         }
-        console.log(454545, askListsDataes.value)
-        total.value = res.data.total
+        total.value =  Number(res.data.total)
       } else {
         ElMessage({
           message:res.data.msg,
@@ -154,7 +154,7 @@ await delNote(id)
     });
 }
 const gathersHandle = async item => {
-  item.isGathered ?  unNotesGathersData(item) : notesGathersData(item) 
+  item.isGathered ? unNotesGathersData(item) : notesGathersData(item) 
 }
 // 采集笔记
 const notesGathersData = async item => {
@@ -162,11 +162,8 @@ await notesGathers(item.id)
     .then((res) => {
       if (res.code == 200) {
         // 采集笔记成功
-        ElMessage({
-          message:'采集笔记成功！',
-          type: 'success'
-        });
-        getAskListsDataes()
+        // getAskListsDataes()
+        item.isGathered = !item.isGathered
       } else {
         ElMessage({
           message:res.data.msg,
@@ -187,11 +184,8 @@ await unNotesGathers(item.id)
     .then((res) => {
       if (res.code == 200) {
         // 取消采集笔记成功！
-        ElMessage({
-          message:'取消采集笔记成功！',
-          type: 'success'
-        });
-        getAskListsDataes()
+        // getAskListsDataes()
+        item.isGathered = !item.isGathered
       } else {
         ElMessage({
           message:res.data.msg,
@@ -240,7 +234,11 @@ const handleCurrentChange = (val) => {
   params.value.pageNo = val
   getAskListsDataes()
 }
-
+// 点赞
+const likedHandle = (item) => {
+  item.liked = !item.liked
+  // item.liked ? item.answerAmount-- : item.answerAmount++
+}
 </script>
 <style lang="scss" scoped>
 .note{
@@ -307,11 +305,12 @@ const handleCurrentChange = (val) => {
           }
         }
       }
-      .gather{
-        color: var(--color-main)
-      }
+      
     }
   }
+  .activeLiked{
+        color: var(--color-main)
+      }
   .pagination{
     padding-top: 40px;
     text-align: center;
