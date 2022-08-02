@@ -11,7 +11,7 @@
     <div class="ft-14 font-bt"><span @click="changeHandle">修改兴趣</span></div>
   </div>
   <div class="classInfo fx" v-if="teacherInfo">
-    <div class="teacherInfo fx-1" :style="{background: `url(${teacherInfo.coverUrl})`}">
+    <div class="teacherInfo fx-1" :style="{'background-image': `url(${teacherInfo.coverUrl})`}">
       <div class="info fx-sb">
         <div class="fx-al-ct fx-1 ">
           <img :src="teacherInfo.icon" alt="" srcset=""> 讲师：<span>{{teacherInfo.teacher}}</span>
