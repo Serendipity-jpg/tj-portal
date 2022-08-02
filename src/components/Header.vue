@@ -44,7 +44,7 @@ import defaultImage from '@/assets/icon.jpeg'
 import { onMounted, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
 
-import { useUserStore } from '@/store'
+import { useUserStore, isLogin, getToken } from '@/store'
 import router from "../router";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -54,11 +54,16 @@ const userInfo = ref()
 const isToken = localStorage.getItem('token') ? true : false
 const input = ref('');
 const route = useRoute()
+const userStore = getToken();
 onMounted(() => {
+  if(!isLogin()){
+   userStore.logout();
+  }
   userInfo.value = store.getUserInfo
   if (Object.keys(route.query).length > 0){
     input.value = route.query.key
   }
+
 })
 // 默认头像
 const onerrorImg = () => {

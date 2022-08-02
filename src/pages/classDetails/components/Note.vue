@@ -24,7 +24,7 @@
             <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-icon_kaoshi2x"></i> 编辑</span>
             <span @click="delNoteHandle(item.id)" class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-btn_delete_nor2x" ></i> 删除 </span>
             <span @click="gathersHandle(item)" class="marg-rt-20" :class="{activeLiked:item.isGathered}" v-if="userInfo.id != item.author.id "><i class="iconfont zhy-a-btn_caiji_nor2x" ></i> 采集 {{item.answerAmount}}</span>
-            <span @click="likedHandle(item)" :class="{activeLiked:item.liked}" ><i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞{{item.liked}} {{item.answerAmount}}</span>
+            <span @click="likedHandle(item)" :class="{activeLiked:item.liked}" ><i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.answerAmount}}</span>
           </div>
         </div>
       </div>
