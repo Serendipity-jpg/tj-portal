@@ -50,14 +50,13 @@ import { ref, onMounted } from "vue"
 import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore, dataCacheSrore, isLogin } from '@/store'
-import btnBj from '@/assets/btn_bj.svg'
-import btnDel from '@/assets/btn_del.svg'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
 const route = useRoute()
 const router = useRouter()
 const store = useUserStore();
 const dataCache = dataCacheSrore();
+
 
 // 引入父级传参
 const props = defineProps({
@@ -73,11 +72,10 @@ const props = defineProps({
 
 // 用户信息
 const userInfo = ref();
-const id = ref();
 onMounted(() => {
-  // 获取登录信息中的我的信息
-  userInfo.value = store.getUserInfo
   if(isLogin()){
+    // 获取登录信息中的我的信息
+    userInfo.value = store.getUserInfo
     // 获取小节数据
     getClassChapterData(route.query.id)
     // 获取问答列表
@@ -113,6 +111,7 @@ const checkCahpter = (id) => {
 // 获取问答列表
 const getAskListsDataes = async () => {
   const questFun = askType.value == 'all' ? getAskList : getMyAskList
+  params.value.sectionId == 'all' ? params.value.sectionId = '' : null
   await questFun(params.value)
     .then((res) => {
       if (res.code == 200) {

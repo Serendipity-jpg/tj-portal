@@ -1,6 +1,6 @@
 <template>
   <div class="breadcrumb ">
-    <router-link to="/">首页</router-link>
+    <span class="font-bt2" @click="() => {$router.push('/')}" >首页</span>
     <span> / </span>
     <span>{{data}}</span>
   </div>
@@ -18,6 +18,8 @@ const props = defineProps({
 </script>
 <style lang="scss" scoped>
 .breadcrumb{
+    position: relative;
+    z-index: 9;
     font-size: 14px;
     padding: 36px 0 20px 0;
     a{

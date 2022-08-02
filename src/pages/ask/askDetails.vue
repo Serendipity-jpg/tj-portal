@@ -135,7 +135,7 @@ onMounted(() => {
   // 获取问题详情
   getQuestionsDetailsData()
   // 获取回答的列表
-  // debugger
+  
   getAllQuestionsData()
 
 })
