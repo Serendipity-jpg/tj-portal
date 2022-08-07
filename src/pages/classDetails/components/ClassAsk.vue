@@ -49,13 +49,13 @@
 import { ref, onMounted } from "vue"
 import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
-import { useUserStore, dataCacheSrore, isLogin } from '@/store'
+import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
 const route = useRoute()
 const router = useRouter()
 const store = useUserStore();
-const dataCache = dataCacheSrore();
+const dataCache = dataCacheStore();
 
 
 // 引入父级传参

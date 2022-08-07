@@ -18,7 +18,6 @@
         </template>
 
         <!-- <template> -->
-          
           <!-- <Search class="search">  :suffix-icon="Search"</Search> -->
         <!-- </template> -->
         </el-input>
@@ -41,10 +40,9 @@
 </template>
 <script setup>
 import defaultImage from '@/assets/icon.jpeg'
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { Search } from "@element-plus/icons-vue";
-
-import { useUserStore, isLogin, getToken } from '@/store'
+import { useUserStore, isLogin, getToken, dataCacheStore } from '@/store'
 import router from "../router";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -55,6 +53,8 @@ const isToken = localStorage.getItem('token') ? true : false
 const input = ref('');
 const route = useRoute()
 const userStore = getToken();
+const dataCache = dataCacheStore();
+
 onMounted(() => {
   if(!isLogin()){
    userStore.logout();
@@ -63,7 +63,15 @@ onMounted(() => {
   if (Object.keys(route.query).length > 0){
     input.value = route.query.key
   }
-
+})
+// 监听路由 清空搜索框的值
+watchEffect(() => {
+  if (route.path != '/search/index') {
+    input.value = ''
+  }
+  if (route.path == '/search/index') {
+    input.value = dataCache.getSearchKey
+  }
 })
 // 默认头像
 const onerrorImg = () => {
@@ -78,8 +86,10 @@ const SearchHandle = () => {
     })
     return false
   }
+  dataCache.setSearchKey(input.value)
   router.push({path: '/search', query: {"key": input.value}})
 }
+
 </script>
 <style lang="scss" scoped>
 header {

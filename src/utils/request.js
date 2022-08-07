@@ -1,6 +1,8 @@
 import axios from 'axios';
 import proxy from '../config/proxy';
 import store from '@/store'
+import { ElMessageBox, ElMessage } from 'element-plus';
+import  router  from '../router';
 
 const env = import.meta.env.MODE || 'development';
 
@@ -35,6 +37,21 @@ instance.interceptors.response.use(
   (response) => {
     if (response.status === 200 && response.data.code == 401){
       localStorage.removeItem('token')
+      ElMessageBox.confirm(
+        '您的账号登录超时或在其他机器登录，请重新登录或更换账号登录！',
+        '登录超时',
+        {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '继续浏览',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          router.push('/login')
+        })
+        .catch(() => {
+          router.go(0)
+        })
       return false 
     }
     if (response.status === 200) {

@@ -42,3 +42,32 @@
   padding: 1px 11px;
   margin-left: 16px;
 }
+// Elmessagebox 样式更改
+.el-message-box__btns .el-button{
+  background: #E1E6F0 !important;
+  color: #19232B;
+}
+.el-message-box__btns .el-button:hover, .el-message-box__btns .el-button:active{
+  background: #CDD3E0 !important;
+  color: #19232B;
+  border:solid 1px transparent;
+}
+.el-message-box__btns .el-button--primary{
+  background: var(--color-main) !important;
+  color: #fff;
+}
+.el-message-box__btns .el-button--primary:hover{
+  background: #519FFF !important;
+  color: #fff;
+  border:solid 1px transparent;
+}
+.el-message-box__btns .el-button--primary:active{
+  background: #1C55CF !important;
+  color: #fff;
+  border:solid 1px transparent;
+}
+
+.el-message-box__btns .el-button:focus-visible{
+  outline: 0 solid var(--el-button-outline-color);
+  outline-offset: 0px;
+}

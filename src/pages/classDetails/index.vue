@@ -29,7 +29,7 @@
               </div>
           </div>
         </div>
-        <div class="buyCont fx-sb" >
+        <div class="buyCont fx-sb" v-if="baseDetailsData.price != '0'" >
           <div class="fx-ct">
             <span class="price">￥</span>
             <span class="price">{{(baseDetailsData.price / 100).toFixed(2) }}</span>
@@ -38,6 +38,14 @@
           <div class="buy">
             <span class="bt-red1 bt-round marg-rt-20">加入购物车</span>
             <span class="bt-red bt-round">立即购买</span>
+          </div>
+        </div>
+        <div class="buyCont fx-sb" v-else >
+          <div class="fx-ct">
+            <span class="price">免费</span>
+          </div>
+          <div class="buy">
+            <span class="bt-red bt-round">立即报名</span>
           </div>
         </div>
       </div>

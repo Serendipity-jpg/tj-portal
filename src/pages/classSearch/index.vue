@@ -3,8 +3,8 @@
   <div class="classSearchWrapper">
     <div class="container searchBar">
       <!-- 结果统计 -->
-      <div class="result" v-if="isLogin() && searchParams.keyword">
-        <span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> </span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程
+      <div class="result" v-if="isLogin() && isShow && searchParams.keyword">
+        <span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> <i class="close" @click="clearSearchKey">X</i></span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程
       </div>
       <!-- 筛选条件 -->
       <div class="title">全部课程</div>
@@ -38,7 +38,7 @@
 <script setup>
 /** 数据导入 **/
 
-import { onMounted, ref, watchEffect } from "vue";
+import { onMounted, ref, watchEffect, nextTick } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, classSeach } from "@/api/class.js";
 // 组件导入
@@ -46,7 +46,7 @@ import SearchKey from './components/SearchKey.vue'
 import SortBar from './components/SortBar.vue'
 import ClassCards from '@/components/ClassCards.vue'
 import { useRoute } from "vue-router";
-import {isLogin} from '@/store'
+import {isLogin, dataCacheStore} from '@/store'
 
 const searchType = ref({subKey: 'categoryIdLv1', title: "课程分类", searchKeys:[]});   
 const searchCost = ref({subKey: 'free', title: "收付费", searchKeys:[{id:'all', name: '全部'},{id: '1', name: '免费'},{id: '0', name: '付费'}]});    
@@ -64,21 +64,18 @@ const searchResultData = ref([])
 const count = ref(0)
 const page = ref(1);
 const route = useRoute()
+// 是否展示关键词及结果
+const isShow = ref(true)
 // mounted生命周期
 onMounted(() => {
   // 获取一、二、三级分类信息
   getClassCategoryData()
   // 搜索
-  search()
+  // search()
   searchParams.value.keyword = route.query.key
 });
-// 监听搜索关键词
-watchEffect(() => {
-  searchParams.value.keyword = route.query.key
-  searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
-  searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
-  searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
-})
+
+const dataCache = dataCacheStore()
 
 /** 方法定义 **/
 
@@ -102,15 +99,31 @@ const getClassCategoryData = async () => {
       });
     });
 };
+// 清空搜索关键词
+const clearSearchKey = () => {
+  console.log(323231)
+  searchParams.value.keyword = ""
+  isShow.value = false
+  dataCache.setSearchKey('')
+  search()
+}
 // 搜索组件对应的事件
-const searchKey = (item) => {
+async function searchKey(item){
+  if(!isLogin()){
+    isShow.value = false
+    dataCache.setSearchKey('')
+  } 
+  searchParams.value.categoryIdLv1 = ""
+  searchParams.value.categoryIdLv2 = ""
+  searchParams.value.categoryIdLv3 = ""
   if (item.key == 'free') {
     searchParams.value[item.key] = item.value != 'all' ? Boolean(+item.value) : undefined;
   } 
   if (item.key == 'categoryIdLv1') {
     searchParams.value[item.key] = item.value != 'all' ? item.value : undefined;
   }
-  search()
+
+  console.log(99999,searchParams.value)
 }
 // 排序操作
 const sortHandle = (item) => {
@@ -124,7 +137,11 @@ const pagesHandle = (item) => {
   search()
 }
 // 搜索
-const search = async () => {
+async function search (){
+  // await nextTick().then(res => {
+  //   console.log(123,res)
+  // })
+  console.log(3456789,{...searchParams.value})
   // 将不纯在的参数干掉
   const params  = JSON.stringify({...searchParams.value})
   await classSeach(JSON.parse(params))
@@ -146,6 +163,12 @@ const search = async () => {
       });
     });
 }
-
+// 监听搜索关键词
+watchEffect(() => {
+  searchParams.value.keyword = route.query.key
+  searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
+  searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
+  searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
+})
 </script>
 <style lang="scss" src="./index.scss"> </style>

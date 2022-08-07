@@ -225,13 +225,18 @@ const setInterestList = list =>{
 const saveInterest = async () => {
   let str = ""
   for(let val of interestCatch.value){
-    str == "" ? str = val : str+= `,${val}`;
+    if (typeof val == 'string'){
+      str == "" ? str = val : str+= `,${val}`;
+    } else {
+      str == "" ? str = val.id : str+= `,${val.id}`;
+    }
   }
   if (str == ""){
     ElMessage({
           message: "您还没有选择兴趣，请先选择兴趣后再保存！",
           type: 'success'
         });
+    return     
   }
   await setInterests({interestedIds:str})
     .then((res) => {
@@ -251,12 +256,7 @@ const saveInterest = async () => {
         });
       }
     })
-    .catch(() => {
-      ElMessage({
-        message: "兴趣保存出错！",
-        type: 'error'
-      });
-    });
+    .catch(() => {});
 }
 </script>
 <style lang="scss" src="./index.scss"> </style>
