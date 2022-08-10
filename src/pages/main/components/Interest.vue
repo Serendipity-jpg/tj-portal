@@ -52,9 +52,7 @@ const actId=ref()
 // 课程讲师信息
 const teacherInfo = ref({})
 const classList = ref({})
-watchEffect((val) => {
-    console.log(333, props.data)
-  } )
+
 // 初始化首选项并获取其课程数据
 onMounted(() => {
   const data = props.data[Symbol.iterator]()

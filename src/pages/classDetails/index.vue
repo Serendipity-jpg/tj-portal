@@ -250,7 +250,7 @@ const changeTable = id => {
 }
 //收藏
 const collectionHandle = () => {
-  console.log(333333,isCollection)
+  // console.log(333333,isCollection)
   isCollection.value = !isCollection.value
 }
 </script>

@@ -24,7 +24,7 @@ const props = defineProps({
   }
 })
 onMounted(() =>{
-  console.log(3333, props.data)
+  // console.log(3333, props.data)
 })
 // emit数据载入
 const emit = defineEmits(['sortHandle'])

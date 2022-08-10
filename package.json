@@ -6,8 +6,10 @@
     "start": "vite --open --mode mock",
     "dev": "vite --open --mode development",
     "dev:test": "vite --open --mode test",
-    "dev:pro": "vite --open --mode product",
-    "build": "vite build",
+    "dev:pro": "vite --open --mode test",
+    "build": "vite build --mode development",
+    "build:dev": "vite build --mode development",
+    "build:test": "vite build --mode test",
     "preview": "vite preview"
   },
   "dependencies": {
