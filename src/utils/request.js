@@ -1,7 +1,7 @@
 import axios from 'axios';
 import proxy from '../config/proxy';
 import store from '@/store'
-import { ElMessageBox, ElMessage } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 import  router  from '../router';
 
 const env = import.meta.env.MODE || 'development';

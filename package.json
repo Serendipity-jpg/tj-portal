@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --open --mode mock",
-    "start": "vite --open --mode development",
+    "start": "vite --open --mode mock",
+    "dev": "vite --open --mode development",
     "dev:test": "vite --open --mode test",
+    "dev:pro": "vite --open --mode product",
     "build": "vite build",
     "preview": "vite preview"
   },

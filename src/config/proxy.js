@@ -1,7 +1,7 @@
 export default {
   development: {
     // 开发环境接口请求
-    host: 'http://www.eehp.cn/api',
+    host: 'http://172.17.2.134/api-test',
     // 开发环境 cdn 路径
     cdn: '',
   },
@@ -11,7 +11,7 @@ export default {
     // 测试环境 cdn 路径
     cdn: '',
   },
-  release: {
+  product: {
     // 正式环境接口地址
     host: 'https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com',
     // 正式环境 cdn 路径
