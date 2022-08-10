@@ -6,7 +6,7 @@
         <template #title>
           <div class="title"><span class="ft-wt-600">{{item.name}}</span></div>
         </template>
-        <div class="subTitle fx-sb" v-for="it in item.sections" :key="it.id">
+        <div class="subTitle fx-sb" v-for="it in item.sections" :key="it.id" @click="play(it)">
           <div class="subTit"><span>{{it.name}}</span></div><div>{{(it.mediaDuration/60).toFixed(0)}} 分钟</div>
         </div>
       </el-collapse-item>
@@ -27,7 +27,7 @@ onMounted(() =>{
   // console.log(3333, props.data)
 })
 // emit数据载入
-const emit = defineEmits(['sortHandle'])
+const emit = defineEmits(['sortHandle', 'playHadle'])
 // 排序选中参数定义
 const activeKey = ref('all')
 // 点击选中
@@ -35,6 +35,9 @@ const activeHandle = (value) => {
   activeKey.value = value
   // 提交父级 
   emit('sortHandle', value)
+}
+const play = (item) => {
+  emit('playHadle', item.id)
 }
 </script>
 <style lang="scss" scoped>

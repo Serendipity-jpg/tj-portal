@@ -49,7 +49,13 @@ export const getInterests = (params) =>
 		params
 	})		
 
-
+// 获取播放视频的授权签名
+export const getMediasSignature = (params) =>
+	request({
+		url: `/medias/signature/play`,
+		method: 'get',
+		params
+	})	
 // 优惠券 相关接口
 
 // 可领优惠券（超值优惠券）

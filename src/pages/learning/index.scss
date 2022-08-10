@@ -30,6 +30,7 @@
         width: 360px;
         background-color: #1B2127;
         transition: 500ms;
+        position: relative;
         .teachInfo{
             width: 100%;
             height: 116px;
@@ -68,6 +69,16 @@
                 height: calc(100vh - 146px);
             }
         }
+        .closeRt{
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 20px;
+            height: 80px;
+            line-height: 80px;
+            background-color: #000;
+            border-radius: 0 10px 10px 0;
+        }
     }
     .close{
         width: 0px;
@@ -80,13 +91,21 @@
         top: 50%;
         width: 44px;
         height: 140.51px;
-        // opacity: 0.64;
-        background: rgba(172,198,237,0.42);
+        background: #2E353F;
         border-radius: 18px 0 0 18px;
-        // filter: blur(27px);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        color: #A0A9B2;
+        font-size: 14px;
+        div{
+            margin: 4px 0;
+        }
+        img{
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
     }
 }
