@@ -138,11 +138,8 @@ const pagesHandle = (item) => {
 }
 // 搜索
 async function search (){
-  // await nextTick().then(res => {
-  //   console.log(123,res)
-  // })
   console.log(3456789,{...searchParams.value})
-  // 将不纯在的参数干掉
+  // 将不存在的参数干掉
   const params  = JSON.stringify({...searchParams.value})
   await classSeach(JSON.parse(params))
   .then((res) => {
@@ -169,6 +166,7 @@ watchEffect(() => {
   searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
   searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
   searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
+  search()
 })
 </script>
 <style lang="scss" src="./index.scss"> </style>

@@ -71,3 +71,14 @@
   outline: 0 solid var(--el-button-outline-color);
   outline-offset: 0px;
 }
+
+// 课程目录的使用了collapse
+
+.el-collapse-item__header, .el-collapse-item__wrap{
+  background-color: transparent;
+  border:none;
+  color: #FFF;
+}
+.el-collapse{
+  border:none;
+}

@@ -1,0 +1,92 @@
+.classLearning{
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+    width: 100vw;
+    color: var(--color-white);
+    .videoCont{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .head{
+            background-color: #1D1D1D;
+            height: 60px;
+            line-height: 60px;
+            img{
+                margin: 8px 0;
+                width: 44px;
+                height: 44px;
+            }
+        }
+        .video{
+            // width: 100%;
+            min-width: 1000px;
+            // #videoRef{
+            //     width: 100%;
+            // }
+        }
+    }
+    .learn{
+        width: 360px;
+        background-color: #1B2127;
+        transition: 500ms;
+        .teachInfo{
+            width: 100%;
+            height: 116px;
+            padding: 21px;
+            background-color: #292F37;
+            img{
+                width: 130px;
+                height: 73px;
+                margin-right: 21px;
+            }
+            .tit{
+                font-weight: 600;
+                line-height: 40px;
+                &::before{
+                    content: '';
+                    display: inline-block;
+                    width: 3px;
+                    height: 13px;
+                    margin-right: 6px;
+                    background: #2080F7;
+                    border-radius: 8px;
+                    border-radius: 1.5px;
+                }
+            }
+            .teacher{
+                line-height: 24px;
+                color: var(--color-font2);
+            }
+        }
+        .cont{
+            padding: 15px 25px;
+            height: calc(100vh - 146px);
+            overflow: hidden;
+            .catalogue{
+                margin-top: 15px;
+                height: calc(100vh - 146px);
+            }
+        }
+    }
+    .close{
+        width: 0px;
+        opacity: 0;
+    }
+    .askAndNote{
+        position: fixed;
+        cursor: pointer;
+        right: 0px;
+        top: 50%;
+        width: 44px;
+        height: 140.51px;
+        // opacity: 0.64;
+        background: rgba(172,198,237,0.42);
+        border-radius: 18px 0 0 18px;
+        // filter: blur(27px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}

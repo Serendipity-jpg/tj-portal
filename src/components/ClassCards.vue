@@ -37,6 +37,7 @@ const props = defineProps({
   }
 })
 const goDetails = id => {
+  console.log(222, id)
   router.push({path: '/details', query:{id}})
 }
 </script>

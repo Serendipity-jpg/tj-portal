@@ -28,15 +28,14 @@ export default defineConfig((mode) => {
       cors: true,
 			open: false,
 			hmr: true,
-      // proxy: {
-      //   '/img-tx': {
-      //     target: 'https://wisehub-1312394356.cos.ap-shanghai.myqcloud.com/',
-      //     rewrite: (path) => {
-      //       console.log(33,path.replace(/^\/img-tx/, ''))
-      //       return path.replace(/^\/img-tx/, '')
-      //     }
-      //   },
-      // },
+      proxy: {
+        '/img-tx': {
+          target: 'https://wisehub-1312394356.cos.ap-shanghai.myqcloud.com/',
+          rewrite: (path) => {
+            return path.replace(/^\/img-tx/, '')
+          }
+        },
+      },
     },
   }
 })

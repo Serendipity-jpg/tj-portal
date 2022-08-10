@@ -5,9 +5,9 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import  router  from '../router';
 
 const env = import.meta.env.MODE || 'development';
-
-// const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
-const host = 'http://172.17.2.134/api-test';
+console.log(env, proxy[env], proxy[env].host);
+const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
+// const host = 'http://172.17.2.134/api-test';
 
 const CODE = {
   LOGIN_TIMEOUT: 1000,

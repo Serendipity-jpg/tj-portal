@@ -44,7 +44,7 @@
           <div class="fx-ct">
             <span class="price">免费</span>
           </div>
-          <div class="buy">
+          <div class="buy" @click="() => {$router.push({path: '/learning', query: {id: detailsId}})} ">
             <span class="bt-red bt-round">立即报名</span>
           </div>
         </div>

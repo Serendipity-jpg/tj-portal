@@ -66,5 +66,20 @@ export default [
         meta: { title: '问题详情' },
       }
     ],
-  }
+  },
+  {
+    path: '/learning',
+    // component: Layout,
+    name: 'learning',
+    redirect: '/learning/index',
+    meta: { title: '学习' },
+    children: [
+      {
+        path: 'index',
+        name: 'learning',
+        component: () => import('@/pages/learning/index.vue'),
+        meta: { title: '学习' },
+      }
+    ],
+  },
 ];
