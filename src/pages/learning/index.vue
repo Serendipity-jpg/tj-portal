@@ -68,7 +68,8 @@ import { isLogin } from "@/store";
 // import '@/utils/release/libs/hls.min.0.13.2m.js';
 // import '@/utils/release/tcplayer.min.js';
 // import '@/utils/tcadapter.min.js'
-import TcAdapter from 'tcadapter';
+// import TcAdapter from 'tcadapter';
+import '@/components/tcadapter';
 import router from "../../router";
 
 const route = useRoute()
