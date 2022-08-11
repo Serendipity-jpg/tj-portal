@@ -65,11 +65,8 @@ import Catalogue from "./components/Catalogue.vue";
 import Question from "./components/Question.vue";
 import Note from "./components/Note.vue";
 import { isLogin } from "@/store";
-// import '@/utils/release/libs/hls.min.0.13.2m.js';
-// import '@/utils/release/tcplayer.min.js';
-// import '@/utils/tcadapter.min.js'
+
 // import TcAdapter from 'tcadapter';
-import '@/components/tcadapter';
 import router from "../../router";
 
 const route = useRoute()
@@ -114,31 +111,15 @@ onMounted(()=>{
 })
 // 初始化视频播放器并播放视频 视频ID、播放器签名
 const initPlay = (fileID, psign) => {
-  // 验证是否支持
-  console.log(TcAdapter.isSupported());
-  const adapter = new TcAdapter(videoRef.value, {
+  const player = new TCPlayer(videoRef.value, {
     appID: '1312394356',
     fileID,
     psign,
     hlsConfig: {},
-  }, () => {
-    console.log('basicInfo', adapter.getVideoBasicInfo());
   });
-  adapter.on(TcAdapter.TcAdapterEvents.HLSREADY, () => {
-    const hls = adapter.hls;
-  })
-    // console.log(TcAdapter.isSupported());
-    // const adapter = new TcAdapter(videoRef.value, {
-    //     appID: '1312394356',
-    //     fileID,
-    //     psign,
-    //     hlsConfig: {},
-    //   }, () => {
-    //     console.log('basicInfo', adapter.getVideoBasicInfo());
-    //   });
-    //   adapter.on(TcAdapter.TcAdapterEvents.HLSREADY, () => {
-    //     const hls = adapter.hls;
-    //   })
+  player.on('timeupdate', function() {
+    console.log(player.currentTime());
+  });
 }
 
 const load = (e) => {

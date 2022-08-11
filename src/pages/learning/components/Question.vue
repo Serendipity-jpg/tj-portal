@@ -1,14 +1,6 @@
 <!-- 问答模块 -->
 <template>
-  <div class="classAsk marg-bt-20">
-    <div class="tabLab fx-sb">
-      <div class="lable">
-        <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部问答</span> 
-        <span @click="askCheck('my')" :class="{act:askType == 'my'}">我的问答</span>
-      </div> 
-      <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: $props.id, title: $props.title}})" class="bt bt-round ft-14">提问</span></div>
-    </div>
-    <AskChapterItems :data="chapterData" @checkCahpter="checkCahpter"></AskChapterItems>
+  <div class="question marg-bt-20">
     <div class="askCont">
       <div class="askLists" v-for="item in askListsDataes">
         <div class="userInfo fx">
@@ -30,25 +22,12 @@
           </div>
         </div>
       </div>
-      <div class="pagination fx-ct">
-        <el-pagination
-          v-model:currentPage="params.pageNo"
-          v-model:page-size="params.pageSize"
-          background
-          :page-sizes="[10, 20, 50, 100]"
-          layout="total, prev, pager, next, sizes, jumper"
-          :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
     </div>
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue"
 import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
-import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
@@ -64,10 +43,6 @@ const props = defineProps({
     type: String,
     default: ''
   }, 
-  title:{
-    type: String,
-    default: ''
-  }
 })
 
 // 用户信息
@@ -205,34 +180,8 @@ const handleCurrentChange = (val) => {
 
 </script>
 <style lang="scss" scoped>
-.classAsk{
+.question{
   padding-top: 30px;
-  .tabLab{
-    margin-bottom: 20px;
-    .lable{
-      display: flex;
-      align-items: center;
-       span{
-        cursor: pointer;
-      }
-    }
-    .ask{
-      width: 103px;
-      height: 32px;
-      align-items: center;
-      span{
-        line-height: 30px;
-      }
-    }
-    .act{
-      background: #19232B;
-      border-radius: 20px;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 5px 20px;
-    }
-  }
   .askCont{
     padding-top: 20px;
     .askLists{
@@ -275,10 +224,6 @@ const handleCurrentChange = (val) => {
         }
       }
     }
-  }
-  .pagination{
-    padding-top: 40px;
-    text-align: center;
   }
 }
 </style>
