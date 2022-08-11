@@ -6,6 +6,104 @@
   "description": "智慧云课堂",
   "glyphs": [
     {
+      "icon_id": "31158306",
+      "name": "ico-50@2x",
+      "font_class": "a-ico-502x1",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "31153532",
+      "name": "btn-bj-nor @2x",
+      "font_class": "a-btn-bj-nor2x",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "31153533",
+      "name": "icon-sp 2@2x",
+      "font_class": "a-icon-sp22x",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "31153534",
+      "name": "btn-wd -nor@2x",
+      "font_class": "a-btn-wd-nor2x",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "31153535",
+      "name": "icon-fx 2@2x",
+      "font_class": "a-icon-fx22x",
+      "unicode": "e650",
+      "unicode_decimal": 58960
+    },
+    {
+      "icon_id": "31153536",
+      "name": "icon-zan@2x",
+      "font_class": "a-icon-zan2x",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
+      "icon_id": "31153537",
+      "name": "icon-zan-sei@2x",
+      "font_class": "a-icon-zan-sei2x",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "31153525",
+      "name": "ico-caiji@2x",
+      "font_class": "a-ico-caiji2x",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "31153526",
+      "name": "icon-delete 2@2x",
+      "font_class": "a-icon-delete22x",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "31153527",
+      "name": "icon-xiugai 2@2x",
+      "font_class": "a-icon-xiugai22x",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "31153528",
+      "name": "ico-50@2x",
+      "font_class": "a-ico-502x",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "31153529",
+      "name": "ico-wc @2x",
+      "font_class": "a-ico-wc2x",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "31153530",
+      "name": "ico-jdks @2x",
+      "font_class": "a-ico-jdks2x",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "31153531",
+      "name": "ico-sp-sei @2x",
+      "font_class": "a-ico-sp-sei2x",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
       "icon_id": "30851020",
       "name": "btn_zan_sel@2x",
       "font_class": "a-btn_zan_sel2x",

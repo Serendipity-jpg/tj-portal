@@ -30,7 +30,7 @@ export default defineConfig((mode) => {
 			hmr: true,
       proxy: {
         '/img-tx': {
-          target: 'https://wisehub-1312394356.cos.ap-shanghai.myqcloud.com/',
+          target: 'http://172.17.2.134/',
           rewrite: (path) => {
             return path.replace(/^\/img-tx/, '')
           }

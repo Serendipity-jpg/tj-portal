@@ -31,7 +31,6 @@ export const getClassChapter = (id) =>
 		method: 'get'
 	})	
 
-	
 // 问答相关
 // 获取问答列表-全部
 export const getAskList = (params) =>

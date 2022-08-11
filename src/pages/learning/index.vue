@@ -5,7 +5,7 @@
       <div class="head fx-sb" > 
         <div class="fx cur-pt" @click="() => $router.go(-1)">
           <img src="@/assets/icon_back.png" alt="">
-          <div>返回 | Java</div>
+          <div>返回 | {{baseDetailsData.name}}</div>
         </div>
       </div>
       <div class="video">
@@ -53,12 +53,12 @@
 </template>
 <script setup>
 /** 数据导入 **/
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { getClassList } from "@/api/classDetails.js";
-import { getMediasSignature } from "@/api/class.js";
-
+import { getClassList, getClassDetails } from "@/api/classDetails.js";
+import { getMediasSignature, getCourseLearning } from "@/api/class.js";
 import { useRoute } from "vue-router";
+
 // 组件导入
 import TableSwitchBar from "@/components/TableSwitchBar.vue";
 import Catalogue from "./components/Catalogue.vue";
@@ -67,8 +67,10 @@ import Note from "./components/Note.vue";
 import { isLogin } from "@/store";
 // import '@/utils/release/libs/hls.min.0.13.2m.js';
 // import '@/utils/release/tcplayer.min.js';
+// import '@/utils/tcadapter.min.js'
 import TcAdapter from 'tcadapter';
 import router from "../../router";
+
 const route = useRoute()
 // 结果 - 详情Id
 const detailsId = ref()
@@ -79,48 +81,96 @@ const classListData = ref([])
 
 const videoRef = ref(null)
 /** 方法定义 **/
+/*
+* 本节有三种模式播放  
+* 一、免费课程 - 先点击点击到学习计划然后进入这里学习
+* 二、购买的课程 - 购买成功自动加入学习计划到这里学习
+* 三、试听 - 无需加入学习计划直接学习
+* 先加载当前课程信息
+* 然后获取学习计划信息
+* 通过课程计划自动调整到对应的小节 - 通过小节Id 获取视频签名（用于视频播放）
+* 点击小节 - 通过小节Id 获取视频签名（用于视频播放）
+*
+*/
 onMounted(()=>{
   detailsId.value = route.query.id
   if (isLogin){
+    // 获取课程目录
     getClassListData();
+    // 查询当前课程是否有学习并获得对应的学习状态
+    getCourseLearningData(route.query.id)
+    // 获取课程详情的
+    getClassDetailsData(route.query.id)
     return 
   } else {
     ElMessage('您还没有登录,先去登录吧！')
     router.push('/login')
   }
+
   // 通过课程的小节id获取视频的fileId
   // getMediasSignatureData();
-  TcAdapter.isSupported();
+  
 })
-// 初始化视频播放器并播放视频 视频ID、封面图、播放器签名
-const initPlay = (fileID, signature, psign) => {
+// 初始化视频播放器并播放视频 视频ID、播放器签名
+const initPlay = (fileID, psign) => {
+  // 验证是否支持
+  console.log(TcAdapter.isSupported());
   const adapter = new TcAdapter(videoRef.value, {
-      appID: '1312394356',
-      fileID,
-      psign,
-      hlsConfig: {},
-    }, () => {
-      console.log('basicInfo', adapter.getVideoBasicInfo());
-    });
-    adapter.on(TcAdapter.TcAdapterEvents.HLSREADY, () => {
-      console.log(333)
-      const hls = adapter.hls;
-    })
+    appID: '1312394356',
+    fileID,
+    psign,
+    hlsConfig: {},
+  }, () => {
+    console.log('basicInfo', adapter.getVideoBasicInfo());
+  });
+  adapter.on(TcAdapter.TcAdapterEvents.HLSREADY, () => {
+    const hls = adapter.hls;
+  })
+    // console.log(TcAdapter.isSupported());
+    // const adapter = new TcAdapter(videoRef.value, {
+    //     appID: '1312394356',
+    //     fileID,
+    //     psign,
+    //     hlsConfig: {},
+    //   }, () => {
+    //     console.log('basicInfo', adapter.getVideoBasicInfo());
+    //   });
+    //   adapter.on(TcAdapter.TcAdapterEvents.HLSREADY, () => {
+    //     const hls = adapter.hls;
+    //   })
 }
 
 const load = (e) => {
-  console.log(e)
+  // console.log(e)
 }
 
 const play = () => {
   videoRef.value.play();
 }
 
-// 获取详情数据
 
-// 获取课程讲师详情数据
-// 获取当前课程学习的状态信息
-
+// 获取课程详情数据
+const baseDetailsData = ref({})
+const getClassDetailsData = async (id) => {
+  await getClassDetails(id)
+    .then((res) => {
+      console.log("课程详情", res.data)
+      if (res.code == 200) {
+        baseDetailsData.value = res.data
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "获取课程详情数据请求出错！",
+        type: 'error'
+      });
+    });
+};
 // 获取课程目录
 const getClassListData = async () => {
   await getClassList(detailsId.value)
@@ -141,23 +191,22 @@ const getClassListData = async () => {
       });
     });
 };
-// 获取学习计划
-const getLearningPlanData = async (sectionId) => {
-  await getMediasSignature({sectionId})
+// 获取当前课程是否有学习计划
+const learningData = ref(null)
+const getCourseLearningData = async (sectionId) => {
+  await getCourseLearning(sectionId)
     .then((res) => {
-      if (res.code == 200) {
-        res.data.fileId
-        initPlay(res.data.fileId, signature, psign)
-      } else {
-        ElMessage({
-          message:res.data.msg,
-          type: 'error'
-        });
+      console.log('是否添加了学习计划：', res)
+      if(res.code == 1){
+        // learningData()
+      }
+      if (res.code == 200) { 
+        learningData.value = res.data
       }
     })
     .catch(() => {
       ElMessage({
-        message: "课程目录数据请求出错！",
+        message: "学习计划获取请求出错！",
         type: 'error'
       });
     });
@@ -167,8 +216,7 @@ const getMediasSignatureData = async (sectionId) => {
   await getMediasSignature({sectionId})
     .then((res) => {
       if (res.code == 200) {
-        res.data.fileId
-        initPlay(res.data.fileId, signature, psign)
+        initPlay(res.data.fileId,res.data.signature)
       } else {
         ElMessage({
           message:res.data.msg,

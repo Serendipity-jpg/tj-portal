@@ -23,6 +23,18 @@ export const getClassList = (id) =>
 		method: 'get'
 	})
 
+// 获取学习计划 getLearningPlan	
+export const getLearningPlan = (id) =>
+	request({
+		url: `courses/cate/${id}`,
+		method: 'get'
+	})
+// 查询当前用户的学习课程		
+export const getCourseLearning = (courseId) =>
+request({
+	url: `/lessons/course/${courseId}`,
+	method: 'get'
+})	
 // 课程搜索
 export const classSeach = (params) =>
 	request({

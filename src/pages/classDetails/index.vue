@@ -37,7 +37,7 @@
           </div>
           <div class="buy">
             <span class="bt-red1 bt-round marg-rt-20">加入购物车</span>
-            <span class="bt-red bt-round">立即购买</span>
+            <span class="bt-red bt-round" @click="() => {$router.push({path: '/learning', query: {id: detailsId}})}" >立即购买</span>
           </div>
         </div>
         <div class="buyCont fx-sb" v-else >

@@ -1,6 +1,6 @@
 <!-- 问答模块 -->
 <template>
-  <div class="classAsk bg-wt marg-bt-20">
+  <div class="classAsk marg-bt-20">
     <div class="tabLab fx-sb">
       <div class="lable">
         <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部问答</span> 

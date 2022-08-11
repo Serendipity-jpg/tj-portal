@@ -7,6 +7,7 @@
           <div class="title"><span class="ft-wt-600">{{item.name}}</span></div>
         </template>
         <div class="subTitle fx-sb" v-for="it in item.sections" :key="it.id" @click="play(it)">
+          <i :class="startIcon(it)"></i>
           <div class="subTit"><span>{{it.name}}</span></div><div>{{(it.mediaDuration/60).toFixed(0)}} 分钟</div>
         </div>
       </el-collapse-item>
@@ -14,6 +15,7 @@
   </div>
 </template>
 <script setup>
+import { computed } from '@vue/reactivity';
 import { onMounted, ref } from 'vue'
 
 // 引入父级传参
@@ -26,6 +28,24 @@ const props = defineProps({
 onMounted(() =>{
   // console.log(3333, props.data)
 })
+// const startIcon = computed((e) => {
+//   console.log(e)
+//   return `iconfont zhy-a-ico-sp-sei2x` 
+// })
+const startIcon = (item) => {
+  let data = 'iconfont zhy-a-ico-sp-sei2x'
+  switch (item.type){
+    case '2' : {
+      data = 'iconfont zhy-a-ico-sp-sei2x'
+      break;
+    } 
+    case '3' : {
+      data = 'iconfont zhy-a-ico-jdks2x'
+      break;
+    }
+  }
+  return data
+}
 // emit数据载入
 const emit = defineEmits(['sortHandle', 'playHadle'])
 // 排序选中参数定义
@@ -36,6 +56,7 @@ const activeHandle = (value) => {
   // 提交父级 
   emit('sortHandle', value)
 }
+
 const play = (item) => {
   emit('playHadle', item.id)
 }
@@ -58,11 +79,16 @@ const play = (item) => {
   }
   .subTitle{
     line-height: 20px;
+    i{
+      position: relative;
+      top: 1px;
+      margin-right: 4px;
+    }
     cursor: pointer;
     margin: 20px 0;
     color: #A0A9B2;
     .subTit{
-      width: 250px;
+      width: 230px;
       line-height: 20px;
     }
     &:hover{
