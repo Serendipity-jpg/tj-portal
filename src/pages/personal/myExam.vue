@@ -49,7 +49,7 @@ const getExamListData = async () => {
     .then((res) => {
       if (res.code == 200 && res.data != null){
         myExamData.value = res.data.list
-        count.value = res.data.total
+        count.value = Number(res.data.total)
       }
     })
     .catch(() => {

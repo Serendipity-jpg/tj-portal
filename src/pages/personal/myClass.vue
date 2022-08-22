@@ -3,7 +3,7 @@
   <div class="myClassWrapper">
     <div class="">
       <!-- 最近学习 -->
-      <div class="personalCards" v-if="learningData != null">
+      <div class="personalCards" v-if="learningData != null && typeof(learningData) != 'string'">
         <CardsTitle class="marg-bt-20" title="最近学习" />
         <ClassCards :data="learningData" type="1"/>
       </div>
