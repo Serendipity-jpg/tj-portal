@@ -25,15 +25,13 @@ export default defineConfig((mode) => {
     server: {
       port: 8088,
       host: '0.0.0.0',
-      cors: true,
-			open: false,
-			hmr: true,
       proxy: {
         '/img-tx': {
-          target: 'http://172.17.2.134/',
-          rewrite: (path) => {
-            return path.replace(/^\/img-tx/, '')
-          }
+          target: 'http://172.17.2.134',
+          changeOrigin: true,
+          // rewrite: (path) => {
+          //   return path.replace(/^\/img-tx/, '')
+          // }
         },
       },
     },

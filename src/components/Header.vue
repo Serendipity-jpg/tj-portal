@@ -26,7 +26,7 @@
         <div class="car fx-al-ct">
           <img src="@/assets/icon-gwc-nor.png" alt="" /> 购物车
         </div>
-        <router-link class="marg-lr-40" to="/">学习中心</router-link>
+        <router-link class="marg-lr-40" to="/personal/main/myClass">学习中心</router-link>
         <div></div>
         <div class="cur-pt font-bt2" v-if="!isToken"><span>注册</span><span>/</span><span @click="() => $router.push('/login')">登录</span></div>
         <div class="fx-al-ct" v-if="isToken && userInfo">

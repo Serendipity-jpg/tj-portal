@@ -73,7 +73,6 @@
 }
 
 // 课程目录的使用了collapse
-
 .el-collapse-item__header, .el-collapse-item__wrap{
   background-color: transparent;
   border:none;
@@ -81,4 +80,51 @@
 }
 .el-collapse{
   border:none;
+}
+
+// 视频播放模块 
+.classLearning .el-input__wrapper{
+  height: 33px;
+  background-color: #000000;
+  box-shadow: 0 0 0 0 transparent
+}
+.classLearning .el-input .el-input__count .el-input__count-inner{
+  background-color: #000000;
+}
+.classLearning .el-textarea__inner{
+  background-color: #000000;
+  box-shadow: 0 0 0 0 transparent
+}
+.classLearning .el-textarea .el-input__count{
+  background-color: #000000;
+}
+.classLearning .el-input__inner{
+  color: #7A838A;
+}
+// 答题
+.classLearning .ExQuestions .el-textarea__inner{
+  background-color: #fff;
+  box-shadow: 0 0 0 1px var(--el-input-border-color,var(--el-border-color)) inset;
+}
+.classLearning .ExQuestions .el-textarea .el-input__count{
+  background-color: #fff;
+}
+.el-checkbox__inner{
+  border-radius: 12px;
+}
+.el-radio-group{
+  display: block;
+}
+.el-radio-group label{
+  width: 100%;
+  line-height: 40px;
+}
+.el-checkbox{
+  width: 100%;
+  line-height: 40px;
+  height: 40px;
+}
+// 我的课程
+.el-table .el-table__cell{
+  padding: 12px 0 ;
 }

@@ -44,8 +44,11 @@
           <div class="fx-ct">
             <span class="price">免费</span>
           </div>
-          <div class="buy" @click="() => {$router.push({path: '/learning', query: {id: detailsId}})} ">
+          <div class="buy" v-if="!isSignUp" @click="signUpHandle">
             <span class="bt-red bt-round">立即报名</span>
+          </div>
+          <div class="buy" v-else @click="goLearning">
+            <span class="bt-red bt-round">马上学习</span>
           </div>
         </div>
       </div>
@@ -59,9 +62,9 @@
         <!-- 课程目录 -->
         <ClassCatalogue v-show="actId == 2" :data="classListData"></ClassCatalogue>
         <!-- 问答模块 -->
-        <ClassAsk v-if="isLogin()" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
+        <ClassAsk v-if="isLogin() && actId == 3" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
         <!-- 笔记模块 -->
-        <Note  v-if="isLogin()" v-show="actId == 4" :id="detailsId"></Note>
+        <Note  v-if="isLogin() && actId == 4" v-show="" :id="detailsId"></Note>
         <div class="fx-ct ft-cl-des" style="height: 400px;" v-show="actId == 5" :id="detailsId">
           暂无数据！
         </div>
@@ -77,12 +80,17 @@
   </div>
 </template>
 <script setup>
-/** 数据导入 **/
 
+/** 数据导入 **/
 import { computed, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassDetails, getClassTeachers, getClassList } from "@/api/classDetails.js";
-import { useRoute } from "vue-router";
+import { setOrder } from "@/api/order.js";
+
+import { getCourseLearning } from "@/api/class.js";
+import { useRoute, useRouter } from "vue-router";
+import { dataCacheStore } from "@/store"
+
 // 组件导入
 import Breadcrumb from "@/components/Breadcrumb.vue";
 import TableSwitchBar from "@/components/TableSwitchBar.vue";
@@ -96,8 +104,12 @@ import { isLogin } from "@/store";
 import weixin from '@/assets/icon_weixin.svg'
 
 const route = useRoute()
+const router= useRouter()
+const store = dataCacheStore()
+
 // 结果 - 详情Id
 const detailsId = ref()
+
 // 课程信息及讲师信息
 const baseDetailsData = ref({})
 const baseClassTeacher = ref([])
@@ -108,6 +120,7 @@ const noLogData = [{id: 1, name: '课程介绍'}, {id: 2, name: '课程目录'},
 const tableBar = computed(() => {
   return isLogin() ? logData : noLogData
 })
+
 // 猜你喜欢 - 静态数据
 const LikeData = [{
     sold: 234, 
@@ -138,7 +151,9 @@ const LikeData = [{
     teacher: "李老师"
   }
 ]
+
 const isCollection = ref(false);
+
 // 当前table选项
 const actId = ref(1)
 
@@ -152,19 +167,32 @@ const askData = [
 ]
 // 课程目录
 const classListData = ref([])
+const baseClassTeacherData = ref([])
+
 // mounted生命周期
-onMounted(() => {
+onMounted(async () => {
   detailsId.value = route.query.id
-  // 获取课程信息
-  getClassDetailsData()
+  //TODO 详情、老师信息、学习进度相关信息
+  //TODO 相关联的接口： 小节列表、目录、问答（我的、全部）、笔记（我的全部）
+  // 获取课程信息 - 详情
+  await getClassDetailsData()
   // 获取课程老师信息
-  getClassTeachersData()
+  await getClassTeachersData()
+  // 获取本节课的学习计划
+  // await getClassPlan()
   // 获取课程目录
-  getClassListData()
+  await getClassListData()
+  // 获取本课程的学习情况 
+  await getCourseLearningData()
+
+  store.setLearingDataes({
+    classDetailsData:baseDetailsData.value, // 课程的信息
+    teacherData:baseClassTeacherData.value, // 讲师信息
+    planData: planData.value // 学习计划信息
+  })
 });
 
 /** 方法定义 **/
-
 // 获取详情数据
 const getClassDetailsData = async () => {
   await getClassDetails(detailsId.value)
@@ -193,6 +221,7 @@ const getClassTeachersData = async () => {
       if (res.code == 200) {
         // 过滤可展示项
         const data = res.data.filter(n => n.isShow);
+        baseClassTeacherData.value = data
         let catchArr = []
         // 数据重组 展示幻灯片用
         data.forEach((n, i) => {
@@ -204,7 +233,7 @@ const getClassTeachersData = async () => {
               catchArr.push([n])
             } else {
               lastTag.push(n)
-            catchArr.push([n])
+              catchArr.push([n])
             }
           }
         })
@@ -244,14 +273,93 @@ const getClassListData = async () => {
       });
     });
 };
+// 获取用户本节课的学习计划
+const getClassPlan = async () => {
+
+}
 // table切换 当前展示信息 课程介绍、课程目录
 const changeTable = id => {
   actId.value = id
+  switch (id) {
+    case 2 : {
+      console.log(22, '获取课程目录')
+      break;
+    } 
+    case 3 : {
+      console.log(333)
+      break;
+    } 
+    case 4 : {
+      console.log(333)
+      break;
+    } 
+  }
 }
+
 //收藏
 const collectionHandle = () => {
-  // console.log(333333,isCollection)
   isCollection.value = !isCollection.value
 }
+const isSignUp = ref(false)
+// 立即报名
+const signUpHandle = async () => {
+  await setOrder({ courseIds:[detailsId.value]})
+  .then((res) => {
+    if (res.code == 200) {
+      ElMessage({
+        message:'报名成功',
+        type: 'success'
+      });
+      isSignUp.value = true
+    } else {
+      ElMessage({
+        message:res.data.msg,
+        type: 'error'
+      });
+    }
+  })
+  .catch(() => {
+    ElMessage({
+      message: "报名失败，请联系管理员",
+      type: 'error'
+    });
+  });
+}
+// 马上学习
+const goLearning = () => {
+  router.push({path: '/learning', query: {id: detailsId.value}})
+}
+
+// 查询当前用户学习的指定课程信息，返回null则代表没有购买
+const planData = ref()
+const getCourseLearningData = async () => {
+  await getCourseLearning(detailsId.value)
+  .then((res) => {
+    const { data } = res
+    if (res.code == 200) {
+      isSignUp.value = true
+      planData.value = data
+    } else if (data.code == 1){
+      isSignUp.value = false
+    } else {
+      ElMessage({
+        message:res.data.msg,
+        type: 'error'
+      });
+    }
+  })
+  .catch(() => {
+    ElMessage({
+      message: "用户学习信息数据请求出错！",
+      type: 'error'
+    });
+  });
+}
+// godetails
+const goDetails = () => {
+
+}
+
+// 
 </script>
 <style lang="scss" src="./index.scss"> </style>

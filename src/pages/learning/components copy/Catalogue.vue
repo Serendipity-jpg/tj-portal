@@ -10,7 +10,7 @@
           <i  @click="play(it, '1')" :class="startIcon(it)"></i>
           <div class="subTit fx-1">
             <span @click="play(it, '1')" class="marg-rt-10">{{it.name}}</span>
-            <span v-if="it.type == 2" @click="play(it, '2')" class="chapter">练习</span>
+            <span @click="play(it, '2')" class="chapter">练习</span>
           </div>
           <div> 
             <span @click="play(it, '1')" v-if="it.mediaDuration != 0">{{(it.mediaDuration/60).toFixed(0)}} 分钟</span>
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref } from 'vue'
 
 // 引入父级传参
 const props = defineProps({
@@ -43,15 +43,15 @@ const props = defineProps({
   }
 })
 // 默认打开项
-const playId = ref('')
-
-watchEffect(() => {
-  playId.value = props.playId
-})
-
+const playId = ref(props.playId)
 // 根据播放状态调整icon
 const startIcon = (item) => {
   let data = 'iconfont zhy-a-ico-sp-sei2x'
+  props.statusList.forEach(val => {
+    if (item.id == val.sectionId){
+      item = item.assign(val)
+    }
+  })
 
   if(item.type == '2'){
     if(item.finished != undefined && item.finished == false){  // 未播放完成
@@ -87,6 +87,7 @@ const play = (item, tp) => {
   ::deep(.el-collapse-item__header){
       background: transparent;
   }
+
   .title{
     font-size: 16px;
     height: 40px;

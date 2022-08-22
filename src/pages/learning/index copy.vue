@@ -5,24 +5,24 @@
       <div class="head fx-sb" > 
         <div class="fx cur-pt" @click="() => $router.go(-1)">
           <img src="@/assets/icon_back.png" alt="">
-          <div>返回 | {{learningClassDetails && learningClassDetails.latestSectionName}}</div>
+          <div>返回 | {{learningData && learningData.latestSectionName}}</div>
         </div>
       </div>
       <div class="videoCont">
         <div class="video" v-show="pageType == 1">
           <video  id="videoRef" ref="videoRef" ></video>
         </div>
-        <Practise v-if="pageType == 2" :id="currentPlayData.sectionId"  :examId="examId" :key="currentPlayData.sectionId"></Practise>
+        <Practise v-if="pageType == 2" :id="currentPlayData.sectionId" :type="pageType-2" :chapterId="currentPlayData.chapterId" :courseId="$route.query.id" :key="currentPlayData.sectionId"></Practise>
       </div>
     </div>
     <!-- 右侧目录、问答、笔记 - start -->
     <div class="learn" :class="{close: isClose}" >
        <div class="closeRt cur-pt" :class="{close: isClose}"  @click="close">></div>
        <div class="teachInfo fx">
-          <img :src="learningClassDetails && learningClassDetails.coverUrl" alt="">
+          <img src="@/assets/banner1.jpg" alt="">
           <div class="">
-            <div class="tit">{{learningClassDetails && learningClassDetails.name}}</div>
-            <div class="teacher ft-14"> 讲师 : {{learningClassDetails && learningClassDetails.teacherName}}</div>
+            <div class="tit">{{classDetailsData.name}}</div>
+            <div class="teacher ft-14"> 讲师 : {{teacherData[0] && teacherData[0].name}}</div>
           </div>
        </div>
        <div class="cont">
@@ -31,15 +31,15 @@
          </div>
          <!-- 目录 -->
          <div class="catalogue" v-show="actId == 1" v-infinite-scroll="load" style="overflow: auto">
-           <Catalogue :data="learningClassDetails && learningClassDetails.chapters" :actIndex="actIndex" :playId="playId" @playHadle="playHadle" @openCatalogue="openCatalogue"></Catalogue>
+           <Catalogue :data="classListData" :statusList="learningList" :actIndex="actIndex" @playHadle="playHadle" @openCatalogue="openCatalogue"></Catalogue>
          </div>
          <!-- 问答 -->
-         <div class="question"  v-if="actId == 2" v-infinite-scroll="load" style="overflow: auto">
+         <div class="question"  v-show="actId == 2" v-infinite-scroll="load" style="overflow: auto">
           <Question></Question>
          </div>
          <!-- 笔记 -->
-         <div class="note"  v-if="actId == 3" v-infinite-scroll="load" style="overflow: auto">
-          <Note></Note>
+         <div class="note"  v-show="actId == 3" v-infinite-scroll="load" style="overflow: auto">
+          <Note :id="currentPlayData.sectionId"></Note>
          </div>
        </div>
     </div>
@@ -58,10 +58,10 @@
 </template>
 <script setup>
 /** 数据导入 **/
-import { onMounted, ref, onUnmounted, provide } from "vue";
+import { onMounted, ref, onUnmounted } from "vue";
 import { ElMessage } from "element-plus";
-import { getMediasSignature, getMyLearning, addPlayLog, getLearningLog, getLearningClassDetails } from "@/api/class.js";
-  import { startExamination } from '@/api/subject.js';
+import { getClassList, getClassDetails, getClassTeachers } from "@/api/classDetails.js";
+import { getMediasSignature, getMyLearning, addPlayLog, getLearningLog } from "@/api/class.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 // 组件导入
@@ -82,7 +82,7 @@ const store = dataCacheStore()
 // 主展示区域 1 为视频 2 为练习 3 考试
 const pageType = ref(1)
 // 结果 - 详情Id
-const detailsId = ref({})
+const detailsId = ref()
 // 课程信息及讲师信息
 const tableBar = [{id: 1, name: '目录'}, {id: 2, name: '问答'}, {id: 3, name: '笔记'}]
 // 课程目录
@@ -102,17 +102,10 @@ const videoRef = ref(null)
 * 点击小节 - 通过小节Id 获取视频签名（用于视频播放）
 *
 */
-
-// 目录默认展开章
+// 讲师信息、课程信息存储
+const teacherData = ref({})
+const classDetailsData = ref({})
 const actIndex = ref('')
-// 默认播放小节
-const playId = ref('')
-// 记录播放相关参数
-const fileId = ref('')
-const signature = ref('')
-const timer = ref(null);
-
-
 // 当前播放小节信息缓存 
 const currentPlayData = reactive({
   courseId:route.query.id,    // 课程Id
@@ -120,10 +113,12 @@ const currentPlayData = reactive({
   sectionId:'',  // 小节Id
   currentTime: '', // 播放时间
   duration: '', // 总时长
+  sectionType: 1 // 播放类型 1-视频，2-练习，3-考试
 })
-provide('currentPlayData', currentPlayData )
-//当前播放课程的全部信息
-const learningClassDetails = ref()
+
+const fileId = ref('')
+const signature = ref('')
+const timer = ref(null);
 
 onMounted(async ()=>{
   //TODO 详情 - 课程ID 小节ID  课程名称 小节名称 讲师的信息 课程图片 + 当前课程是否购买
@@ -131,11 +126,6 @@ onMounted(async ()=>{
   //TODO 如果课程已经看过了 需要最后一次播放的信息 小节ID 小节名称 小节播放时间 到哪里了
   detailsId.value = route.query.id  // 课程id
 
-  // 使用课程id获取当前课程的细节
-  await getLearningClassDetailsData()
-  // 通过课程的小节id获取视频的fileId
-  // await getMediasSignatureData(learningClassDetails.value.latestSectionId);
-  return false
   if (isLogin){
     // 查询当前课程是否有学习并获得对应的学习状态 
     await getCourseLearningData(route.query.id)
@@ -167,30 +157,23 @@ onMounted(async ()=>{
   } 
   // actIndex.value = data.id
   currentPlayData.duration = learningData.mediaDuration
+  // 通过课程的小节id获取视频的fileId
+  getMediasSignatureData(learningData.value.id);
 })
-// 使用课程id获取当前课程的细节
-const getLearningClassDetailsData = async () => {
-  await getLearningClassDetails({courseId: detailsId.value})
+
+// 组件卸载的时候触发 - 页面跳转的时候触发
+onUnmounted(() => {
+  clearInterval(timer.value)
+})
+
+// 获取课程讲师详情数据
+const getClassTeachersData = async () => {
+  await getClassTeachers(detailsId.value)
     .then((res) => {
       if (res.code == 200) {
-       learningClassDetails.value = res.data
-       // 第一次进入本课程 默认 第一章 第一节
-       if(res.data.latestSectionId == undefined && res.data.latestSectionId == undefined){
-          learningClassDetails.value.latestChapterId = res.data.chapters[0].id || ''   // 章Id
-          learningClassDetails.value.latestSectionId = res.data.chapters[0].sections[0].id || ""  // 小节Id
-          learningClassDetails.value.latestSectionMoment = 0
-       }
-       // 小节的名称后端没有提供 前端遍历查询
-        const data = res.data.chapters[0].sections.filter(n => n.id == learningClassDetails.value.latestSectionId)
-        learningClassDetails.value.latestSectionName = data[0].name;
-        // 缓存当前播放内容
-        currentPlayData.duration = data[0].mediaDuration
-        currentPlayData.chapterId = learningClassDetails.value.latestChapterId, // 章Id
-        currentPlayData.sectionId = learningClassDetails.value.latestSectionId,  // 小节Id
-        currentPlayData.currentTime = learningClassDetails.value.currentTime, // 播放时间
-       // 默认展开对应的章
-       actIndex.value = res.data.chapters[0].id || "" 
-       playId.value = res.data.chapters[0].sections[0].id || "" 
+        // 过滤可展示项
+        const data = res.data.filter(n => n.isShow);
+        teacherData.value = data
       } else {
         ElMessage({
           message:res.data.msg,
@@ -205,11 +188,6 @@ const getLearningClassDetailsData = async () => {
       });
     });
 };
-
-// 组件卸载的时候触发 - 页面跳转的时候触发
-onUnmounted(() => {
-  clearInterval(timer.value)
-})
 
 // 初始化视频播放器并播放视频 视频ID、播放器签名
 const player = ref(null)
@@ -245,9 +223,8 @@ const initPlay = (fileID, psign) => {
     addPlayLogHandle()
   });
   // 延迟自动播放 定位到对应的时间点
-  setTimeout(()=> {player.value.currentTime(currentPlayData.currentTime)}, 2000)
+  setTimeout(()=> {player.value.currentTime(learningData.latestSectionMoment)}, 2000)
 }
-
 // 目录、问答、笔记滚动
 const load = () => {}
 
@@ -267,8 +244,93 @@ const addPlayLogHandle = () => {
     });
 };
 
+// 获取课程详情数据
+const getClassDetailsData = async (id) => {
+  await getClassDetails(id)
+    .then((res) => {
+      if (res.code == 200) {
+        classDetailsData.value = res.data
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "获取课程详情数据请求出错！",
+        type: 'error'
+      });
+    });
+};
+
+// 获取课程目录
+const getClassListData = async () => {
+  await getClassList(detailsId.value)
+    .then((res) => {
+      if (res.code == 200) {
+        classListData.value = res.data
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "课程目录数据请求出错！",
+        type: 'error'
+      });
+    });
+};
+
+// 查询我的某个课程表的学习记录
+const learningList = ref([]) 
+const getLearningLogData = async(sectionId) => {
+  await getLearningLog(sectionId)
+    .then((res) => {
+      learningList.value = res.data
+    })
+    .catch(() => {
+      ElMessage({
+        message: "学习计划获取请求出错！",
+        type: 'error'
+      });
+    });
+}
+
+// 查询我正在学习的课程
+const isPay = ref(false)
+const learningData = ref(null)
+const getCourseLearningData = async (sectionId) => {
+  await getMyLearning(sectionId)
+    .then((res) => {
+      if (res && !res.data){
+        isPay.value = false
+        return false 
+      }
+      if(res.code == 1){
+        isPay.value = false
+        return false
+      }
+      if (res.code == 200 && res.data) { 
+        isPay.value = true
+        learningData.value = res.data
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "学习计划获取请求出错！",
+        type: 'error'
+      });
+    });
+};
+
 // 通过课程的小节id获取视频的fileId
 const getMediasSignatureData = async (sectionId) => {
+  currentPlayData.sectionId = learningData.value.id; // 记录当前播放的小节Id 及 播放时间
   await getMediasSignature({sectionId})
     .then((res) => {
       if (res.code == 200) {
@@ -299,7 +361,12 @@ const playHadle = (val) => {
   currentPlayData.sectionId = item.id  // 小节Id
   currentPlayData.currentTime =  '' // 播放时间
   currentPlayData.duration = item.mediaDuration // 总时长
-   console.log(tp)
+  // 初始化时的定义 与上面的信息一致 使用时的key不同 
+  learningData.value.id = item.id // 小节Id
+  learningData.value.latestSectionId = item.id // 小节Id
+  learningData.value.latestSectionName = item.name // 名称
+  learningData.value.mediaDuration = item.mediaDuration // 总时长
+
   // 视频播放
   if(tp == '1'){
     pageType.value = 1
@@ -317,51 +384,15 @@ const playHadle = (val) => {
     player.value.currentTime(item.latestSectionMoment)
     } 
   } else if (tp == '2'){
-    // 打开练习题 开始考试 
-    startExaminationHandle(item)
+    // 打开练习题
+    pageType.value = 2;
+    player.value.pause()
   }
 }
-
-// 考试开始时提交
-  const examId = ref('')
-  const startExaminationHandle = (item) => {
-    const param = {
-      sectionId: item.id, // 小节id
-      type: item.type == 2 ? 0 : 1,  // 类型，0-练习，1-考试  item.type对应章节的类型，2-视频（小节），3-考试
-      chapterId: currentPlayData.chapterId,  
-      courseId: currentPlayData.courseId,  
-    }
-    startExamination(param)
-      .then((res) => {
-        if(res.code == 200){
-          examId.value = res.data
-          pageType.value = 2;
-          player.value.pause()
-        } else {
-          ElMessage({
-            message: res.data.msg,
-            type: 'error'
-          });
-        } 
-      })
-      .catch(() => {
-        ElMessage({
-          message: "考题列表获取失败！",
-          type: 'error'
-        });
-      });
-  }
-
-// 答题出错的时候
-const errorHandle = (val) =>{
-  pageType.value = 1
-}
-
 // 目录 - 打开一个章列表
 const openCatalogue = (item) => {
   currentPlayData.chapterId = item
 }
-
 // table切换 目录、问答、笔记
 const actId = ref(1)
 const changeTable = id => {

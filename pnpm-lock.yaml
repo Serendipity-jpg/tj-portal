@@ -8,7 +8,7 @@ specifiers:
   element-plus: ^2.2.9
   nprogress: ^0.2.0
   pinia: ^2.0.15
-  pinia-plugin-persistedstate: ^1.6.1
+  pinia-use-persist: ^0.0.21
   sass: ^1.53.0
   swiper: ^8.3.1
   tcadapter: ^0.0.8
@@ -24,7 +24,7 @@ dependencies:
   element-plus: 2.2.12_vue@3.2.37
   nprogress: 0.2.0
   pinia: 2.0.18_vue@3.2.37
-  pinia-plugin-persistedstate: 1.6.3_pinia@2.0.18
+  pinia-use-persist: 0.0.21_vue@3.2.37
   sass: 1.54.4
   swiper: 8.3.2
   tcadapter: 0.0.8
@@ -728,6 +728,10 @@ packages:
       safe-buffer: 5.1.2
     dev: false
 
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: false
+
   /css-select/4.3.0:
     resolution: {integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==}
     dependencies:
@@ -1320,12 +1324,15 @@ packages:
     engines: {node: '>=8.6'}
     dev: false
 
-  /pinia-plugin-persistedstate/1.6.3_pinia@2.0.18:
-    resolution: {integrity: sha512-vwxUca3DZKW6+wnGsgu6hA0ESVKoLovF8vH1jMOPBhaH4VpCSTgn5AsprTxXyg3uMk047m0B+NggeMTcCC8H6w==}
-    peerDependencies:
-      pinia: ^2.0.0
+  /pinia-use-persist/0.0.21_vue@3.2.37:
+    resolution: {integrity: sha512-l48Tiq536tnImvqz898iGIG6YfP0Fp8hj2skdNkFv5fTdf4iFC9/g28bMi17JR/aUQZZkg8fm6maZAGNP2BICg==}
     dependencies:
+      crypto-js: 4.1.1
       pinia: 2.0.18_vue@3.2.37
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - typescript
+      - vue
     dev: false
 
   /pinia/2.0.18_vue@3.2.37:

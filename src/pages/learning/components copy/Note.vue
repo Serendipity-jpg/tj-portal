@@ -38,7 +38,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, reactive, inject } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { getAllNotes, getMyNotes } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import {useRoute} from "vue-router"
@@ -52,8 +52,6 @@ const props = defineProps({
   }
 })
 
-const currentPlayData = inject('currentPlayData')
-
 onMounted(() => {
   // 获取笔记信息
   getAskListsDataes()
@@ -65,49 +63,45 @@ const emit = defineEmits(['sortHandle'])
 const actIndex = ref(1);
 // 提问数据
 const noteParams = reactive({
-  sectionId: currentPlayData.sectionId, // 小节Id
-  courseId: currentPlayData.courseId, // 课程id
-  chapterId: currentPlayData.chapterId,  // 章Id
+  courseId: '', // 课程id,
+  chapterId: '',  // 章Id
+  sectionId: '', // 小节Id
   anonymity: false, // 是否匿名
   description: '',
 })
 // 点击选中
 const activeHandle = (value) => {
   actIndex.value = value
-  getAskListsDataes()
+  // // 提交父级 
+  // emit('sortHandle', value)
 }
 // 笔记数据
 const noteListsDataes = ref({})
-const total = ref(0)
 // 问答列表参数
 const params = ref({
   isAsc:true,
   pageNo: 1,
   pageSize: 10,
-  sectionId: currentPlayData.sectionId,
-  courseId: currentPlayData.courseId,
+  sectionId: props.id,
+  courseId: route.query.id,
   sortBy: ''
 });
 // 获取笔记列表
 const getAskListsDataes = async () => {
   const questFun = actIndex.value == 2 ? getAllNotes : getMyNotes
+  params.value.sectionId == 1 ?  params.value.sectionId = undefined : null
   await questFun(params.value)
     .then((res) => {
-    
       if (res.code == 200) {
-        if(res.data.list.length > 0){
-          console.log(898988)
-          if (askType.value == 'all'){
-            noteListsDataes.value = res.data.list
-          } else {
-            noteListsDataes.value = res.data.list.map(n => {
-              n.author = {...userInfo.value}
-              return n
-            })
-          }
+        if (askType.value == 'all'){
+          noteListsDataes.value = res.data.list
+        } else {
+          noteListsDataes.value = res.data.list.map(n => {
+            n.author = {...userInfo.value}
+            return n
+          })
         }
         total.value =  Number(res.data.total)
-        console.log(89898899)
       } else {
         ElMessage({
           message:res.data.msg,
@@ -115,6 +109,12 @@ const getAskListsDataes = async () => {
         });
       }
     })
+    .catch(() => {
+      ElMessage({
+        message: "笔记列表数据请求出错！",
+        type: 'error'
+      });
+    });
 }
 // 
 const ruleshandle = (item) =>{

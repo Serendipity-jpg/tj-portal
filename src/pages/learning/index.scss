@@ -6,6 +6,8 @@
     color: var(--color-white);
     .videoCont{
         flex: 1;
+        height: 100vh;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         .head{
@@ -46,6 +48,8 @@
             .tit{
                 font-weight: 600;
                 line-height: 40px;
+                height: 40px;
+                overflow: hidden;
                 &::before{
                     content: '';
                     display: inline-block;
@@ -63,21 +67,27 @@
             }
         }
         .cont{
-            padding: 15px 25px;
+            padding: 15px;
             height: calc(100vh - 146px);
             overflow: hidden;
             .catalogue{
                 margin-top: 15px;
                 height: calc(100vh - 146px);
             }
+            .question{
+                margin-top: 15px;
+            }
+            .note{
+                margin-top: 15px;
+            }
         }
         .closeRt{
             position: absolute;
             left: 0;
-            top: 50%;
-            width: 20px;
-            height: 80px;
-            line-height: 80px;
+            top: 30px;
+            width: 14px;
+            height: 60px;
+            line-height: 60px;
             background-color: #000;
             border-radius: 0 10px 10px 0;
         }

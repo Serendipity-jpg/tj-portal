@@ -35,7 +35,7 @@
 </template>
 <script setup>
 import defaultImage from '@/assets/icon.jpeg'
-import { ref, onMounted, reactive, inject } from "vue"
+import { ref, onMounted, reactive } from "vue"
 import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
@@ -45,7 +45,14 @@ const router = useRouter()
 const store = useUserStore();
 const dataCache = dataCacheStore();
 
-const currentPlayData = inject('currentPlayData')
+
+// 引入父级传参
+const props = defineProps({
+  id:{
+    type: String,
+    default: ''
+  }, 
+})
 
 // 默认头像
 const onerrorImg = (tag) => {
@@ -58,6 +65,8 @@ onMounted(() => {
   if(isLogin()){
     // 获取登录信息中的我的信息
     userInfo.value = store.getUserInfo
+    // 获取小节数据
+    getClassChapterData(route.query.id)
     // 获取问答列表
     getAskListsDataes()
   }
@@ -69,7 +78,7 @@ const params = ref({
   isAsc:true,
   pageNo: 1,
   pageSize: 10,
-  sectionId: currentPlayData.sectionId,
+  sectionId: '',
   sortBy: ''
 });
 
@@ -88,9 +97,9 @@ const ruleshandle = () => {
 const isSend = ref(true)
 // 提问数据
 const quest = reactive({
-  sectionId: currentPlayData.sectionId, // 小节Id
-  courseId: currentPlayData.courseId, // 课程id
-  chapterId: currentPlayData.chapterId,  // 章Id
+  courseId: '', // 课程id,
+  chapterId: '',  // 章Id
+  sectionId: '', // 小节Id
   title: '', 
   anonymity: false, // 是否匿名
   description: '',
@@ -174,6 +183,27 @@ const goDetails = (item) => {
 }
 // 小节数据
 const chapterData = ref([])
+
+// 获取小节数据
+const getClassChapterData = async (id) => {
+  await getClassChapter(id)
+    .then((res) => {
+      if (res.code == 200) {
+        chapterData.value = [{id:'all', index: '全部'},...res.data]
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "课程章节数据请求出错！",
+        type: 'error'
+      });
+    });
+}
 
 // 设置每页多少条
 const handleSizeChange = (val) => {

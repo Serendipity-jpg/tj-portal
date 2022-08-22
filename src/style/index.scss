@@ -252,6 +252,9 @@ a{
 .pd-tp-10{
   padding-top: 10px;
 }
+.pd-lr-10{
+  padding:0 10px;
+}
 .pd-tp-20{
   padding-top: 20px;
 }
@@ -292,8 +295,14 @@ a{
 .ft-16{
   font-size: 16px;
 }
+.ft-18{
+  font-size: 18px;
+}
 .ft-20{
   font-size: 20px;
+}
+.ft-cl-1{
+  color: var(--color-font1);
 }
 .ft-cl-des{
   color: var(--color-font3);
@@ -304,7 +313,7 @@ a{
 .ft-cl-wt{
   color: var(--color-white);
 }
-
+// 常用样式
 .cur-pt{
   cursor: pointer;
 }
@@ -312,7 +321,9 @@ a{
 .bd-non{
   border:none !important;
 }
-
+.br-8{
+border-radius: 8px;
+}
 // 公用图片头像
 .img{
   width: 24px;

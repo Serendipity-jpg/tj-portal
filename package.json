@@ -18,7 +18,7 @@
     "element-plus": "^2.2.9",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.15",
-    "pinia-plugin-persistedstate": "^1.6.1",
+    "pinia-use-persist": "^0.0.21",
     "sass": "^1.53.0",
     "swiper": "^8.3.1",
     "tcadapter": "^0.0.8",

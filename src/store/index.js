@@ -1,10 +1,10 @@
 import { createPinia } from 'pinia';
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import {usePersist} from "pinia-use-persist";
 
 const store = createPinia();
 
 // // 数据持久化
-store.use(piniaPluginPersistedstate);
+store.use(usePersist);
 export { store };
 
 export * from './modules/dataCache';

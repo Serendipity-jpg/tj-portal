@@ -26,6 +26,7 @@ const props = defineProps({
 .openClass {
   padding-bottom: 40px;
   .classCont{
+    justify-content: flex-start;
     .items{
       margin-right: 20px;
       width: calc(25% - 15px);

@@ -69,7 +69,6 @@ export default [
   },
   {
     path: '/learning',
-    // component: Layout,
     name: 'learning',
     redirect: '/learning/index',
     meta: { title: '学习' },
@@ -80,6 +79,77 @@ export default [
         component: () => import('@/pages/learning/index.vue'),
         meta: { title: '学习' },
       }
+    ],
+  },
+  {
+    path: '/personal',
+    component: Layout,
+    name: 'personal',
+    redirect: '/personal/main',
+    meta: { title: '个人中心' },
+    children: [
+      {
+        path: 'main',
+        name: 'personalMain',
+        component: () => import('@/pages/personal/index.vue'),
+        meta: { title: '个人中心首页' },
+        children:[
+          {
+            path: 'myClass',
+            name: 'myClass',
+            component: () => import('@/pages/personal/myClass.vue'),
+            meta: { title: '我的课程', active:'myClass', icon: '&#xe611;'},
+          },
+          {
+            path: 'myExam',
+            name: 'myExam',
+            component: () => import('@/pages/personal/myExam.vue'),
+            meta: { title: '我的考试', active:'myExam', icon: '&#xe615;'},
+          },
+          {
+            path: 'myExamDetails',
+            name: 'myExamDetails',
+            component: () => import('@/pages/personal/myExamDetails.vue'),
+            meta: { title: '考试详情', active:'myExam', hidden: true, icon: '&#xe615;'},
+          },
+          {
+            path: 'myOrder',
+            name: 'myOrder',
+            component: () => import('@/pages/personal/myOrder.vue'),
+            meta: { title: '我的订单', active:'myOrder', icon: '&#xe60b;'},
+          },
+          {
+            path: 'myCoupon',
+            name: 'myCoupon',
+            component: () => import('@/pages/personal/myCoupon.vue'),
+            meta: { title: '我的优惠券', active:'myCoupon', icon: '&#xe616;'},
+          },
+          {
+            path: 'myMessage',
+            name: 'myMessage',
+            component: () => import('@/pages/personal/myMessage.vue'),
+            meta: { title: '我的消息', active:'myMessage', icon: '&#xe612;'},
+          },
+          {
+            path: 'myIntegral',
+            name: 'myIntegral',
+            component: () => import('@/pages/personal/myIntegral.vue'),
+            meta: { title: '我的积分', active:'myIntegral', icon: '&#xe610;'},
+          },
+          {
+            path: 'myCollect',
+            name: 'myCollect',
+            component: () => import('@/pages/personal/myCollect.vue'),
+            meta: { title: '我的收藏', active:'myCollect', icon: '&#xe613;'},
+          },
+          {
+            path: 'mySet',
+            name: 'mySet',
+            component: () => import('@/pages/personal/mySet.vue'),
+            meta: { title: '个人设置', active:'mySet', icon: '&#xe617;'},
+          }
+        ]
+      },
     ],
   },
 ];

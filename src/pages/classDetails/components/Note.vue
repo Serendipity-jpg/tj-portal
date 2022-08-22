@@ -52,6 +52,7 @@ import { getAllNotes, getMyNotes, delNote, notesGathers, unNotesGathers } from "
 import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore, isLogin } from '@/store'
 import { useRoute } from "vue-router";
+
 const route = useRoute()
 // 引入父级传参
 const props = defineProps({
