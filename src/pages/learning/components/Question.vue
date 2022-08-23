@@ -14,9 +14,7 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-10" @click="() => $router.push({path:'/ask', query:{id:$props.id,queryId:item.id,type:'edit',title:item.title}})">回答</span>
-            <span class="" @click="delQuestionsHandle(item.id)" >
-              <i class="iconfont zhy-a-icon-zan2x"></i> </span>
+            <span class="marg-rt-10" @click="() => $router.push({path:'/askDetails/index', query:{id:item.id}})">回答</span>
           </div>
         </div>
       </div>
@@ -27,7 +25,7 @@
       <div class="fx-sb fx-al-ct" style="margin-top: 4px;">
         <div><el-checkbox v-model="quest.anonymity" label="私密" size="large" /></div>
         <div class="subCont">
-          <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="submitForm(ruleFormRef)">提问</span>
+          <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="submitForm()">提问</span>
         </div>
       </div>
     </div>
@@ -36,7 +34,7 @@
 <script setup>
 import defaultImage from '@/assets/icon.jpeg'
 import { ref, onMounted, reactive, inject } from "vue"
-import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
+import { postQuestions, getAskList, getMyAskList, putLiked } from "@/api/classDetails.js"
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
@@ -75,14 +73,7 @@ const params = ref({
 
 const ruleshandle = () => {
   console.log(909)
-  // const ruleData = {...ruleForm}
-  // let isValue = true
-  // for(let k in ruleData){
-  //   if (ruleData[k] == '' && k != 'anonymity'){
-  //       isValue = false
-  //     }
-  // }   
-  // isSend.value = isValue
+
 }
 //
 const isSend = ref(true)
@@ -142,17 +133,13 @@ const getAskListsDataes = async () => {
       });
     });
 }
-// 删除问题
-const delQuestionsHandle = async id => {
-await delQuestions(id)
+// 点赞或者取消
+const putLikedHandle = async (item) => {
+const liked = item.liked == undefined ? false : item.liked
+await putLiked({id:item.id, liked:!item.liked})
     .then((res) => {
       if (res.code == 200) {
-        // 删除成功
-        ElMessage({
-          message:'问题删除成功！',
-          type: 'success'
-        });
-        getAskListsDataes()
+        item.liked = !item.liked
       } else {
         ElMessage({
           message:res.data.msg,
@@ -162,11 +149,12 @@ await delQuestions(id)
     })
     .catch(() => {
       ElMessage({
-        message: "问题删除请求出错！",
+        message: "点赞请求出错！",
         type: 'error'
       });
     });
 }
+
 // 去往详情页面
 const goDetails = (item) => {
   dataCache.setAskDetails(item)
@@ -185,7 +173,28 @@ const handleCurrentChange = (val) => {
   params.value.pageNo = val
   getAskListsDataes()
 }
-
+// 提交问题
+const submitForm = async () => {
+await postQuestions(quest)
+    .then((res) => {
+      if (res.code == 200) {
+        quest.title = ''
+        quest.description = ''
+        getAskListsDataes()
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "提问请求出错！",
+        type: 'error'
+      });
+    });
+}
 </script>
 <style lang="scss" scoped>
 .questionWrapper{
@@ -222,11 +231,22 @@ const handleCurrentChange = (val) => {
         .actBut{
           color: #A0A9B2;
           cursor: pointer;
+          i{
+            display: inline-block;
+            position: relative;
+            width: 20px;
+            height: 20px;
+          }
           .iconfont{
             position: relative;
             color: #A0A9B2;
             font-size: 20px;
             top: 2px;
+          }
+          .zhy-a-btn_zan_sel2x{
+            color: var(--color-main);
+            font-size: 18px;
+            top: 0;
           }
           .btnIcon{
             color: #A0A9B2;

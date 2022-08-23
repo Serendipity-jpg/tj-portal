@@ -61,6 +61,7 @@ const handleChange = (val) => {
   }
   :deep(.el-collapse-item__header){
     background: #F5F6F9;
+    color: var(--color-font1);
     border:none;
     border-radius: 8px;
     margin: 20px 0;

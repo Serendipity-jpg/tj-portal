@@ -8,16 +8,20 @@
         <div class="title marg-bt-10 ft-14" v-html="data.name"></div>
         <div class="ft-cl-des" v-if="type == 'default' || type == 'search'"><span>讲师：</span> {{data.teacher}}</div>
         <div class="ft-cl-des" v-if="type == 'default'"><span>共</span> {{data.sections}} <span>节</span></div>
-        <div class="ft-cl-des fx-sb" v-if="type == 'default'"><span>有{{data.sections}}人在学习</span> <span class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span> </div>
+        <div class="ft-cl-des fx-sb" v-if="type == 'default'">
+          <span>有{{data.sold}}人在学习</span>
+          <span v-if="Number(data.price) != 0" class="ft-16 ft-cl-err">￥ {{(data.price/100).toFixed(2)}}</span>
+          <span v-else class="ft-16 ft-cl-err">免费</span> 
+        </div>
         <div class="ft-cl-des fx-sb" v-if="type == 'search'">
-          <span>共{{data.sections}}节 <em>.</em> 有{{data.sections}}人在学习</span> 
+          <span>共{{data.sections || 0}}节 <em>.</em> 有{{data.sold}}人在学习</span> 
           <span v-if="Number(data.price) != 0" class="ft-16 ft-cl-err">￥ {{(Number(data.price)/100).toFixed(2)}}</span>
           <span v-else class="ft-16 ft-cl-err">免费</span> 
         </div>
-        <div class="ft-cl-des" v-if="type == 'default'"><span>评分：</span> 4.9</div>
+        <div class="ft-cl-des" v-if="type == 'like'"><span>评分：</span> 4.9</div>
         <div class="ft-cl-des fx-sb" v-if="type == 'like'">
           <span>{{data.sections}} 次播放 </span> 
-          <span v-if="Number(data.price) != 0" class="ft-16 ft-cl-err">￥{{(Number(data.price)/100).toFixed(2)}} 11</span> 
+          <span v-if="Number(data.price) != 0" class="ft-16 ft-cl-err">￥{{(Number(data.price)/100).toFixed(2)}}</span> 
           <span v-else class="ft-16 ft-cl-err">免费</span> 
         </div>
     </div>
@@ -37,7 +41,6 @@ const props = defineProps({
   }
 })
 const goDetails = id => {
-  console.log(222, id)
   router.push({path: '/details', query:{id}})
 }
 </script>

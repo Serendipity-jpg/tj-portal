@@ -4,9 +4,10 @@
     <div class="preview">
       <div class="previewTit">答题卡</div>
       <div class="previewList">
-        <span v-for="(item, index) in params" :class="{act: item.answers != '' && item.answers != undefined }" :key="index">{{index + 1}}</span>
+        <span v-for="(item, index) in params" :class="{act: String(item.answers) != '' && item.answers != undefined }" :key="index">{{index + 1}}</span>
       </div>
       <div class="previewSub" @click="submit" ><span class="bt">提交试卷</span></div>
+      
     </div>
     <div class="ExQuestions" v-infinite-scroll="load" style="overflow: auto">
       <div class="questions" v-for="(item, index) in subjectList" :key="index">
@@ -47,12 +48,16 @@
   </div>
 </template>
 <script setup>
-  import { onMounted, ref, reactive, onUnmounted  } from 'vue'
+  import { onMounted, ref, reactive, onUnmounted, onBeforeUnmount  } from 'vue'
   import {ElMessage, ElMessageBox} from 'element-plus'
   import { getSubject, postSubject } from '@/api/subject.js';
 
   // 接收传过来的参数
   const props = defineProps({
+    currentPlayData:{
+      type: Object,
+      default: '',
+    }, 
     id:{
       type: String,
       default: '',
@@ -63,6 +68,8 @@
     },
   })
   
+  const emit = defineEmits('playHadle')
+
   // 生命周期
   onMounted(() => {
     // 根据小节或测试id获取练习题
@@ -111,14 +118,12 @@
         break
     }
     return str
-  }
-
- 
+  } 
 
   // 根据小节或测试id获取练习题
   const subjectList = ref()
   const getSubjectList = async () => {
-    await getSubject(props.id)
+    await getSubject(props.currentPlayData.sectionId)
       .then((res) => {
         if(res.code == 200){
           subjectList.value = res.data
@@ -137,7 +142,10 @@
       });
   }
 
-  // 提交试卷
+  // 是否已经提交试卷
+  const isSubmit = ref(false)
+
+  // 确认提交试卷
   const params = reactive(subjectList)
   const submit = () =>{
     const Effective = params.value.filter(n => n.answers != "" && n.answers != undefined )
@@ -160,16 +168,19 @@
       postSubjectHandle()
     }
   }
+
   // 提交了
   const postSubjectHandle = () => {
     const param = params.value.map(el => {
-      const data = {questionId: el.id, answer:el.answers.toString(), questionType: el.type}
+      const data = {questionId: el.id, answer:el.answers.toString(), questionType: el.subjectType}
       return data
-    }); 
+    });
     postSubject({examDetails: param, id: props.examId})
       .then((res) => {
         if(res.code == 200){
           subjectList.value = res.data
+          isSubmit.value = true
+          emit('playHadle', {item: props.currentPlayData, tp: '9'})
         } else {
           ElMessage({
             message: res.msg,
@@ -185,8 +196,12 @@
       });
   }
   
-   // 组件卸载提醒交卷
-  onUnmounted(() => {
+  // 组件卸载前提醒交卷
+  onBeforeUnmount(() => {
+    if (isSubmit.value){
+      return false;
+    }
+    return
     const Effective = params.value.filter(n => n.answers != "" && n.answers != undefined )
     if(Effective.length > 0){
       ElMessageBox.confirm(

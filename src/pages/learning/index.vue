@@ -12,12 +12,12 @@
         <div class="video" v-show="pageType == 1">
           <video  id="videoRef" ref="videoRef" ></video>
         </div>
-        <Practise v-if="pageType == 2" :id="currentPlayData.sectionId"  :examId="examId" :key="currentPlayData.sectionId"></Practise>
+        <Practise v-if="pageType == 2" :currentPlayData="currentPlayData" @playHadle="playHadle" :examId="examId" :key="currentPlayData.sectionId"></Practise>
       </div>
     </div>
     <!-- 右侧目录、问答、笔记 - start -->
     <div class="learn" :class="{close: isClose}" >
-       <div class="closeRt cur-pt" :class="{close: isClose}"  @click="close">></div>
+       <div class="closeRt cur-pt" :class="{close: isClose}" @click="close">></div>
        <div class="teachInfo fx">
           <img :src="learningClassDetails && learningClassDetails.coverUrl" alt="">
           <div class="">
@@ -60,7 +60,7 @@
 /** 数据导入 **/
 import { onMounted, ref, onUnmounted, provide } from "vue";
 import { ElMessage } from "element-plus";
-import { getMediasSignature, getMyLearning, addPlayLog, getLearningLog, getLearningClassDetails } from "@/api/class.js";
+import { getMediasSignature, addPlayLog, getLearningClassDetails } from "@/api/class.js";
   import { startExamination } from '@/api/subject.js';
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
@@ -118,8 +118,10 @@ const currentPlayData = reactive({
   courseId:route.query.id,    // 课程Id
   chapterId: '', // 章Id
   sectionId:'',  // 小节Id
+  nestSectionId:'', // 下一个小节的id
   currentTime: '', // 播放时间
   duration: '', // 总时长
+  type:'', // 小节类型 
 })
 provide('currentPlayData', currentPlayData )
 //当前播放课程的全部信息
@@ -130,11 +132,14 @@ onMounted(async ()=>{
   //TODO 判断课程是否有播放记录 - 如果课程没有看过 - 从第一节开始播放
   //TODO 如果课程已经看过了 需要最后一次播放的信息 小节ID 小节名称 小节播放时间 到哪里了
   detailsId.value = route.query.id  // 课程id
-
+  
   // 使用课程id获取当前课程的细节
   await getLearningClassDetailsData()
+  // 获取上传播放的小节及时间
+  currentPlayData.sectionId = learningClassDetails.value.latestSectionId
+  currentPlayData.currentTime = learningClassDetails.value.latestSectionMoment
   // 通过课程的小节id获取视频的fileId
-  // await getMediasSignatureData(learningClassDetails.value.latestSectionId);
+  await getMediasSignatureData(learningClassDetails.value.latestSectionId);
   return false
   if (isLogin){
     // 查询当前课程是否有学习并获得对应的学习状态 
@@ -218,6 +223,7 @@ const initPlay = (fileID, psign) => {
     appID: '1312394356',
     fileID,
     psign,
+    posterImage:true,
     autoplay: true,
     preload:'auto',
     hlsConfig: {},
@@ -244,8 +250,10 @@ const initPlay = (fileID, psign) => {
     timer.value = null
     addPlayLogHandle()
   });
-  // 延迟自动播放 定位到对应的时间点
-  setTimeout(()=> {player.value.currentTime(currentPlayData.currentTime)}, 2000)
+  player.value.ready(() => {
+    player.value.currentTime(currentPlayData.currentTime || 0)
+    player.value.play()
+  })
 }
 
 // 目录、问答、笔记滚动
@@ -293,20 +301,26 @@ const getMediasSignatureData = async (sectionId) => {
 };
 
 // 点击小节
-const playHadle = (val) => {
+const playHadle = async (val) => {
   const {item, tp} = val
+  console.log(item, tp)
+  // 练习返回
+  if(tp == '9'){
+    pageType.value = 1;
+    return 
+  }
   // 更新currentPlayData 提交播放记录使用
   currentPlayData.sectionId = item.id  // 小节Id
   currentPlayData.currentTime =  '' // 播放时间
   currentPlayData.duration = item.mediaDuration // 总时长
-   console.log(tp)
+  
   // 视频播放
   if(tp == '1'){
     pageType.value = 1
     if (item.id == currentPlayData.id){
       player.value.play()
     } else {
-    getMediasSignatureData(item.id)
+   await getMediasSignatureData(item.id)
     player.value.loadVideoByID(
       {
         appID: '1312394356',
@@ -314,9 +328,10 @@ const playHadle = (val) => {
         psign: signature.value,
       }
     )
-    player.value.currentTime(item.latestSectionMoment)
+    // player.value.currentTime(item.latestSectionMoment)
+    // player.value.play()
     } 
-  } else if (tp == '2'){
+  } else if (tp == '2' || tp == '3'){
     // 打开练习题 开始考试 
     startExaminationHandle(item)
   }

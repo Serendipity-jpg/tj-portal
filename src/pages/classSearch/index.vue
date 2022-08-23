@@ -71,8 +71,10 @@ onMounted(() => {
   // 获取一、二、三级分类信息
   getClassCategoryData()
   // 搜索
-  // search()
-  searchParams.value.keyword = route.query.key
+  searchParams.value.keyword = dataCache.getSearchKey
+  searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
+  searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
+  searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
 });
 
 const dataCache = dataCacheStore()
@@ -101,12 +103,11 @@ const getClassCategoryData = async () => {
 };
 // 清空搜索关键词
 const clearSearchKey = () => {
-  console.log(323231)
   searchParams.value.keyword = ""
   isShow.value = false
   dataCache.setSearchKey('')
-  search()
 }
+
 // 搜索组件对应的事件
 async function searchKey(item){
   if(!isLogin()){
@@ -122,8 +123,7 @@ async function searchKey(item){
   if (item.key == 'categoryIdLv1') {
     searchParams.value[item.key] = item.value != 'all' ? item.value : undefined;
   }
-
-  console.log(99999,searchParams.value)
+  console.log(8989, item)
 }
 // 排序操作
 const sortHandle = (item) => {
@@ -162,10 +162,8 @@ async function search (){
 }
 // 监听搜索关键词
 watchEffect(() => {
-  searchParams.value.keyword = route.query.key
-  searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
-  searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
-  searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
+  searchParams.value.keyword = dataCache.getSearchKey
+  console.log(3333, searchParams)
   search()
 })
 </script>

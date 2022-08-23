@@ -7,13 +7,13 @@
           <div class="title"><span class="ft-wt-600">{{item.name}}</span></div>
         </template>
         <div :class="{subTitle:true, 'fx-sb':true, playAct: playId == it.id}"  v-for="it in item.sections" :key="it.id" >
-          <i  @click="play(it, '1')" :class="startIcon(it)"></i>
+          <i  @click="play(it, it.type == 2 ? 1 :it.type)" :class="startIcon(it)"></i>
           <div class="subTit fx-1">
-            <span @click="play(it, '1')" class="marg-rt-10">{{it.name}}</span>
-            <span v-if="it.type == 2" @click="play(it, '2')" class="chapter">练习</span>
+            <span @click="play(it, it.type == 2 ? 1 : it.type == 2 ? 1 :it.type)" class="marg-rt-10">{{it.name}}</span>
+            <span v-if="it.type == 2" @click="play(it, it.type == 2 ? 2 :it.type)" class="chapter">练习</span>
           </div>
           <div> 
-            <span @click="play(it, '1')" v-if="it.mediaDuration != 0">{{(it.mediaDuration/60).toFixed(0)}} 分钟</span>
+            <span @click="play(it, it.type == 2 ? 1 :it.type)" v-if="it.mediaDuration != 0">{{(it.mediaDuration/60).toFixed(0)}} 分钟</span>
           </div>
         </div>
       </el-collapse-item>
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect, inject } from 'vue'
 
 // 引入父级传参
 const props = defineProps({
@@ -38,15 +38,19 @@ const props = defineProps({
     default: ''
   }, 
   playId:{
-     type: String,
-     default: ''
-  }
+    type: String,
+    default: ''
+  }, 
 })
+
+
+const currentPlayData = inject('currentPlayData')
+
 // 默认打开项
-const playId = ref('')
+const playId = ref(props.playId)
 
 watchEffect(() => {
-  playId.value = props.playId
+  playId.value = currentPlayData.sectionId || props.playId
 })
 
 // 根据播放状态调整icon

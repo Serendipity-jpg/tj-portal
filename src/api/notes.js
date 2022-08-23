@@ -1,5 +1,12 @@
 import request from "@/utils/request.js"
 // 笔记相关接口
+// 新增笔记
+export const addNotes = params =>
+	request({
+		url: `/notes`,
+		method: 'post',
+		data:params,
+	})
 // 全部笔记
 export const getAllNotes = params =>
 	request({

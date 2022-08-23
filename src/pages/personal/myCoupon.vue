@@ -1,7 +1,7 @@
 <!-- 我的优化券 -->
 <template>
-  <div class="bg-wt">
-    我的优化券
+  <div class="">
+    <div class="content">功能研发中, 敬请期待！！</div>
   </div>
 </template>
 <script setup>

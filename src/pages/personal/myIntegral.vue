@@ -1,7 +1,7 @@
 <!-- 我的积分 -->
 <template>
-  <div class="bg-wt">
-    我的积分
+  <div class="">
+    <div class="content">功能研发中, 敬请期待！！</div>
   </div>
 </template>
 <script setup>

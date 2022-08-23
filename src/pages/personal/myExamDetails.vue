@@ -24,7 +24,7 @@
         <div class="fx-sb">
           <div class="td fx-1">
             <div class="marg-bt-10 ft-wt-600 ft-cl-1">所用时长</div>
-            <div>{{timeFormat($route.query.duration)}} </div>
+            <div>{{$route.query.duration ? timeFormat($route.query.duration) : '00 : 00 : 00'}} </div>
           </div>
           <div  class="td fx-1">
             <div class="marg-bt-10 ft-wt-600 ft-cl-1">提交时间</div>
@@ -32,12 +32,12 @@
           </div>
           <div  class="td fx-1">
             <div class="marg-bt-10 ft-wt-600 ft-cl-1">总 分 数</div>
-            <div>{{$route.query.objectiveScore + $route.query.subjectiveScore}} / {{total}}</div>
+            <div>{{$route.query.objectiveScore + $route.query.subjectiveScore || 0}} / {{total}}</div>
           </div>
         </div>
       </div>
      </div>
-     <div class="answerCardTitle">答题卡</div>
+     <div class="answerCardTitle" v-if="myExamDetails">答题卡</div>
      <div class="answerCards">
       <span v-for="(item, index) in myExamDetails" :class="{right:item.correct,wrong:!item.correct && item.answer != ''}">{{index}}</span>
      </div>

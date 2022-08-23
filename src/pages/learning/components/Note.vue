@@ -8,26 +8,37 @@
     </div>
     <div class="noteCont" >
       <div class="noteLists" v-for="item in noteListsDataes">
-        <div class="userInfo fx">
-          <img :src="item.user.icon" :onerror="onerrorImg(item.user)" alt="" srcset="">
-          {{item.user.name}}
+      <div class="userInfo fx-sb">
+        <div class=" fx">
+          <img :src="item.author && item.author.icon" :onerror="onerrorImg(item.author)" alt="" srcset="">
+          {{item.author && item.author.name}}
         </div>
+        <div>{{item.noteMoment}}</div>
+      </div>
+        
         <div class="note">
-          <div class="tit ft-14">{{item.title}}</div>
+          <div class="tit ft-14">{{item.content}}</div>
           <div class="font-bt2" @click="goDetails(item)" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
         </div>
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-10" @click="() => $router.push({path:'/ask', query:{id:$props.id,queryId:item.id,type:'edit',title:item.title}})">回答</span>
-            <span class="" @click="delQuestionsHandle(item.id)" >
-              <i class="iconfont zhy-a-icon-zan2x"></i> </span>
+            <span class="marg-rt-10" @click="() => {ElMessage({message: '该功能暂未实现！'})}">
+              编辑
+            </span>
+            <span class="marg-rt-10" @click="delNoteHandle(item)" >
+              删除
+            </span>
+            <span class="" @click="putLikedHandle(item)" >
+              <i v-show="!item.liked" class="iconfont zhy-a-icon-zan2x"></i> 
+              <i v-show="item.liked" class="iconfont zhy-a-btn_zan_sel2x"></i>
+            </span>
           </div>
         </div>
       </div>
     </div>
     <div class="questCont">
-      <el-input v-model="noteParams.description" rows="4" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
+      <el-input v-model="noteParams.content" rows="4" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
       <div class="fx-sb fx-al-ct" style="margin-top: 12px;">
         <div></div>
         <div class="subCont">
@@ -39,11 +50,16 @@
 </template>
 <script setup>
 import { onMounted, ref, reactive, inject } from 'vue'
-import { getAllNotes, getMyNotes } from "@/api/notes.js"
+import { getAllNotes, getMyNotes, addNotes, likeed, delNote } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import {useRoute} from "vue-router"
-const route = useRoute()
+import defaultImage from '@/assets/icon.jpeg'
+import { useUserStore } from '@/store'
 
+const route = useRoute()
+const store = useUserStore();
+
+const userInfo = ref(null)
 // 引入父级传参
 const props = defineProps({
   id:{
@@ -55,6 +71,7 @@ const props = defineProps({
 const currentPlayData = inject('currentPlayData')
 
 onMounted(() => {
+  userInfo.value = store.getUserInfo
   // 获取笔记信息
   getAskListsDataes()
 })
@@ -63,18 +80,24 @@ const isSend = ref(false)
 const emit = defineEmits(['sortHandle'])
 
 const actIndex = ref(1);
-// 提问数据
+// 笔记数据
 const noteParams = reactive({
+  isPrivate:false, // 是否是隐私笔记，默认false  新增的全部都是正常的
   sectionId: currentPlayData.sectionId, // 小节Id
   courseId: currentPlayData.courseId, // 课程id
   chapterId: currentPlayData.chapterId,  // 章Id
-  anonymity: false, // 是否匿名
-  description: '',
+  content: '',
+  noteMoment: currentPlayData.currentTime
 })
 // 点击选中
 const activeHandle = (value) => {
   actIndex.value = value
   getAskListsDataes()
+}
+// 默认头像
+const onerrorImg = (item) => {
+  console.log(item)
+  // item.icon=defaultImage;
 }
 // 笔记数据
 const noteListsDataes = ref({})
@@ -93,11 +116,9 @@ const getAskListsDataes = async () => {
   const questFun = actIndex.value == 2 ? getAllNotes : getMyNotes
   await questFun(params.value)
     .then((res) => {
-    
       if (res.code == 200) {
         if(res.data.list.length > 0){
-          console.log(898988)
-          if (askType.value == 'all'){
+          if (actIndex.value == 2){
             noteListsDataes.value = res.data.list
           } else {
             noteListsDataes.value = res.data.list.map(n => {
@@ -107,7 +128,6 @@ const getAskListsDataes = async () => {
           }
         }
         total.value =  Number(res.data.total)
-        console.log(89898899)
       } else {
         ElMessage({
           message:res.data.msg,
@@ -124,6 +144,75 @@ const ruleshandle = (item) =>{
   } else {
     isSend.value = false
   }
+}
+// 删除
+const delNoteHandle = async (item) => {
+
+// ElMessage({ message: '接口不通，请绕行！'});
+// return 
+await delNote(item.id)
+    .then((res) => {
+      if (res.code == 200) {
+        ElMessage({
+          message: '笔记删除成功',
+          type: 'error'
+        });
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "笔记请求出错！",
+        type: 'error'
+      });
+    });
+}
+// 点赞或者取消 
+const putLikedHandle = async (item) => {
+await likeed(item.id, !item.liked)
+    .then((res) => {
+      if (res.code == 200) {
+        item.liked = !item.liked
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "笔记请求出错！",
+        type: 'error'
+      });
+    });
+}
+// 新增笔记
+const submitForm = async () => {
+console.log(8989, noteParams)
+await addNotes(noteParams)
+    .then((res) => {
+      if (res.code == 200) {
+        // quest.title = ''
+        // quest.description = ''
+        // getAskListsDataes()
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "笔记请求出错！",
+        type: 'error'
+      });
+    });
 }
 </script>
 <style lang="scss" scoped>

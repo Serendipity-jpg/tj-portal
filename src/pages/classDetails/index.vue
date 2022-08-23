@@ -36,8 +36,8 @@
             <span class="desc">课前随时退 · 售后有保障</span> 
           </div>
           <div class="buy">
-            <span class="bt-red1 bt-round marg-rt-20">加入购物车</span>
-            <span class="bt-red bt-round" @click="() => {$router.push({path: '/learning', query: {id: detailsId}})}" >立即购买</span>
+            <span class="bt-red1 bt-round marg-rt-20" @click="() => {ElMessage({ message: '功能研发中，请绕行！'});}">加入购物车</span>
+            <span class="bt-red bt-round" @click="() => {ElMessage({ message: '功能研发中，请绕行！'});}" >立即购买</span>
           </div>
         </div>
         <div class="buyCont fx-sb" v-else >

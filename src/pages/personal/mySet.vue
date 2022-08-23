@@ -1,7 +1,7 @@
 <!-- 个人设置 -->
 <template>
-  <div class="personalWrapper">
-    个人设置
+  <div class="personalWrapper ">
+    <div class="content">功能研发中, 敬请期待！！</div>
   </div>
 </template>
 <script setup>
