@@ -1,7 +1,7 @@
-<!-- 个人中心 - 左侧导航  -->
+<!-- 我的考试 - 列表表格  -->
 <template>
   <div class="classCards fx-1">
-    <el-table class="table" :data="data" style="width: 100%; ">
+    <el-table class="table" :data="data" style="">
       <el-table-column prop="courseName" center label="课程">
         <template #default="scope">
           <div>{{scope.row.courseName}}</div>
@@ -32,6 +32,7 @@ defineProps({
 .classCards{
   margin-top: 20px;
   line-height: 30px;
+  
   .table{
     border: solid 1px #ebeef5;
     border-bottom: none;

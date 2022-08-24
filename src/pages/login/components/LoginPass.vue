@@ -44,7 +44,7 @@ const router = useRouter()
 const formRef = ref();
 const checked = ref(false)
 const fromData = reactive({
-  username: "louzhuanyong",
+  username: "18810966208",
   password: "123456",
   type: 1
 });

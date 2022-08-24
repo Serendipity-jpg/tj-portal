@@ -15,7 +15,7 @@
         <PlanTable  :data="planData"></PlanTable>
       </div>
       <!-- 全部课程 -->
-      <div v-if="myClassData != null">
+      <div v-if="myClassData != null && myClassData.length > 0">
         <div class="personalCards" >
           <CardsTitle class="marg-bt-20" title="全部课程" />
           <div class=""><span></span></div>

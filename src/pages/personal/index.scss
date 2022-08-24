@@ -3,12 +3,12 @@
     .personal{
         padding: 30px 0;
         display: flex;
+        justify-content: space-between;
     }
     .content{
         padding: 30px;
         background-color: #fff;
         border-radius: 8px;
-        min-height: 470px;
     }
 }
 // 公用样式
@@ -26,6 +26,10 @@
 }
 .mn-cl{
     color: var();
+}
+.nodata{
+    text-align: center;
+    line-height: 100px;
 }
 // 我的课程样式
 .myClassWrapper{

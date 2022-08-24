@@ -3,8 +3,9 @@
   <div class="myExam">
     <div class="personalCards" v-if="myExamData != null">
       <CardsTitle class="marg-bt-20" title="我的考试" />
-      <ExamTable :data="myExamData"></ExamTable>
-      <div class="pageination">
+      <div v-if="count == 0" class="nodata">暂无数据</div>
+      <ExamTable v-if="count.length > 0" :data="myExamData"></ExamTable>
+      <div class="pageination" v-if="count.length > 0">
         <el-pagination
           background
           layout="total, sizes, prev, pager, next, jumper"
