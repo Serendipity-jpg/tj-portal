@@ -1,4 +1,4 @@
-<!-- 个人中心-我的订单 -->
+<!-- 个人中心-我的订单-详情 -->
 <template>
   <div class="">
     <div class="content">功能研发中, 敬请期待！！</div>

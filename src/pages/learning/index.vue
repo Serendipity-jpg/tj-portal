@@ -17,7 +17,7 @@
     </div>
     <!-- 右侧目录、问答、笔记 - start -->
     <div class="learn" :class="{close: isClose}" >
-       <div class="closeRt cur-pt" :class="{close: isClose}" @click="close">></div>
+       <div class="closeRt cur-pt" :class="{close: isClose}" @click="close"><i class="iconfont zhy-a-shouqi2x"></i></div>
        <div class="teachInfo fx">
           <img :src="learningClassDetails && learningClassDetails.coverUrl" alt="">
           <div class="">
@@ -43,7 +43,7 @@
          </div>
        </div>
     </div>
-    <!-- 右侧目录、问答、笔记 - start -->
+    <!-- 右侧弹出问答、笔记 - start -->
     <div class="askAndNote" :class="{close: !isClose}" @click="open">
       <div class="fx-cl-ct">
         <img src="../../assets/btn-wd.png" alt="">
