@@ -28,10 +28,11 @@ export const collectionNotes = id =>
 		method: 'post'
 	})    
 // 更新笔记
-export const updateNotes = id =>
+export const updateNotes = data =>
 	request({
-		url: `/notes/${id}`,
-		method: 'put'
+		url: `/notes/${data.id}`,
+		method: 'put',
+		data
 	})      
 	
 // 删除笔记

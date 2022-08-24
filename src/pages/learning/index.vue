@@ -5,14 +5,14 @@
       <div class="head fx-sb" > 
         <div class="fx cur-pt" @click="() => $router.go(-1)">
           <img src="@/assets/icon_back.png" alt="">
-          <div>返回 | {{learningClassDetails && learningClassDetails.latestSectionName}}</div>
+          <div>返回 | {{currentPlayData.sectionName}}</div>
         </div>
       </div>
       <div class="videoCont">
         <div class="video" v-show="pageType == 1">
           <video  id="videoRef" ref="videoRef" ></video>
         </div>
-        <Practise v-if="pageType == 2" :currentPlayData="currentPlayData" @playHadle="playHadle" :examId="examId" :key="currentPlayData.sectionId"></Practise>
+        <Practise v-if="pageType == 2" @playHadle="playHadle" :examId="examId" :key="currentPlayData.sectionId"></Practise>
       </div>
     </div>
     <!-- 右侧目录、问答、笔记 - start -->
@@ -70,7 +70,6 @@ import Catalogue from "./components/Catalogue.vue";
 import Question from "./components/Question.vue";
 import Practise from "./components/Practise.vue";
 import Note from "./components/Note.vue";
-import { isLogin } from "@/store";
 
 // import TcAdapter from 'tcadapter';
 import router from "../../router";
@@ -117,12 +116,16 @@ const timer = ref(null);
 const currentPlayData = reactive({
   courseId:route.query.id,    // 课程Id
   chapterId: '', // 章Id
+  lastPlaySectionId: '', // 上一次播放的小节Id
+  prevSectionId: '', // 上一个小节的id
   sectionId:'',  // 小节Id
+  sectionName: '',
   nestSectionId:'', // 下一个小节的id
   currentTime: '', // 播放时间
   duration: '', // 总时长
   type:'', // 小节类型 
 })
+
 provide('currentPlayData', currentPlayData )
 //当前播放课程的全部信息
 const learningClassDetails = ref()
@@ -140,38 +143,6 @@ onMounted(async ()=>{
   currentPlayData.currentTime = learningClassDetails.value.latestSectionMoment
   // 通过课程的小节id获取视频的fileId
   await getMediasSignatureData(learningClassDetails.value.latestSectionId);
-  return false
-  if (isLogin){
-    // 查询当前课程是否有学习并获得对应的学习状态 
-    await getCourseLearningData(route.query.id)
-    // 查询我的某个课程表的学习记录 
-    await getLearningLogData(route.query.id)
-    // 获取课程详情的 - 这边先不用获取了 从vuex 里拿
-    getClassDetailsData(route.query.id)
-    // 获取讲师的信息
-    getClassTeachersData()
-
-    // 获取课程目录
-    await getClassListData();
-  } else {
-    ElMessage('您还没有登录,先去登录吧！')
-    router.push('/login')
-  }
-  // 未购买或未播放过的课程课程 定位到第一章第一节 开始播放
-  if(!isPay.value){
-    const data = classListData.value[0]
-    learningData.value = {
-      id:data.sections[0].id,  // 正在学习的小节id - 给下面的接口使用
-      latestSectionId: data.sections[0].id,  // 正在学习的小节id
-      latestSectionName: data.sections[0].name, // 正在学习的小节的名称
-      latestSectionMoment: 0, // 正在学习的章节时间点，单位秒
-      mediaDuration: data.mediaDuration, // 视频总时长
-    }
-    // 展开目录中已播放的部分
-    actIndex.value = data.id
-  } 
-  // actIndex.value = data.id
-  currentPlayData.duration = learningData.mediaDuration
 })
 // 使用课程id获取当前课程的细节
 const getLearningClassDetailsData = async () => {
@@ -193,6 +164,7 @@ const getLearningClassDetailsData = async () => {
         currentPlayData.chapterId = learningClassDetails.value.latestChapterId, // 章Id
         currentPlayData.sectionId = learningClassDetails.value.latestSectionId,  // 小节Id
         currentPlayData.currentTime = learningClassDetails.value.currentTime, // 播放时间
+        currentPlayData.sectionName = learningClassDetails.value.latestSectionName // 小节名称
        // 默认展开对应的章
        actIndex.value = res.data.chapters[0].id || "" 
        playId.value = res.data.chapters[0].sections[0].id || "" 
@@ -209,6 +181,7 @@ const getLearningClassDetailsData = async () => {
         type: 'error'
       });
     });
+    store.setCurrentPlayData(currentPlayData)
 };
 
 // 组件卸载的时候触发 - 页面跳转的时候触发
@@ -232,7 +205,7 @@ const initPlay = (fileID, psign) => {
     currentPlayData.currentTime = player.value.currentTime();
   });
   player.value.on('pause', function() {
-     console.log('pause')
+    console.log('pause')
     // 每次视频暂停的时候 停止发送播放记录请求
     clearInterval(timer.value)
     timer.value = null
@@ -304,6 +277,10 @@ const getMediasSignatureData = async (sectionId) => {
 const playHadle = async (val) => {
   const {item, tp} = val
   console.log(item, tp)
+  // 小节名称
+  currentPlayData.sectionName = item.name
+
+  console.log(currentPlayData.sectionName)
   // 练习返回
   if(tp == '9'){
     pageType.value = 1;
@@ -311,9 +288,8 @@ const playHadle = async (val) => {
   }
   // 更新currentPlayData 提交播放记录使用
   currentPlayData.sectionId = item.id  // 小节Id
-  currentPlayData.currentTime =  '' // 播放时间
+  currentPlayData.currentTime =  item.currentTime // 播放时间
   currentPlayData.duration = item.mediaDuration // 总时长
-  
   // 视频播放
   if(tp == '1'){
     pageType.value = 1
@@ -328,13 +304,14 @@ const playHadle = async (val) => {
         psign: signature.value,
       }
     )
-    // player.value.currentTime(item.latestSectionMoment)
-    // player.value.play()
+    player.value.currentTime(item.latestSectionMoment)
+    player.value.play()
     } 
   } else if (tp == '2' || tp == '3'){
     // 打开练习题 开始考试 
     startExaminationHandle(item)
   }
+  store.setCurrentPlayData(currentPlayData)
 }
 
 // 考试开始时提交

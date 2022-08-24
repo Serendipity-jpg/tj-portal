@@ -48,16 +48,16 @@
   </div>
 </template>
 <script setup>
-  import { onMounted, ref, reactive, onUnmounted, onBeforeUnmount  } from 'vue'
+  import { onMounted, ref, reactive, onBeforeUnmount,watchEffect  } from 'vue'
   import {ElMessage, ElMessageBox} from 'element-plus'
   import { getSubject, postSubject } from '@/api/subject.js';
+  import { dataCacheStore } from "@/store"
+
+  const store = dataCacheStore()
+  const currentPlayData = store.getCurrentPlayData
 
   // 接收传过来的参数
   const props = defineProps({
-    currentPlayData:{
-      type: Object,
-      default: '',
-    }, 
     id:{
       type: String,
       default: '',
@@ -76,7 +76,9 @@
     getSubjectList()
     // 开始答题
   })
-
+  watchEffect(() => {
+    console.log(4545, store.getCurrentPlayData)
+  })
   // 添加题型
   const subjectTypeWt = (type) => {
     let str = ''
@@ -123,7 +125,7 @@
   // 根据小节或测试id获取练习题
   const subjectList = ref()
   const getSubjectList = async () => {
-    await getSubject(props.currentPlayData.sectionId)
+    await getSubject(currentPlayData.sectionId)
       .then((res) => {
         if(res.code == 200){
           subjectList.value = res.data
@@ -198,10 +200,13 @@
   
   // 组件卸载前提醒交卷
   onBeforeUnmount(() => {
+    // leaveConfirm()
+  })
+  // 已经答题但没提交前的效验
+  function leaveConfirm () {
     if (isSubmit.value){
       return false;
     }
-    return
     const Effective = params.value.filter(n => n.answers != "" && n.answers != undefined )
     if(Effective.length > 0){
       ElMessageBox.confirm(
@@ -219,7 +224,7 @@
         .catch(() => {
         })
     } 
-  })
+  }
   const load = () => {}
 </script>
 <style lang="scss" scoped>

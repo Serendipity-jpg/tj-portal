@@ -10,7 +10,7 @@
       <div class="noteLists" v-for="item in noteListsDataes">
       <div class="userInfo fx-sb">
         <div class=" fx">
-          <img :src="item.author && item.author.icon" :onerror="onerrorImg(item.author)" alt="" srcset="">
+          <img :src="item.author && item.author.icon" alt="" srcset="">
           {{item.author && item.author.name}}
         </div>
         <div>{{item.noteMoment}}</div>
@@ -23,7 +23,7 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-10" @click="() => {ElMessage({message: '该功能暂未实现！'})}">
+            <span class="marg-rt-10" @click="editNoteHandle(item)">
               编辑
             </span>
             <span class="marg-rt-10" @click="delNoteHandle(item)" >
@@ -50,7 +50,7 @@
 </template>
 <script setup>
 import { onMounted, ref, reactive, inject } from 'vue'
-import { getAllNotes, getMyNotes, addNotes, likeed, delNote } from "@/api/notes.js"
+import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import {useRoute} from "vue-router"
 import defaultImage from '@/assets/icon.jpeg'
@@ -94,11 +94,7 @@ const activeHandle = (value) => {
   actIndex.value = value
   getAskListsDataes()
 }
-// 默认头像
-const onerrorImg = (item) => {
-  console.log(item)
-  // item.icon=defaultImage;
-}
+
 // 笔记数据
 const noteListsDataes = ref({})
 const total = ref(0)
@@ -136,10 +132,9 @@ const getAskListsDataes = async () => {
       }
     })
 }
-// 
+// 是否可以保存
 const ruleshandle = (item) =>{
-  console.log(item)
-  if (noteParams.description != ''){
+  if (noteParams.content != ''){
     isSend.value = true
   } else {
     isSend.value = false
@@ -147,9 +142,6 @@ const ruleshandle = (item) =>{
 }
 // 删除
 const delNoteHandle = async (item) => {
-
-// ElMessage({ message: '接口不通，请绕行！'});
-// return 
 await delNote(item.id)
     .then((res) => {
       if (res.code == 200) {
@@ -157,6 +149,7 @@ await delNote(item.id)
           message: '笔记删除成功',
           type: 'error'
         });
+        getAskListsDataes()
       } else {
         ElMessage({
           message:res.data.msg,
@@ -171,8 +164,12 @@ await delNote(item.id)
       });
     });
 }
+const subType = ref('add')
+const editParams = ref({})
 // 点赞或者取消 
 const putLikedHandle = async (item) => {
+ElMessage({message: '该功能暂未实现！'})
+return 
 await likeed(item.id, !item.liked)
     .then((res) => {
       if (res.code == 200) {
@@ -191,15 +188,18 @@ await likeed(item.id, !item.liked)
       });
     });
 }
-// 新增笔记
+// 新增/便捷-笔记
 const submitForm = async () => {
-console.log(8989, noteParams)
-await addNotes(noteParams)
+  const query = subType == 'add' ? addNotes : updateNotes
+  const params = subType == 'add' ? noteParams : editParams.value
+
+  await query(params)
     .then((res) => {
       if (res.code == 200) {
-        // quest.title = ''
-        // quest.description = ''
-        // getAskListsDataes()
+        subType.value = 'add'
+        noteParams.content = ''
+        isSend.value = false
+        getAskListsDataes()
       } else {
         ElMessage({
           message:res.data.msg,
@@ -214,6 +214,17 @@ await addNotes(noteParams)
       });
     });
 }
+// 编辑笔记
+const editNoteHandle = async (item) => {
+  noteParams.content = item.content
+  subType.value = 'edit'
+  editParams.value = {
+    id: item.id,
+    content: noteParams.content,
+    isPrivate: false
+  }
+}
+
 </script>
 <style lang="scss" scoped>
 .learnNoteWrapper{
