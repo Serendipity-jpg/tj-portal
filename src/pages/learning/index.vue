@@ -182,6 +182,7 @@ const getLearningClassDetailsData = async () => {
       });
     });
     store.setCurrentPlayData(currentPlayData)
+    console.log(888, currentPlayData)
 };
 
 // 组件卸载的时候触发 - 页面跳转的时候触发

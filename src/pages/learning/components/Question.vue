@@ -38,12 +38,13 @@ import { postQuestions, getAskList, getMyAskList, putLiked } from "@/api/classDe
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
+
 const route = useRoute()
 const router = useRouter()
 const store = useUserStore();
 const dataCache = dataCacheStore();
 
-const currentPlayData = inject('currentPlayData')
+const currentPlayData = dataCacheStore().getCurrentPlayData
 
 // 默认头像
 const onerrorImg = (tag) => {

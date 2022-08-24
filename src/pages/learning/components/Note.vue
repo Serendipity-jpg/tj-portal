@@ -53,8 +53,9 @@ import { onMounted, ref, reactive, inject } from 'vue'
 import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import {useRoute} from "vue-router"
-import defaultImage from '@/assets/icon.jpeg'
-import { useUserStore } from '@/store'
+import { useUserStore, dataCacheStore } from '@/store'
+
+const currentPlayData = dataCacheStore().getCurrentPlayData
 
 const route = useRoute()
 const store = useUserStore();
@@ -67,19 +68,6 @@ const props = defineProps({
     default: ''
   }
 })
-
-const currentPlayData = inject('currentPlayData')
-
-onMounted(() => {
-  userInfo.value = store.getUserInfo
-  // 获取笔记信息
-  getAskListsDataes()
-})
-const isSend = ref(false)
-// emit数据载入
-const emit = defineEmits(['sortHandle'])
-
-const actIndex = ref(1);
 // 笔记数据
 const noteParams = reactive({
   isPrivate:false, // 是否是隐私笔记，默认false  新增的全部都是正常的
@@ -89,6 +77,19 @@ const noteParams = reactive({
   content: '',
   noteMoment: currentPlayData.currentTime
 })
+
+onMounted(() => {
+  userInfo.value = store.getUserInfo
+  // 获取笔记信息
+  getAskListsDataes() 
+  console.log(99999, currentPlayData, noteParams)
+})
+const isSend = ref(false)
+// emit数据载入
+const emit = defineEmits(['sortHandle'])
+
+const actIndex = ref(1);
+
 // 点击选中
 const activeHandle = (value) => {
   actIndex.value = value
@@ -188,11 +189,14 @@ await likeed(item.id, !item.liked)
       });
     });
 }
-// 新增/便捷-笔记
+// 新增/编辑-笔记
 const submitForm = async () => {
-  const query = subType == 'add' ? addNotes : updateNotes
-  const params = subType == 'add' ? noteParams : editParams.value
-
+  const query = subType.value == 'add' ? addNotes : updateNotes
+  let params = noteParams
+  if(subType.value == 'edit'){
+  editParams.value.content = noteParams.content
+  params = editParams.value
+  }
   await query(params)
     .then((res) => {
       if (res.code == 200) {
