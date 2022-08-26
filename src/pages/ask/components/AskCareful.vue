@@ -35,7 +35,6 @@ defineProps({
   border-radius: 8px;
   padding:30px;
   line-height: 22px;
-  margin-top: 30px;
   font-size: 14px;
   .but{
     border-bottom: solid 1px var(--color-background1);

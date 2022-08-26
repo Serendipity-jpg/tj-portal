@@ -1,9 +1,7 @@
 <!-- 我的考试 -->
 <template>
   <div class="myExamDetails">
-     <div class="marg-bt-20">
-      <span @click="()=> $router.go(-1)"><span class="font-bt2">我的考试</span> /  考试详情</span>
-      </div>
+     <BreadCrumb></BreadCrumb>
      <div class="examHeadle">
       <div class="tit">考试批阅</div>
       <div class="table">
@@ -77,9 +75,12 @@ import { getExamDetails } from "@/api/class.js";
 import { upperAlpha, timeFormat } from "@/utils/tool.js"
 import { useRoute } from "vue-router";
 import { useUserStore } from '@/store'
-const stroe = useUserStore()
+
 
 // 组件导入
+import BreadCrumb from './components/BreadCrumb.vue'
+
+const stroe = useUserStore()
 const route = useRoute();
 
 // mounted生命周期

@@ -133,6 +133,8 @@ request({
 	method: 'delete',
 })
 
+
+
 // 查询我的学习计划
 export const getMyPlan = () =>
 request({
@@ -140,11 +142,26 @@ request({
 	method: 'get',
 })
 
+// 新增、修改学习计划
+export const changeMyPlan = (data) =>
+request({
+	url: `/lessons/plans`,
+	method: 'post',
+	data
+})
+
 // 报名免费课程
 export const signUp = (courseId) =>
 request({
 	url: `/lessons/course/${courseId}`,
 	method: 'psot',
+})
+
+// 将指定课程从课程表移除
+export const delMyClass = (courseId) =>
+request({
+	url: `/lessons/course/${courseId}`,
+	method: 'delete',
 })
 
 // 创建学习计划

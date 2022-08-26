@@ -82,6 +82,33 @@ export default [
     ],
   },
   {
+    path: '/pay',
+    name: 'pay',
+    component: Layout,
+    redirect: '/pay/settlement',
+    meta: { title: '购买' },
+    children: [
+      {
+        path: 'settlement',
+        name: 'settlement',
+        component: () => import('@/pages/pay/settlement.vue'),
+        meta: { title: '结算页' },
+      },
+      {
+        path: 'payment',
+        name: 'payment',
+        component: () => import('@/pages/pay/payment.vue'),
+        meta: { title: '支付页面' },
+      },
+      {
+        path: 'success',
+        name: 'success',
+        component: () => import('@/pages/pay/success.vue'),
+        meta: { title: '支付页面' },
+      }
+    ],
+  },
+  {
     path: '/personal',
     component: Layout,
     name: 'personal',
@@ -110,13 +137,19 @@ export default [
             path: 'myExamDetails',
             name: 'myExamDetails',
             component: () => import('@/pages/personal/myExamDetails.vue'),
-            meta: { title: '考试详情', active:'myExam', hidden: true, icon: '&#xe615;'},
+            meta: { title: '我的考试', current: '考试详情', active:'myExam', hidden: true, icon: '&#xe615;'},
           },
           {
             path: 'myOrder',
             name: 'myOrder',
             component: () => import('@/pages/personal/myOrder.vue'),
             meta: { title: '我的订单', active:'myOrder', icon: '&#xe60b;'},
+          },
+          {
+            path: 'myOrderDetails',
+            name: 'myOrderDetails',
+            component: () => import('@/pages/personal/myOrderDetails.vue'),
+            meta: { title: '我的订单', current: '订单详情', active:'myOrder', hidden: true, icon: '&#xe60b;'},
           },
           {
             path: 'myCoupon',

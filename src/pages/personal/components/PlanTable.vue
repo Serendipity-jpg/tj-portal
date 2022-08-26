@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="120">
         <template #default="scope">
-          <div class="font-bt1" @click="() => $router.push({path: '/learning/index', query: {id: scope.row.id}})">去学习</div>
+          <div class="font-bt1" @click="() => $router.push({path: '/learning/index', query: {id: scope.row.courseId}})">去学习</div>
         </template>
       </el-table-column>
     </el-table>

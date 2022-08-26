@@ -13,7 +13,7 @@ export default {
   },
   product: {
     // 正式环境接口地址
-    host: 'https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com',
+    host: 'https://tjxt-user-t.itheima.net/api',
     // 正式环境 cdn 路径
     cdn: '',
   },

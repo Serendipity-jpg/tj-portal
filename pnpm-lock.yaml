@@ -6,9 +6,11 @@ specifiers:
   '@vitejs/plugin-vue-jsx': ^1.3.10
   axios: ^0.27.2
   element-plus: ^2.2.9
+  moment: ^2.29.4
   nprogress: ^0.2.0
   pinia: ^2.0.15
   pinia-use-persist: ^0.0.21
+  qrcode.vue: ^3.3.3
   sass: ^1.53.0
   swiper: ^8.3.1
   tcadapter: ^0.0.8
@@ -22,9 +24,11 @@ dependencies:
   '@vitejs/plugin-vue-jsx': 1.3.10
   axios: 0.27.2
   element-plus: 2.2.12_vue@3.2.37
+  moment: 2.29.4
   nprogress: 0.2.0
   pinia: 2.0.18_vue@3.2.37
   pinia-use-persist: 0.0.21_vue@3.2.37
+  qrcode.vue: 3.3.3_vue@3.2.37
   sass: 1.54.4
   swiper: 8.3.2
   tcadapter: 0.0.8
@@ -1276,6 +1280,10 @@ packages:
       dom-walk: 0.1.2
     dev: false
 
+  /moment/2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+    dev: false
+
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: false
@@ -1363,6 +1371,14 @@ packages:
   /process/0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
+    dev: false
+
+  /qrcode.vue/3.3.3_vue@3.2.37:
+    resolution: {integrity: sha512-OsD4tQjIbxg/K6D5ZkWjBdYI9eg9K2i8qeYILdEAX5mdAydSAxV7xKmmZSP/hA12olLqEMZ9ryqDQrwa9jEMgw==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.37
     dev: false
 
   /readdirp/3.6.0:

@@ -11,16 +11,31 @@
       <div><span>已学习：</span>{{data.learnedSections}} / {{data.course.sections}}</div>
       <div v-if="type == '1'"><span>正在学习：</span>第{{data.learnedSections}}节 {{data.course.name}}</div>
     </div>
-    <div class="btn" @click="() => $router.push({path: '/learning/index', query: {id: data.course.id}})">
-      <span class="bt bt-round">继续学习</span>
-    </div>
-    <div class="btn" v-if="type == 'allClass'" @click="() => $router.push({path: '/learning/index', query: {id: data.course.id}})">
-      <span class="bt bt-round">创建计划</span>
-    </div>
+    <div class="btnCont">
+      <div class="btn" v-if="type == '1'" @click="() => $router.push({path: '/learning/index', query: {id: data.course.id}})">
+        <span class="bt bt-round">继续学习</span>
+      </div>
+      <div class="btn" v-if="type == '2' && data.status != 3" @click="() => $router.push({path: '/learning/index', query: {id: data.course.id}})">
+        <span class="bt bt-round" v-if="data.status == 0">马上学习</span>
+        <span class="bt bt-round" v-if="data.status == 1">继续学习</span>
+        <span class="bt bt-round" v-if="data.status == 2">重新学习</span>
+      </div>
+      <div class="btn" v-if="type == '2' && data.status != 3 && data.planStatus == 0" @click="planActive(data, 'add')">
+        <span class="bt-grey bt-round">创建计划</span>
+      </div>
+      <div class="btn" v-if="type == '2' && data.status != 3 && data.planStatus == 1" @click="planActive(data, 'edit')">
+        <span class="bt-grey bt-round">修改计划</span>
+      </div>
+      <div class="btn" v-if="type == '2' && data.status == 3" @click="planActive(data, 'del')">
+        <span class="bt-grey bt-round">删除课程</span>
+      </div>
+    </div> 
   </div>
 </template>
 <script setup>
-// 介绍父组件传来的标题
+import { defineEmits } from 'vue';
+
+// 接收父组件传来的标题
 defineProps({
   data:{
     type: Object,
@@ -31,6 +46,12 @@ defineProps({
     default: '1'
   }
 })  
+const emit = defineEmits('planHandle')
+
+const planActive = (it, type) => {
+  emit('planHandle', {data: it, type})
+}
+
 </script>
 <style lang="scss" scoped>
 .classCards{
@@ -48,11 +69,19 @@ defineProps({
       line-height: 40px;
     }
   }
-  .btn{
-    width: 114px;
-    height: 40px;
+  
+  .btnCont{
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+     .btn{
+        width: 114px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+      }
   }
+  
 }
 </style>
