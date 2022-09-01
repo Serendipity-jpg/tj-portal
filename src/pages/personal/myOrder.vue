@@ -13,10 +13,10 @@
         </div>
         <div class="tabCont">
           <div class="orderList">
-            <div class="fx-1 alignLeft">
-              <OrderCards :data="it" v-for="it in item.details"></OrderCards>
+            <div class="fx-1 alignLeft" >
+              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.courseId}})"></OrderCards>
             </div>
-            <span>{{item.orderAmount}}</span><span>{{item.realPayAmount}}</span><span>{{orderStatus(item)}}</span>
+            <span>{{amountConversion(item.orderAmount)}}</span><span>{{amountConversion(item.realPayAmount)}}</span><span>{{orderStatus(item)}}</span>
             <span class="btCont">
               <span class="bt">评价课程</span>
               <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey">查看订单</span>
@@ -43,9 +43,10 @@
 /** 数据导入 **/
 import { onMounted, ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
-import { getOrderListes, getOrderClassList } from "@/api/order.js";
+import { getOrderListes } from "@/api/order.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
+import {amountConversion} from "@/utils/tool.js"
 
 // 组件导入
 import CardsTitle from './components/CardsTitle.vue'
@@ -62,7 +63,7 @@ const tableBar = [
   {id: 3, name: '已完成'},
   {id: 4, name: '已关闭'},
   {id: 5, name: '已报名'},
-  {id: 6, name: '退款中'},
+  {id: 6, name: '已退款'},
 ]
 
 // tab切换

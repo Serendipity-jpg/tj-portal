@@ -134,3 +134,25 @@
 .el-table .el-table__cell{
   padding: 12px 0 ;
 }
+// 购物车
+.cartsWrapper .el-checkbox__inner{
+  border-radius: 0;
+}
+.cartsWrapper .el-checkbox{
+  width: 50px;
+  line-height: 40px;
+  height: 40px;
+}
+
+
+// 弹框 - 退款使用
+.myOrderDetailsWrapper .el-dialog__body{
+  padding:20px 30px 20px 30px;
+}
+.myOrderDetailsWrapper .el-dialog__header{
+  padding: 20px 30px 0px 30px;
+  font-weight: 600;
+}
+.myOrderDetailsWrapper .el-dialog__headerbtn{
+  right: 8px;
+}

@@ -36,8 +36,8 @@
             <span class="desc">课前随时退 · 售后有保障</span> 
           </div>
           <div class="buy">
-            <span class="bt-red1 bt-round marg-rt-20" @click="() => {ElMessage({ message: '功能研发中，请绕行！'});}">加入购物车</span>
-            <span class="bt-red bt-round" @click="() => {$router.push({path: '/pay/settlement', query:{id: $route.query.id}})}" >立即购买</span>
+            <span class="bt-red1 bt-round marg-rt-20" @click="addCarts()">加入购物车</span>
+            <span class="bt-red bt-round" @click="payHandle()" >立即购买</span>
           </div>
         </div>
         <div class="buyCont fx-sb" v-else >
@@ -85,7 +85,7 @@
 import { computed, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassDetails, getClassTeachers, getClassList } from "@/api/classDetails.js";
-import { setOrder } from "@/api/order.js";
+import { setOrder, putCarts } from "@/api/order.js";
 
 import { getCourseLearning } from "@/api/class.js";
 import { useRoute, useRouter } from "vue-router";
@@ -282,15 +282,12 @@ const changeTable = id => {
   actId.value = id
   switch (id) {
     case 2 : {
-      console.log(22, '获取课程目录')
       break;
     } 
     case 3 : {
-      console.log(333)
       break;
     } 
     case 4 : {
-      console.log(333)
       break;
     } 
   }
@@ -303,7 +300,7 @@ const collectionHandle = () => {
 const isSignUp = ref(false)
 // 立即报名
 const signUpHandle = async () => {
-  await setOrder({ courseIds:[detailsId.value]})
+  await setOrder({ courseIdList:[detailsId.value]})
   .then((res) => {
     if (res.code == 200) {
       ElMessage({
@@ -355,11 +352,35 @@ const getCourseLearningData = async () => {
     });
   });
 }
-// godetails
-const goDetails = () => {
-
+// 立即购买
+const payHandle = () => {
+  store.setOrderClassInfo([baseDetailsData.value])
+  router.push({path: '/pay/settlement'})
 }
 
-// 
+// 加入购物车
+const addCarts = () => {
+  putCarts({courseId: detailsId.value})
+  .then((res) => {
+    const { data } = res
+    if (res.code == 200) {
+     ElMessage({
+        message:'已加入购物车',
+        type: 'success'
+      });
+    } else {
+      ElMessage({
+        message:res.data.msg,
+        type: 'error'
+      });
+    }
+  })
+  .catch(() => {
+    ElMessage({
+      message: "添加购物车请求出错！",
+      type: 'error'
+    });
+  });
+}
 </script>
 <style lang="scss" src="./index.scss"> </style>

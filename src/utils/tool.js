@@ -43,3 +43,11 @@ export const timeFormat = (time) => {
       }
     return `${hour} : ${minute} : ${second}`
 }
+
+export const amountConversion = (item) => {
+  let amount = 0
+  if (item){
+    amount = (item / 100).toFixed(2)
+  } 
+  return amount
+}

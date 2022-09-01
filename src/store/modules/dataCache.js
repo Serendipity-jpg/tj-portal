@@ -10,12 +10,14 @@ export const dataCacheStore = defineStore('notification', {
       planData:{} // 课程计划信息 
     },
     currentPlayData:{},
+    orderClassInfo:{}, //订单的课程信息 
   }),
   getters: {
     getAskDetails: state => state.askDetails,
     getSearchKey: state => state.searchKey,
     getLearingDataes: state => state.learingDataes,
     getCurrentPlayData: state => state.currentPlayData,
+    getOrderClassInfo: state => state.orderClassInfo
   },
   actions: {
     setAskDetails(data) {
@@ -30,6 +32,9 @@ export const dataCacheStore = defineStore('notification', {
     setCurrentPlayData(data) {
       this.currentPlayData = data;
     },
+    setOrderClassInfo(data){
+      this.orderClassInfo = data;
+    }
   },
   persist: {
     enabled: true,

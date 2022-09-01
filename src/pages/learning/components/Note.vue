@@ -82,7 +82,6 @@ onMounted(() => {
   userInfo.value = store.getUserInfo
   // 获取笔记信息
   getAskListsDataes() 
-  console.log(99999, currentPlayData, noteParams)
 })
 const isSend = ref(false)
 // emit数据载入

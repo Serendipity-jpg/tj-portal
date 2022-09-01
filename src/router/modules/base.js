@@ -95,6 +95,12 @@ export default [
         meta: { title: '结算页' },
       },
       {
+        path: 'carts',
+        name: 'carts',
+        component: () => import('@/pages/pay/carts.vue'),
+        meta: { title: '购物车' },
+      },
+      {
         path: 'payment',
         name: 'payment',
         component: () => import('@/pages/pay/payment.vue'),
@@ -156,6 +162,12 @@ export default [
             name: 'myCoupon',
             component: () => import('@/pages/personal/myCoupon.vue'),
             meta: { title: '我的优惠券', active:'myCoupon', icon: '&#xe616;'},
+          },
+          {
+            path: 'myCouponExplain',
+            name: 'myCouponExplain',
+            component: () => import('@/pages/personal/myCouponExplain.vue'),
+            meta: { title: '我的优惠券', current: '优惠券说明', active:'myCoupon', hidden: true, icon: '&#xe616;'},
           },
           {
             path: 'myMessage',

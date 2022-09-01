@@ -182,7 +182,6 @@ const getLearningClassDetailsData = async () => {
       });
     });
     store.setCurrentPlayData(currentPlayData)
-    console.log(888, currentPlayData)
 };
 
 // 组件卸载的时候触发 - 页面跳转的时候触发
@@ -280,8 +279,6 @@ const playHadle = async (val) => {
   console.log(item, tp)
   // 小节名称
   currentPlayData.sectionName = item.name
-
-  console.log(currentPlayData.sectionName)
   // 练习返回
   if(tp == '9'){
     pageType.value = 1;

@@ -123,7 +123,6 @@ async function searchKey(item){
   if (item.key == 'categoryIdLv1') {
     searchParams.value[item.key] = item.value != 'all' ? item.value : undefined;
   }
-  console.log(8989, item)
 }
 // 排序操作
 const sortHandle = (item) => {
@@ -138,7 +137,6 @@ const pagesHandle = (item) => {
 }
 // 搜索
 async function search (){
-  console.log(3456789,{...searchParams.value})
   // 将不存在的参数干掉
   const params  = JSON.stringify({...searchParams.value})
   await classSeach(JSON.parse(params))
@@ -163,7 +161,6 @@ async function search (){
 // 监听搜索关键词
 watchEffect(() => {
   searchParams.value.keyword = dataCache.getSearchKey
-  console.log(3333, searchParams)
   search()
 })
 </script>

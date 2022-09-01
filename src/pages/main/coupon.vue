@@ -88,7 +88,7 @@ const getCouponData = async (id) => {
 
 <style lang="scss"> 
 .couponCards{
-  width: calc(50% - 40px);
+  width: calc(60% - 40px);
   background: #FFFFFF;
   border: 1px solid #EEEEEE;
   border-left:none;

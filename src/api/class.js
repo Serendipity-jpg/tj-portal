@@ -105,11 +105,11 @@ request({
 	params
 })	
 // 兑换码兑换优惠券
-export const exchangeCoupon = (params) =>
+export const exchangeCoupon = (data) =>
 request({
 	url: `/code/exchange`,
 	method: 'post',
-	params
+	data
 })	
 
 // 课程表管理接口

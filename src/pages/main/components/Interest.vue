@@ -57,7 +57,6 @@ const classList = ref({})
 onMounted(() => {
   const data = props.data[Symbol.iterator]()
   actId.value = data.next().value.id
-  console.log(999, actId.value)
   // 通过二级分类id 获取对应课程列表
   getClassListData(actId.value)
 })

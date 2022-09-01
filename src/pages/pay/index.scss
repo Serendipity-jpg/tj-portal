@@ -1,5 +1,5 @@
 // 结算页面
-.settlementWrapper, .paymenttWrapper, .successWrapper {
+.settlementWrapper, .paymenttWrapper, .successWrapper, .cartsWrapper {
   padding: 30px;
   margin: 30px auto 40px auto;
   border-radius: 8px;
@@ -7,6 +7,12 @@
     font-weight: 600;
     font-size: 20px;
     margin-bottom: 28px;
+    span{
+      font-weight: 400;
+      font-size: 14px;
+      color: #80878C;
+      margin-left: 5px;
+    }
   }
   .tabHead{
     border: 1px solid #EEEEEE;
@@ -142,6 +148,63 @@
       border-radius: 4px;
       font-size: 14px;
       margin-top: 20px;
+    }
+  }
+}
+
+//
+.cartsWrapper{
+  .container{
+    padding: 30px;
+    border-radius: 8px;
+    align-items: center;
+  }
+  .cal{
+    width: 200px;
+  }
+  .tabItem{
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .allAction{
+    line-height: 40px;
+  }
+  .bt-grey{ 
+    width: 110px;
+  }
+  .bt{
+    height: fit-content;
+    font-size: 14px;
+  }
+  .bt-red{
+    border-radius: 50px;
+    height: 50px;
+    line-height: 50px;
+    width: 140px;
+    margin-left: 32px;
+  }
+  .checkBox{
+    flex:1;
+    text-align: left;
+    justify-content: flex-start;
+    align-items: center;
+    .name{
+      margin-left: 140px;
+      line-height: 25px;
+    }
+    img{
+      margin-left: 30px;
+    }
+  }
+  .count{
+    justify-content: right;
+    text-align: right;
+    color: #80878C;
+    line-height: 27px;
+    .pric{
+      font-weight: 600;
+      font-size: 20px;
+      color: #FF4C4C;
     }
   }
 }

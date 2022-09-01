@@ -23,8 +23,8 @@
         </el-input>
       </div>
       <div class="fx-al-ct">
-        <div class="car fx-al-ct">
-          <img src="@/assets/icon-gwc-nor.png" alt="" /> 购物车
+        <div class="car fx-al-ct font-bt2" @click="() => $router.push('/pay/carts')">
+          <img src="@/assets/icon-gwc-nor.png"  alt="" /> 购物车
         </div>
         <router-link class="marg-lr-40" to="/personal/main/myClass">学习中心</router-link>
         <div></div>
