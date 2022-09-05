@@ -216,3 +216,36 @@ request({
 	method: 'post',
 	data:params
 })
+
+
+
+/**  积分相关的接口 **/
+
+// 签到打卡功能，返回本次签到的积分值
+export const pointsSign = (params) =>
+request({
+	url: `/points/sign`,
+	method: 'post',
+	data:params
+})
+// 获取签到记录
+export const getSignRecords = () =>
+request({
+	url: `/points/sign/records`,
+	method: 'get',
+})
+// 查询指定赛季信息
+export const getSeasons = (params) =>
+request({
+	url: `/boards/list`,
+	method: 'get',
+	params
+})
+// 查询赛季信息列表
+export const getSelectOptions = (params) =>
+request({
+	url: `/boards/seasons/list`,
+	method: 'get',
+	params
+})
+

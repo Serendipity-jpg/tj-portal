@@ -175,7 +175,6 @@ const refundApplyReq = () => {
     .then((res) => {
       if (res.code == 200 ){
         orderDetails.value = res.data
-        console.log(res)
       } else {
         ElMessage({
         message: res.msg,
@@ -222,7 +221,6 @@ const getOrderDetailsData = async () => {
     .then((res) => {
       if (res.code == 200 ){
         orderDetails.value = res.data
-        console.log(res)
       } else {
         ElMessage({
         message: res.msg,

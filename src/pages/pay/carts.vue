@@ -18,7 +18,7 @@
         >
         <div class="tabItem fx-sb" v-for="item in cartsDataes" :key="item.id">
           <div class="checkBox fx">
-            <el-checkbox :label="item.id">
+            <el-checkbox :label="item.id" :disabled="item.courseValidDate ==null ? false : !moment().isBefore(item.courseValidDate)">
             <img :src="item.coverUrl" alt=""> 
             </el-checkbox>
             <span class="name">{{item.courseName}}</span>
@@ -47,7 +47,7 @@
       </div>
       <div class="count ft-14 fx fx-1">
         <div>
-          <p>合计： <span class="pric">￥ 2323</span></p>
+          <p>合计： <span class="pric">￥ {{checkPrice}}</span></p>
           <p>若购买享有优惠，相应金额将在订单结算页面减扣</p>
         </div>
         <div @click="goSettlement" class="bt bt-red">去下单</div>
@@ -57,10 +57,12 @@
 </template>
 <script setup>
 /** 数据导入 **/
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
 import { getCarts, delCarts } from "@/api/order.js";
 import router from "../../router";
+import moment from "moment";
+import { amountConversion } from "@/utils/tool.js"
 
 import { dataCacheStore } from "@/store"
 const store = dataCacheStore()
@@ -71,7 +73,6 @@ onMounted(() => {
 })
 
 const cartsDataes = ref([])
-
 // 获取购物车信息
 const getCartsData = async () => {
   await getCarts()
@@ -109,6 +110,17 @@ const handleCheckedChange = (value) => {
   checkAll.value = checkedCount === cartsDataes.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < cartsDataes.value.length
 }
+// 合计价格
+const checkPrice = computed(() => {
+  let allprice = 0
+  cartsDataes.value.map(val => {
+    if (checkedList.value.indexOf(val.id) != -1){
+      allprice += val.price
+    }
+  })
+  return amountConversion(allprice)
+})
+
 // 删除
 const delHandle = (item) => {
   const params = item != 'all' ? [item.id] : checkedList.value

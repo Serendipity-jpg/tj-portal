@@ -129,7 +129,6 @@ const getPayUrlData = async val => {
         timer.value = setInterval(() => {
           getPayStateData()
         }, 5000)
-        console.log(909, timer.value)
       } else {
         ElMessage({
           message:res.data.msg,

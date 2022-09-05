@@ -71,10 +71,6 @@ const params = ref({
   sectionId: currentPlayData.sectionId,
   sortBy: ''
 });
-
-const ruleshandle = () => {
-  console.log(909)
-}
 //
 const isSend = ref(true)
 // 提问数据

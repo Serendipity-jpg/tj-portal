@@ -76,9 +76,6 @@
     getSubjectList()
     // 开始答题
   })
-  watchEffect(() => {
-    console.log(4545, store.getCurrentPlayData)
-  })
   // 添加题型
   const subjectTypeWt = (type) => {
     let str = ''

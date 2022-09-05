@@ -11,9 +11,5 @@ import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
-const route = useRoute()
-
-onMounted(() => {
-    // console.log(router, route)
-})    
+const route = useRoute() 
 </script>

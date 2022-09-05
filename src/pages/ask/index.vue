@@ -200,13 +200,10 @@ const submitForm = (formEl) => {
         });
       });
     } else {
-      console.log('error submit!')
       return false
     }
   })
 }
-
-
 
 </script>
 <style lang="scss" src="./index.scss"> </style>

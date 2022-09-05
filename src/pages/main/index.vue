@@ -249,7 +249,6 @@ const saveInterest = async () => {
         intKey.value++
         interestDialog.value = false
       } else {
-        console.log(res)
         ElMessage({
           message: res.data.msg,
           type: 'error'
