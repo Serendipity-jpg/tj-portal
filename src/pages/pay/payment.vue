@@ -18,8 +18,10 @@
     <div class="pay">
       <div class="tit">选择一下支付方式付款</div>
       <div class="fx">
-        <div v-if="payMethods.indexOf('aliPay') != -1" @click="payMethodCheck('aliPay')" class="cont marg-rt-20" :class="{act: payMethod == 'zhifubao'}"><img src="@/assets/icon_zhifubao.png" width="44" height="44" alt=""> 支付宝 </div>
-        <div v-if="payMethods.indexOf('weixinPay') != -1" @click="payMethodCheck('weixinPay')"  class="cont" :class="{act: payMethod == 'weixin'}"><img src="@/assets/icon_weixin.png" width="44" height="44" alt=""> 微信支付 </div>
+
+        <div v-for="item in payMethodList" :key="item.id" @click="payMethodCheck(item)" class="cont marg-rt-20" :class="{act: payMethod.id === item.id}">
+          <img :src="item.channelIcon" width="44" height="44" alt=""> {{ item.name }}
+        </div>
       </div>
     </div>
     <el-dialog
@@ -28,13 +30,15 @@
       :before-close="handleClose"
     >
       <template #header class="dialog-title">
-        <span>{{dialogCont.title}}</span>
+        <span>{{payMethod.name}}支付</span>
       </template>
       <div style="padding: 0 40px" v-if="qrCodeUrl != ''">
         <qrcode-vue :key="qrCodeUrl" :value="qrCodeUrl" :size="320" level="H" />
       </div>
       <template #footer>
-        <div class="dialog-footer" v-html="dialogCont.desc"></div>
+        <div class="dialog-footer">
+          <p>请使用<em> {{payMethod.name}} </em>扫一扫</p> <p>二维码完成支付</p>
+        </div>
       </template>
     </el-dialog>
   </div>
@@ -67,13 +71,9 @@ const dialogCont = reactive({
 
 const title = ref('')
 // 选择支付方式
-const payMethod = ref('')
+const payMethod = ref({})
 const payMethodCheck = (item) => {
   payMethod.value = item
-  dialogCont.title = item == 'weixinPay' ? '微信支付' : '支付宝支付'
-  dialogCont.desc = item == 'weixinPay' 
-  ? '<p>请使用<em> 微信 </em>扫一扫</p> <p>二维码完成支付</p>' 
-  : '<p>请使用<em> 支付宝 </em>扫一扫</p> <p>二维码完成支付</p>'
   // 获取二维码 
   getPayUrlData(item)
 } 
@@ -93,13 +93,11 @@ const ruleForm = reactive({
 
 // 获取支付渠道列表
 const payMethodList = ref([]) // 支付渠道信息
-const payMethods = ref([]) // 提起code 供展示支付方式使用
 const getPayMethodList = async () => {
   await getPayMethod()
     .then((res) => {
       if (res.code == 200) {
         payMethodList.value = res.data
-        payMethods.value = res.data.map(n => n.payChannelCode)
       } else {
         ElMessage({
           message:res.data.msg,
@@ -119,12 +117,12 @@ const getPayMethodList = async () => {
 const timer = ref(null) // 定时获取支付状态
 const qrCodeUrl = ref('') 
 const getPayUrlData = async val => {
-  const payChannelId = payMethodList.value.filter(n => n.payChannelCode == val)[0].id
-  const params = {orderId: route.query.orderId, payChannelId}
+  const payChannelCode = val.channelCode
+  const params = {orderId: route.query.orderId, payChannelCode}
   await getPayUrl(params)
     .then((res) => {
       if (res.code == 200) {
-        qrCodeUrl.value = res.data.qrCodeUrl
+        qrCodeUrl.value = res.data
         dialogVisible.value = true
         timer.value = setInterval(() => {
           getPayStateData()
@@ -151,10 +149,10 @@ const getPayStateData = async () => {
   await getPayState({orderId: route.query.orderId})
     .then((res) => {
       if (res.code == 200) {
-        if (res.data.payStatus == 1 && isFirstGet.value){
+        if (res.data.status === 1 && isFirstGet.value){
           isFirstGet.value = false
           orderInfo.value = res.data
-        } else if (res.data.payStatus == 2 || res.data.payStatus == 5){
+        } else if (res.data.status === 2 || res.data.status === 5){
           clearInterval(timer.value)
           router.push('/pay/success')
         } else {

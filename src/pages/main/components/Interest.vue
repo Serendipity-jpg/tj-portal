@@ -14,14 +14,16 @@
     <div class="teacherInfo fx-1" :style="{'background-image': `url(${teacherInfo.coverUrl})`}">
       <div class="info fx-sb">
         <div class="fx-al-ct fx-1 ">
-          <img :src="teacherInfo.icon" alt="" srcset=""> 讲师：<span>{{teacherInfo.teacher}}</span>
+          <img :src="teacherInfo.icon || '/img-tx/1.jpg'" alt="" srcset=""> 讲师：<span>{{teacherInfo.teacher}}</span>
         </div>
         <div class="" @click="$router.push({path:'/details',query:{id:teacherInfo.id}})"><span class="bt">立即报名</span></div>
       </div>
     </div>
     <div class="classList fx-1 bg-wt">
       <div class="box">
-        <div class="fx-sb item" v-for="(item, index) in classList" :key="index" @click="$router.push({path:'/details',query:({id: item.id})})">
+        <div class="fx-sb item" v-for="(item, index) in classList" :key="index"
+             @mouseover="teacherInfo = classList[index]"
+             @click="$router.push({path:'/details',query:({id: item.id})})">
           <span class="title">{{item.name}}</span>
           <span class="desc">共{{item.sections}}节 <i>.</i> {{item.sold}}人正在学习 </span>
         </div>

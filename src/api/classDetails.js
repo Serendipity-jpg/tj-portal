@@ -1,33 +1,35 @@
 import request from "@/utils/request.js"
 // 课程详情页面接口
+const COURSE_API_PREFIX = "/cs"
+const LEARNING_API_PREFIX = "/ls"
 // 课程分类
 export const getClassDetails = (id) =>
 	request({
-		url: `/courses/baseInfo/${id}`,
+		url: `${COURSE_API_PREFIX}/courses/baseInfo/${id}`,
 		method: 'get',
 	})
 // 查询课程老师
 export const getClassTeachers = (id) =>
 	request({
-		url: `/courses/teachers/${id}`,
+		url: `${COURSE_API_PREFIX}/courses/teachers/${id}`,
 		method: 'get',
 	})
 // 查询课程目录
 export const getClassList = (id) =>
 	request({
-		url: `/courses/catas/${id}`,
+		url: `${COURSE_API_PREFIX}/courses/catas/${id}`,
 		method: 'get'
 	})	
 // 获取课程章节 下拉数据展示
 export const getClassCourses = (id) =>
 request({
-	url: `/courses/catas/${id}`,
+	url: `${COURSE_API_PREFIX}/courses/catas/${id}`,
 	method: 'get'
 })	
 // 获取课程小节 - 问答详情使用
 export const getClassChapter = (id) =>
 	request({
-		url: `/courses/catas/index/list/${id}`,
+		url: `${COURSE_API_PREFIX}/courses/catas/index/list/${id}`,
 		method: 'get'
 	})	
 
@@ -35,61 +37,61 @@ export const getClassChapter = (id) =>
 // 获取问答列表-全部
 export const getAskList = (params) =>
 	request({
-		url: `/questions`,
+		url: `${LEARNING_API_PREFIX}/questions`,
 		method: 'get',
 		params,
 	})	
 // 获取问答列表
 export const getMyAskList = (params) =>
 	request({
-		url: `/questions/me`,
+		url: `${LEARNING_API_PREFIX}/questions/me`,
 		method: 'get',
 		params,
 	})	
 // 新增提问
 export const postQuestions = (params) =>
 	request({
-		url: `/questions`,
+		url: `${LEARNING_API_PREFIX}/questions`,
 		method: 'post',
 		data:params,
 	})	
 // 获取问题详情
 export const getQuestionsDetails = (id) =>
 request({
-	url: `/questions/${id}`,
+	url: `${LEARNING_API_PREFIX}/questions/${id}`,
 	method: 'get',
 })	
 // 编辑提问
 export const putQuestions = (params) =>
 	request({
-		url: `/questions/${id}`,
+		url: `${LEARNING_API_PREFIX}/questions/${id}`,
 		method: 'put',
 		params,
 	})			
 // 删除提问
 export const delQuestions = (id) =>
 	request({
-		url: `/questions/${id}`,
+		url: `${LEARNING_API_PREFIX}/questions/${id}`,
 		method: 'delete',
 	})		
 // 回复
 export const postAnswers = params =>
 	request({
-		url: `/answers`,
+		url: `${LEARNING_API_PREFIX}/answers`,
 		method: 'post',
 		data:params
 	})			
 // 根据问题的Id获取问题的
 export const getAllQuestions = params =>
 	request({
-		url: `/questions/${params.id}/answers`,
+		url: `${LEARNING_API_PREFIX}/questions/${params.id}/answers`,
 		method: 'get',
 		params
 	})
 // 根据答案id分页查询回复列表
 export const getReply = params =>
 request({
-	url: `/answers/${params.id}/replies`,
+	url: `${LEARNING_API_PREFIX}/answers/${params.id}/replies`,
 	method: 'get',
 	params
 })
@@ -97,7 +99,7 @@ request({
 // 点赞接口
 export const putLiked = params =>
 request({
-	url: `/answers/${params.id}/liked/${params.liked}`,
+	url: `${LEARNING_API_PREFIX}/answers/${params.id}/liked/${params.liked}`,
 	method: 'put',
 	params
 })

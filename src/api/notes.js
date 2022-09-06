@@ -1,36 +1,37 @@
 import request from "@/utils/request.js"
 // 笔记相关接口
+const LEARNING_API_PREFIX = "/ls"
 // 新增笔记
 export const addNotes = params =>
 	request({
-		url: `/notes`,
+		url: `${LEARNING_API_PREFIX}/notes`,
 		method: 'post',
 		data:params,
 	})
 // 全部笔记
 export const getAllNotes = params =>
 	request({
-		url: `/notes/portal`,
+		url: `${LEARNING_API_PREFIX}/notes/portal`,
 		method: 'get',
 		params,
 	})
 // 我的笔记
 export const getMyNotes = params =>
 	request({
-		url: `/notes/me`,
+		url: `${LEARNING_API_PREFIX}/notes/me`,
 		method: 'get',
 		params,
 	})
 // 采集笔记
 export const collectionNotes = id =>
 	request({
-		url: `/notes/${id}`,
+		url: `${LEARNING_API_PREFIX}/notes/${id}`,
 		method: 'post'
 	})    
 // 更新笔记
 export const updateNotes = data =>
 	request({
-		url: `/notes/${data.id}`,
+		url: `${LEARNING_API_PREFIX}/notes/${data.id}`,
 		method: 'put',
 		data
 	})      
@@ -38,30 +39,30 @@ export const updateNotes = data =>
 // 删除笔记
 export const delNote = (id) =>
 request({
-	url: `/notes/${id}`,
+	url: `${LEARNING_API_PREFIX}/notes/${id}`,
 	method: 'delete',
 })	
 // 采集笔记
 export const notesGathers = (id) =>
 request({
-	url: `/notes/gathers/${id}`,
+	url: `${LEARNING_API_PREFIX}/notes/gathers/${id}`,
 	method: 'post',
 })	
 // 取消采集笔记
 export const unNotesGathers = (id) =>
 request({
-	url: `/notes/gathers/${id}`,
+	url: `${LEARNING_API_PREFIX}/notes/gathers/${id}`,
 	method: 'delete',
 })	
 // 笔记点赞
 export const likeed = (id) =>
 request({
-	url: `/note/${id}`,
+	url: `${LEARNING_API_PREFIX}/note/${id}`,
 	method: 'post',
 })	
 // 取消笔记点赞
 export const unLikeed = (id) =>
 request({
-	url: `/note/${id}`,
+	url: `${LEARNING_API_PREFIX}/note/${id}`,
 	method: 'delete',
 })	

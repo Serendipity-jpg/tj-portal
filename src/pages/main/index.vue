@@ -39,7 +39,16 @@
       <OpenClass
         title="精品好课"
         class="container"
-        :data="freeClassData"
+        :data="goodClassData"
+      ></OpenClass>
+    </div>
+    <!-- 精品好课 -- end -->
+    <!-- 精品新课 -- start -->
+    <div class="pd-tp-30">
+      <OpenClass
+          title="精品新课"
+          class="container"
+          :data="newClassData"
       ></OpenClass>
     </div>
     <!-- 精品好课 -- end -->
@@ -78,7 +87,7 @@
 import { onMounted, ref } from "vue";
 import { isLogin } from "@/store";
 import { ElMessage } from "element-plus";
-import { getClassCategorys, getFreeClassList, setInterests, getInterests } from "@/api/class.js";
+import { getClassCategorys, getRecommendClassList, setInterests, getInterests } from "@/api/class.js";
 import ClassCategory from "./components/ClassCategory.vue";
 import CheckInterest from "./components/CheckInterest.vue";
 import Interest from "./components/Interest.vue";
@@ -92,17 +101,22 @@ import banner3 from "@/assets/banner3.jpg";
 const classCategorys = ref([]);
 // banner幻灯片图片
 const imags = [banner1, banner2, banner3];
-// 直播公开课的数据
+// 精品公开课的数据
 const freeClassData = ref([]);
 // 兴趣弹窗
 const interestDialog = ref(false)
-
+// 精品好课数据
+const goodClassData = ref([]);
+// 精品新课数据
+const newClassData = ref([]);
 // mounted生命周期
 onMounted(() => {
   // 获取三级分类信息
   getClassCategoryData();
   // 获取精品公开课
   getFreeClassListData();
+  getGoodClassListData();
+  getNewClassListData();
   // 获取兴趣列表 （二级分类）
   if (isLogin()) {
     getInterestData()
@@ -138,7 +152,7 @@ const setInterest = (val) => {
 }
 // 精品公开课接口
 const getFreeClassListData = async () => {
-  await getFreeClassList()
+  await getRecommendClassList('free')
     .then((res) => {
       if (res.code == 200) {
         freeClassData.value = res.data;
@@ -156,28 +170,17 @@ const getFreeClassListData = async () => {
       });
     });
 };
-// 新课推荐
-const getNewClassListData = async () => {
-  await getClassCategorys()
-    .then((res) => {
-      if (res.code == 200) {
-        classCategorys.value = res.data;
-      } else {
-        ElMessage(res.meg);
-      }
-    })
-    .catch(() => {
-      ElMessage("分类请求出错！");
-    });
-};
-// 精品好课
+// 精品公开课接口
 const getGoodClassListData = async () => {
-  await getClassCategorys()
+  await getRecommendClassList('best')
     .then((res) => {
       if (res.code == 200) {
-        classCategorys.value = res.data;
+        goodClassData.value = res.data;
       } else {
-        ElMessage(res.meg);
+        ElMessage({
+          message: res.data.msg,
+          type: 'error'
+        });
       }
     })
     .catch(() => {
@@ -187,6 +190,21 @@ const getGoodClassListData = async () => {
       });
     });
 };
+// 新课推荐
+const getNewClassListData = async () => {
+  await getRecommendClassList('new')
+    .then((res) => {
+      if (res.code == 200) {
+        newClassData.value = res.data;
+      } else {
+        ElMessage(res.meg);
+      }
+    })
+    .catch(() => {
+      ElMessage("分类请求出错！");
+    });
+};
+
 // 保存设置的兴趣变量
 const interest = ref(new Set())
 const intKey = ref(1)

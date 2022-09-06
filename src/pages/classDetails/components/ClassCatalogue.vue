@@ -10,8 +10,13 @@
             </div>
           </template>
           <div class="item fx-sb" v-for="(it, ind) in item.sections">
-            <div><iconVideo v-if="it.type == 2" class="icon" /> <iconJdks v-if="it.type == 3" class="icon" /> {{it.index}}、{{it.name}}</div>
-            <div class="time">{{(it.mediaDuration/60).toFixed(0)+'.'+it.mediaDuration % 60}}</div>
+            <div><iconVideo v-if="it.type == 2" class="icon" /> <iconJdks v-if="it.type == 3" class="icon" />
+              {{it.index}}、{{it.name}}
+            </div>
+            <div class="time">
+              <span v-if="it.trailer" class="trailer-font" @click="toPlayPage(it.id)">试看</span>
+              {{(it.mediaDuration/60).toFixed(0)+'.'+it.mediaDuration % 60}}
+            </div>
           </div>
         </el-collapse-item>
     </el-collapse>
@@ -33,8 +38,24 @@ const activeNames = ref([0])
 const handleChange = (val) => {
   console.log(val)
 }
+const toPlayPage = (id) => {
+  console.log(id);
+}
 </script>
 <style lang="scss" scoped>
+.trailer-font{
+  padding: 3px 12px;
+  font-size: 12px;
+  background: rgba(242,13,13,.1);
+  border-radius: 12px;
+  color: #f20d0d;
+  font-weight: 700;
+  line-height: 20px;
+}
+.trailer-font:hover{
+  color: #fff;
+  background: #f20d0d;
+}
 .classList{
   padding-top: 10px;
   .time{

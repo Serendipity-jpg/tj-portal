@@ -9,16 +9,16 @@
       </div>
       <div class="marg-bt-20" v-for="(item, index) in orderListData">
         <div class="tabInfo">
-          <div><span class="time alignLeft">{{item.orderTime}}</span>订单号：{{item.id}}</div>
+          <div><span class="time alignLeft">{{item.createTime}}</span>订单号：{{item.id}}</div>
         </div>
         <div class="tabCont">
           <div class="orderList">
             <div class="fx-1 alignLeft" >
-              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.courseId}})"></OrderCards>
+              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.id}})"></OrderCards>
             </div>
-            <span>{{amountConversion(item.orderAmount)}}</span><span>{{amountConversion(item.realPayAmount)}}</span><span>{{orderStatus(item)}}</span>
+            <span>{{amountConversion(item.totalAmount)}}</span><span>{{amountConversion(item.realAmount)}}</span><span>{{orderStatus(item)}}</span>
             <span class="btCont">
-              <span class="bt">评价课程</span>
+              <span class="bt" v-if="isOrderPay(item)">评价课程</span>
               <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey">查看订单</span>
               <span v-if="false" class="bt bt-grey">删除订单</span>
             </span>
@@ -70,13 +70,13 @@ const tableBar = [
 const actId = ref(1)
 const changeTable = id => {
   actId.value = id
-  params.status = actId.value-1 == 0 ? undefined : actId.value-1
+  params.status = actId.value-1 === 0 ? undefined : actId.value-1
   getOrderListesData()
 }
 // 分页
 const count = ref(0)
 const params = reactive({
-  status: actId.value-1 == 0 ? undefined : actId.value-1, // 订单状态：1：待支付，2：已支付，3：已关闭，4：已完成，5：已报名
+  status: actId.value-1 === 0 ? undefined : actId.value-1, // 订单状态：1：待支付，2：已支付，3：已关闭，4：已完成，5：已报名
   // refundStatus: 1, // 退款状态1：待审批，2：取消退款，3：同意退款，4：拒绝退款，5：退款成功，6：退款失败
   pageNo: 1,
   pageSize: 10,
@@ -120,11 +120,14 @@ const getOrderListesData =  async () => {
       });
     });
 }
-
+function isOrderPay(item){
+  let status = item.status;
+  return status === 2 || status === 4 || status === 5;
+}
 // 订单状态1：待支付，2：已支付，3：已关闭，4：已完成，5：已报名
 function orderStatus(item) {
   let data = ''
-  switch(item.orderStatus){
+  switch(item.status){
     case 1: {
       data = '待支付'
       break
@@ -143,6 +146,10 @@ function orderStatus(item) {
     }
     case 5: {
       data = '已报名'
+      break
+    }
+    case 6: {
+      data = '退款'
       break
     }
   }

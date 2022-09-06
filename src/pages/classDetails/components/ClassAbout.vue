@@ -20,14 +20,14 @@
           <div class="cards fx">
             <div class="teacherInfo" v-for="(it, ind) in item" :key="ind">
               <div class="teach">
-                <img :src="it.icon" alt="">
+                <img :src="it.icon || '/img-tx/default-user-icon.jpg'" alt="">
                 <div>
                   <div class="name">{{it.name}}</div> 
                   <div>{{it.job}}</div>
                 </div>
               </div>
               <div class="about">
-                {{it.introduce}}
+                {{it.intro}}
               </div>
             </div>
           </div>

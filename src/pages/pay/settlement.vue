@@ -12,7 +12,7 @@
           <img :src="item.coverUrl" alt=""> 
           <span>{{item.name || item.courseName}}</span>
         </div>
-        <div class="cal ft-cl-err" >￥ {{(item.price / 100).toFixed(2)}}</div>
+        <div class="cal ft-cl-err" >￥ {{(item.nowPrice / 100).toFixed(2)}}</div>
       </div>
     </div>
     <div class="settiementInfo">
@@ -44,7 +44,7 @@
 import { onMounted, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import { comfirePageInfo, setOrder} from "@/api/order.js";
+import { confirmOrderInfo, setOrder} from "@/api/order.js";
 import { dataCacheStore } from "@/store"
 import {amountConversion} from "@/utils/tool.js"
 const store = dataCacheStore()
@@ -68,9 +68,9 @@ const couponIds = ref([])
 const orderInfo = ref({})
 // 下单确认页信息
 const comfirePageInfoHandle = async () => {
-  const courseIdList = orderClass.value.map(n => n.courseId ? n.courseId : n.id).join()
-  const params = {courseIdList}
-  await comfirePageInfo(params)
+  const courseIds = orderClass.value.map(n => n.courseId ? n.courseId : n.id).join()
+  const params = {courseIds}
+  await confirmOrderInfo(params)
     .then((res) => {
       if (res.code == 200) {
         orderInfo.value = res.data
@@ -90,8 +90,8 @@ const comfirePageInfoHandle = async () => {
 } 
 // 下单 
 const orderHandle = async () => {
-  const courseIdList = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
-  const params = {courseIdList}
+  const courseIds = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
+  const params = {courseIds}
   
   await setOrder(params)
     .then((res) => {

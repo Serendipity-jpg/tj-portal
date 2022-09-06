@@ -10,10 +10,10 @@
       class="demo-dynamic"
     >
       <el-form-item prop="userName" label="">
-        <el-input v-model="fromData.userName" placeholder="请输入手机号" />
+        <el-input v-model="fromData.cellPhone" placeholder="请输入手机号" />
       </el-form-item>
       <el-form-item prop="password" label="">
-        <el-input type="pass" v-model="fromData.password" placeholder="请输入验证码" />
+        <el-input type="pass" v-model="fromData.code" placeholder="请输入验证码" />
       </el-form-item>
       <el-form-item class="marg-b-10">
         <div class="fx-sb">
@@ -37,8 +37,9 @@ import { reactive, ref } from "vue";
 
 const formRef = ref();
 const fromData = reactive({
-  username: "13500010003",
-  password: "123",
+  cellPhone: "13500010003",
+  code: "123",
+  type: 2
 });
 
 const rules = reactive({

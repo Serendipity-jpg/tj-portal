@@ -2,13 +2,12 @@
 <template>
   <div class="cartsWrapper">
     <div class="container bg-wt marg-bt-20">
-      <div class="title">我的购物车 <span>共{{cartsDataes.length}}门课程</span></div>
+      <div class="title">我的购物车 <span>共{{carts.length}}门课程</span></div>
       <div class="tab" >
         <div class="tabHead fx-sb">
           <div>课程名称</div>
           <div class="fx">
-            <div class="cal">课程有效期</div>
-            <div class="cal">单价(元)</div>
+            <div class="cart-price">单价(元)</div>
             <div class="cal">操作</div>
           </div>
         </div>
@@ -16,18 +15,20 @@
           v-model="checkedList"
           @change="handleCheckedChange"
         >
-        <div class="tabItem fx-sb" v-for="item in cartsDataes" :key="item.id">
+        <div class="tabItem fx-sb" v-for="item in carts" :key="item.id">
           <div class="checkBox fx">
             <el-checkbox :label="item.id">
-            <img :src="item.coverUrl" alt=""> 
+            <img :src="item.coverUrl" alt="">
             </el-checkbox>
             <span class="name">{{item.courseName}}</span>
           </div>
-          <div class="fx">
-            <div class="cal ft-cl" >
-              <p>{{item.courseValidDate}}</p>
+          <div class="fx" style="align-items: center;">
+            <div class="cart-price" >
+              ￥ {{(item.nowPrice / 100).toFixed(2)}}
+              <div class="ft-cl-err cart-price-div" v-if="item.nowPrice < item.price">
+                比加入时便宜了 ￥ {{((item.price - item.nowPrice) / 100).toFixed(2)}}
+              </div>
             </div>
-            <div class="cal ft-cl-err" >￥ {{(item.price / 100).toFixed(2)}}</div>
             <div class="cal font-bt2" @click="delHandle(item)">删除</div>
           </div>
         </div>
@@ -47,7 +48,7 @@
       </div>
       <div class="count ft-14 fx fx-1">
         <div>
-          <p>合计： <span class="pric">￥ 2323</span></p>
+          <p>合计： <span class="pric">￥ {{ (totalAmount / 100).toFixed(2)}}</span></p>
           <p>若购买享有优惠，相应金额将在订单结算页面减扣</p>
         </div>
         <div @click="goSettlement" class="bt bt-red">去下单</div>
@@ -64,13 +65,13 @@ import router from "../../router";
 
 import { dataCacheStore } from "@/store"
 const store = dataCacheStore()
-
+let totalAmount = ref(0);
 onMounted(() => {
   // 获取章节列表 - 下拉选择
   getCartsData()
 })
 
-const cartsDataes = ref([])
+const carts = ref([])
 
 // 获取购物车信息
 const getCartsData = async () => {
@@ -78,7 +79,7 @@ const getCartsData = async () => {
     .then((res) => {
       if (res.code == 200) {
         const { data } = res
-        cartsDataes.value = data
+        carts.value = data
       } else {
         ElMessage({
           message:res.data.msg,
@@ -97,17 +98,21 @@ const getCartsData = async () => {
 const checkAll = ref(false) // 是否全选
 const checkedList = ref([]) // 选项
 const isIndeterminate = ref(false) // 是否有选项 
-
+const calcTotalAmount = () =>{
+  totalAmount.value = carts.value.filter(c => checkedList.value.findIndex(v=>v===c.id) > -1).map(c => c.nowPrice).reduce((l, p) => l + p, 0);
+}
 // 全选
 const handleCheckAllChange = (val) => {
-  checkedList.value = val ? cartsDataes.value.map(n => n.id) : []
+  checkedList.value = val ? carts.value.map(n => n.id) : []
   isIndeterminate.value = false
+  calcTotalAmount();
 }
 // 单个选择
 const handleCheckedChange = (value) => {
   const checkedCount = value.length
-  checkAll.value = checkedCount === cartsDataes.value.length
-  isIndeterminate.value = checkedCount > 0 && checkedCount < cartsDataes.value.length
+  checkAll.value = checkedCount === carts.value.length
+  isIndeterminate.value = checkedCount > 0 && checkedCount < carts.value.length
+  calcTotalAmount();
 }
 // 删除
 const delHandle = (item) => {
@@ -136,16 +141,16 @@ const delHandle = (item) => {
 }
 // 去结算
 const goSettlement = () => {
-  if(checkedList.value.length == 0){
+  if(checkedList.value.length === 0){
     ElMessage({
           message:'请选择要结算的课程',
           type: 'error'
         });
     return false
   } 
-  const list = cartsDataes.value.filter(n =>checkedList.value.indexOf(n.id) != -1)
+  const list = carts.value.filter(n =>checkedList.value.indexOf(n.id) !== -1)
   store.setOrderClassInfo(list)
   router.push({path: '/pay/settlement'})
 }
 </script>
-<style lang="scss" src="./index.scss"> </style>
+<style lang="scss" src="./index.scss"></style>

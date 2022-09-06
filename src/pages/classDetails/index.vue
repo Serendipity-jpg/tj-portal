@@ -122,7 +122,8 @@ const tableBar = computed(() => {
 })
 
 // 猜你喜欢 - 静态数据
-const LikeData = [{
+const LikeData = [
+  {
     sold: 234, 
     icon: "sit enim sunt", 
     sections: 45,

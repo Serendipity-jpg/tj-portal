@@ -52,5 +52,5 @@ export function getToken() {
   return useUserStore(store);
 }
 export function isLogin(token) {
-  return localStorage.getItem(TOKEN_NAME) != undefined 
+  return !!localStorage.getItem(TOKEN_NAME)
 }

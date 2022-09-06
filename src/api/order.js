@@ -1,83 +1,64 @@
 import request from "@/utils/request.js"
 /** 订单相关接口 **/ 
-
+const TRADE_API_PREFIX = "/ts"
 // 订单列表 - 分页列表
 export const getOrderListes = (params) =>
 request({
-	url: `/orders/page`,
+	url: `${TRADE_API_PREFIX}/orders/page`,
 	method: 'get',
 	params
 })
 // 查询订单明细
-export const getOrderDetails = (params) =>
+export const getOrderDetails = (id) =>
 request({
-	url: `/orders/placeOrder`,
-	method: 'post',
-	params
+	url: `${TRADE_API_PREFIX}/orders/${id}`,
+	method: 'get'
 })
-// 获取课程订单明细信息
-export const getClassOrder = (params) =>
-	request({
-		url: `/orders/placeOrder`,
-		method: 'post',
-		params
-	})
 // 当前学生的订单分页数据
 export const getOrderPages = (params) =>
 request({
-	url: `/orders/placeOrder`,
-	method: 'post',
+	url: `${TRADE_API_PREFIX}/orders/page`,
+	method: 'get',
 	params
 })
-// 下单确认页信息 
-export const comfirePageInfo = (params) =>
+// 订单结算页，查询订单可用优惠券、订单id信息
+export const confirmOrderInfo = (params) =>
 	request({
-		url: `orders/comfirePageInfo`,
+		url: `${TRADE_API_PREFIX}/orders/prePlaceOrder`,
 		method: 'get',
 		params
 	})
+
 // 下单
 export const setOrder = (params) =>
 	request({
-		url: `/orders/placeOrder`,
+		url: `${TRADE_API_PREFIX}/orders/placeOrder`,
 		method: 'post',
 		data:params
 	})
-// 获取订单进度 - 订单详情（用于学生端）
-export const getOrderState = (params) =>
-	request({
-		url: `/orders/progress/${params.id}`,
-		method: 'get'
-	})	
-// 获取订单信息	
-export const getOrderInfo = (params) =>
-	request({
-		url: `/orders/progress/{id}`,
-		method: 'post',
-		params
-	})	
-// 订单支付取消
-export const delOrder = (params) =>
-	request({
-		url: `/orders/cancel`,
-		method: 'post',
-		params
-	})	
-// 根据订单id查询订单明细列表
-export const getOrderClassList = (params) =>
-	request({
-		url: `/orders/detail/queryByOrderId/${params.orderId}`,
-		method: 'post',
-		params
-	})	
 
-	
+// 订单支付取消
+export const cancelOrder = (id) =>
+	request({
+		url: `${TRADE_API_PREFIX}/orders/${id}/cancel`,
+		method: 'put',
+		params
+	})
+// 删除订单
+export const delOrder = (id) =>
+	request({
+		url: `${TRADE_API_PREFIX}/orders/${id}`,
+		method: 'delete',
+		params
+	})
+
+
 /** 购物车相关接口 **/ 	
 
 // 将课程加入购物车
 export const putCarts = (data) =>
 	request({
-		url: `/purchaseCart/add`,
+		url: `${TRADE_API_PREFIX}/carts`,
 		method: 'post',
 		data
 	})	
@@ -85,7 +66,7 @@ export const putCarts = (data) =>
 // 获取购物车中的课程
 export const getCarts = (data) =>
 	request({
-		url: `/purchaseCart`,
+		url: `${TRADE_API_PREFIX}/carts`,
 		method: 'get',
 		data
 	})		
@@ -93,9 +74,8 @@ export const getCarts = (data) =>
 // 批量将课程从购物车中删除
 export const delCarts = (data) =>
 	request({
-		url: `/purchaseCart/batch`,
-		method: 'delete',
-		data
+		url: `${TRADE_API_PREFIX}/carts?ids=${data.join(',')}`,
+		method: 'delete'
 	})		
 
 
@@ -104,21 +84,21 @@ export const delCarts = (data) =>
 // 支付渠道列表
 export const getPayMethod = (params) =>
 	request({
-		url: `/pay/channels`,
+		url: `${TRADE_API_PREFIX}/pay/channels`,
 		method: 'get',
 		params
 	})	
 // 支付申请,返回支付二维码url
 export const getPayUrl = (data) =>
 	request({
-		url: `/pay/apply`,
+		url: `${TRADE_API_PREFIX}/pay/order`,
 		method: 'post',
 		data
 	})
 // 获取支付信息,包含支付状态和支付超时时间
 export const getPayState = (params) =>
 	request({
-		url: `/pay/${params.orderId}`,
+		url: `${TRADE_API_PREFIX}/orders/${params.orderId}/status`,
 		method: 'get',
 		params
 	})			
@@ -128,15 +108,14 @@ export const getPayState = (params) =>
 // 退款申请
 export const refundsApply = (data) =>
 	request({
-		url: `/refunds/apply`,
+		url: `${TRADE_API_PREFIX}/refund-apply`,
 		method: 'post',
 		data
 	})		
 
 // 退款详情
-export const refundsDetails = (params) =>
+export const refundsDetails = (id) =>
 	request({
-		url: `/refunds/${params.applyId}`,
-		method: 'get',
-		params
+		url: `${TRADE_API_PREFIX}/refund-apply/detail/${id}`,
+		method: 'get'
 	})		
