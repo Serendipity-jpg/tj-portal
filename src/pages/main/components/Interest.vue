@@ -73,7 +73,6 @@ const checkHandle = (id) => {
 };
 // 鼠标滑过分类
 const overHandle = (item) => {
-  console.log(item);
   teacherInfo.value = item;
 };
 

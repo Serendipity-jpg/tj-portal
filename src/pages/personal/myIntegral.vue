@@ -4,7 +4,7 @@
     <div class="personalCards">
       <CardsTitle class="marg-bt-20" title="我的积分" />
       <div class="title"></div>
-      <Calendar></Calendar>
+      <Calendar @pointsSign="pointsSign"></Calendar>
       <div class="listCont fx-sb">
         <div class="list">
           <div class="tit">获取积分</div>
@@ -31,7 +31,7 @@
 /** 数据导入 **/
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { getSeasons } from "@/api/class.js";
+import { getSeasons, getSignRecords } from "@/api/class.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 
@@ -59,7 +59,10 @@ const baseClassTeacherData = ref([])
 
 // mounted生命周期
 onMounted(async () => {
+ // 积分榜信息查询
  getSeasonsData()
+ // 获取签到记录
+ getSignRecordsHandle()
 });
 
 /** 方法定义 **/
@@ -85,6 +88,49 @@ const getSeasonsData = () => {
       });
     });
 }
-
+// 获取签到记录
+const signRecordsDatas = ref([])
+const getSignRecordsHandle = async () => {
+  await getSignRecords()
+    .then((res) => {
+      if (res.code == 200 ){
+        console.log(898, res.data)
+        signRecordsDatas.value = res.data
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "学霸榜请求失败！",
+        type: 'error'
+      });
+    });
+}
+// 打卡 - 返回积分
+// const clockAction = ref([])
+const pointsSign = async () => {
+  await pointsSign()
+    .then((res) => {
+      if (res.code == 200 ){
+        console.log(res.data)
+        // signRecordsDatas.value = res.data
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "学霸榜请求失败！",
+        type: 'error'
+      });
+    });
+}
 </script>
 <style lang="scss" src="./index.scss"> </style>

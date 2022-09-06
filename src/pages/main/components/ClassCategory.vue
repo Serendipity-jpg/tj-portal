@@ -20,10 +20,12 @@
         
         <!-- 展示详情 -->
         <div class="allCategory" v-show="isDetails" @mouseover="mouseoverHandle()">
-          <div class="fx ft-wt-600 pd-bt-10" v-for="item in categorys" :key="item.id">
-            <span class="tit" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv2',id:item.id}})">{{item.name}} :</span> 
-            <div class="name fx-1">
-              <span class="ft-wt-400 cur-pt" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv3',id:item.id}})" v-for="it in item.children" :key="it.id">{{it.name}}</span>
+          <div class="cont">
+            <div class="fx ft-wt-600 pd-bt-10" v-for="item in categorys" :key="item.id">
+              <span class="tit font-bt2" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv2',id:item.id}})">{{item.name}} :</span> 
+              <div class="name fx-1">
+                <span class="ft-wt-400 cur-pt font-bt2" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv3',id:item.id}})" v-for="it in item.children" :key="it.id">{{it.name}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -31,7 +33,7 @@
     </div>
 </template>
 <script setup>
-import {onMounted, ref} from 'vue';
+import {ref} from 'vue';
   const isDetails = ref(false);
   // 接收的全部分类
   const props = defineProps({
@@ -93,6 +95,10 @@ import {onMounted, ref} from 'vue';
     background: #FFFFFF;
     box-shadow: 0 4px 6px 2px rgba(108,112,118,0.17);
     border-radius: 8px;
+    .cont{
+      height: 360px;
+      overflow: hidden;
+    }
     .tit{
       display: inline-block;
       width: 120px;

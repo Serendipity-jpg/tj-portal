@@ -3,14 +3,14 @@
   <div class="calendar">
     <div class="label">
       <div class="fx marg-rt-20"><span></span>未打卡 </div>
-      <div class="fx"><span style="background: #ECF4FF;"></span>已打卡</div>
+      <div class="fx"><span style="background: #ECF4FF; cursor: pointer;"></span>已打卡</div>
     </div>
     <div class="calendarHead">
       <span v-for="item in week" :key="item">{{item}}</span>
     </div>
     <div class="calendarCont">
       <div class="day" v-for="item in calendarData">
-          <div class="taday" v-if="item.date==currentDay">打卡</div>
+          <div class="taday" v-if="item.date==currentDay" @click="pointsSignHandle(item)">打卡</div>
           <div :class="{noMonth: item.date.split('-')[1] != currentDay.split('-')[1]}" v-else>
             {{item.date.split('-')[2]}}
           </div>
@@ -29,16 +29,15 @@ const props = defineProps({
   }
 })
 // 定义emits
-const emit = defineEmits(['changeTable']);
+const emit = defineEmits(['pointsSign']);
 const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 const calendarData = ref([])
 const currentDay = moment().format('YYYY-MM-DD')
 
 onMounted(() => {
   getMounthDay(currentDay)
-  // getDays(currentDay)
 })
-
+// 日历数据处理
 function getMounthDay(day){
   const arr = []
   // 计算本月一号 和最后一天 及一号是周几
@@ -57,6 +56,10 @@ function getMounthDay(day){
   }
 
   calendarData.value = arr
+}
+// 打开
+const pointsSignHandle = (val) => {
+  emit("pointsSign", val)
 }
 
 </script>

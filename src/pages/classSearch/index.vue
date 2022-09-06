@@ -75,6 +75,7 @@ onMounted(() => {
   searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
   searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
   searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
+  search()
 });
 
 const dataCache = dataCacheStore()
@@ -106,6 +107,7 @@ const clearSearchKey = () => {
   searchParams.value.keyword = ""
   isShow.value = false
   dataCache.setSearchKey('')
+  search()
 }
 
 // 搜索组件对应的事件
@@ -123,6 +125,7 @@ async function searchKey(item){
   if (item.key == 'categoryIdLv1') {
     searchParams.value[item.key] = item.value != 'all' ? item.value : undefined;
   }
+  search()
 }
 // 排序操作
 const sortHandle = (item) => {
@@ -160,8 +163,11 @@ async function search (){
 }
 // 监听搜索关键词
 watchEffect(() => {
-  searchParams.value.keyword = dataCache.getSearchKey
-  search()
+  console.log(1111)
+  if (searchParams.value.keyword != dataCache.getSearchKey){
+    searchParams.value.keyword = dataCache.getSearchKey
+    search()
+  }
 })
 </script>
 <style lang="scss" src="./index.scss"> </style>
