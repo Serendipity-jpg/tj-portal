@@ -37,6 +37,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from 'vue-router'
 import { userLogins, getUserInfo } from "@/api/user"
 import { useUserStore } from '@/store'
+import { ElMessage } from "element-plus";
 
 const store = useUserStore();
 const router = useRouter()
@@ -77,6 +78,10 @@ const submitForm = (formEl) => {
           } 
 					// 跳转到首页
 				} else {
+          ElMessage({
+              message: res.msg,
+              type: 'error'
+          });
 					console.log('登录失败')
 				}
 			})

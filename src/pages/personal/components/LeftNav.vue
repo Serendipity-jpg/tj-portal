@@ -4,6 +4,7 @@
     <router-link class="fx-sb font-bt2" :class="{'active': activeClass(item)}" v-for="item in personalRoute" :to="item.path">
       {{item.meta.title}}<i class="iconfont" v-html="item.meta.icon"></i>
     </router-link>
+    <a  class="fx-sb font-bt2" href="/#/login" >退出<i class="iconfont">&#xe60c;</i></a>
   </div>
 </template>
 <script setup>

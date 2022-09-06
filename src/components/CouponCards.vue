@@ -28,13 +28,16 @@ const props = defineProps({
 </script>
 <style lang="scss" scoped>
 .couponCards{
-  width: calc(50% - 35px);
+  width: calc(50% - 18px);
   background: #FFFFFF;
   border: 1px solid #EEEEEE;
   border-left:none;
   border-radius: 8px;
   margin-bottom: 30px;
   margin-right: 35px;
+  &:nth-child(2n){
+    margin-right: 0;
+  }
   .price{
     width: 138px;
     height: 124px;

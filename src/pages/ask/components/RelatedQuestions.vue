@@ -12,9 +12,6 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
-
 // 引入父级传参
 defineProps({
   data:{

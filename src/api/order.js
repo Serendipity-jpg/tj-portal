@@ -57,12 +57,17 @@ export const getOrderInfo = (params) =>
 		params
 	})	
 // 订单支付取消
-export const delOrder = (params) =>
+export const cancelOrder = (params) =>
 	request({
 		url: `/orders/cancel`,
 		method: 'post',
-		params
+		data:params
 	})	
+export const delOrder = (params) =>
+	request({
+		url: `/orders/delete/${params.id}`,
+		method: 'delete',
+	})		
 // 根据订单id查询订单明细列表
 export const getOrderClassList = (params) =>
 	request({
@@ -136,7 +141,7 @@ export const refundsApply = (data) =>
 // 退款详情
 export const refundsDetails = (params) =>
 	request({
-		url: `/refunds/${params.applyId}`,
+		url: `/refunds//getInfoByOrderDetailId/${params.id}`,
 		method: 'get',
 		params
 	})		

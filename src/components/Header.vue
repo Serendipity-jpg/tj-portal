@@ -31,8 +31,8 @@
         <div class="cur-pt font-bt2" v-if="!isToken"><span>注册</span><span>/</span><span @click="() => $router.push('/login')">登录</span></div>
         <div class="fx-al-ct" v-if="isToken && userInfo">
           <img class="headIcon" :src="userInfo.icon" :onerror="onerrorImg" alt="">
-          <div >{{userInfo.name}} |</div>
-          <div class="font-bt2 pd-lf-10" @click="() => $router.push('/login')"> 退出 </div>
+          <div >{{userInfo.name}} </div>
+          <!-- <div class="font-bt2 pd-lf-10" @click="() => $router.push('/login')"> 退出 </div> -->
         </div>
       </div>
     </div>

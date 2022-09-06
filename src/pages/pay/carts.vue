@@ -18,7 +18,7 @@
         >
         <div class="tabItem fx-sb" v-for="item in cartsDataes" :key="item.id">
           <div class="checkBox fx">
-            <el-checkbox :label="item.id" :disabled="item.courseValidDate ==null ? false : !moment().isBefore(item.courseValidDate)">
+            <el-checkbox :label="item.id" :disabled="item.courseValidDate == '永久有效' ? false : !moment().isBefore(item.courseValidDate)">
             <img :src="item.coverUrl" alt=""> 
             </el-checkbox>
             <span class="name">{{item.courseName}}</span>

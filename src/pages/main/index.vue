@@ -11,7 +11,7 @@
     </div>
     <!-- 兴趣模块  -->
     <div class="container" v-if="interest.size > 0">
-      <Interest :data="interest" :key="intKey" @setInterest = setInterest ></Interest>
+      <Interest :data="interest" :key="intKey" @setInterest="setInterest"></Interest>
     </div>
     <!-- 兴趣模块 -->
     <!-- 直播公开课 -->
@@ -24,11 +24,7 @@
     </div> -->
     <!-- 新课推荐 -->
     <div class="pd-tp-30 bg-wt">
-      <OpenClass
-        title="新课推荐"
-        class="container"
-        :data="freeClassData"
-      ></OpenClass>
+      <OpenClass title="新课推荐" class="container" :data="freeClassData"></OpenClass>
     </div>
     <!-- 广告位 -->
     <div class="globalTopBanner" style="display: block;">
@@ -36,39 +32,35 @@
     </div>
     <!-- 精品好课 -- start -->
     <div class="pd-tp-30">
-      <OpenClass
-        title="精品好课"
-        class="container"
-        :data="freeClassData"
-      ></OpenClass>
+      <OpenClass title="精品好课" class="container" :data="freeClassData"></OpenClass>
     </div>
     <!-- 精品好课 -- end -->
     <!-- 兴趣选择设置 -- start -->
     <div class="interest">
-      <el-dialog
-        v-model="interestDialog"
-        width="80%"
-        :show-close="false"
-      >
-      <template #header="{ close, titleId }">
-        <div class="dialogHead fx-sb">
-          <div>
-          <span class="titleClass marg-rt-10">设置学习兴趣</span> 
-          <span class="ft-cl-des">打造你的专属在线学习平台</span>
+      <el-dialog v-model="interestDialog" width="80%" :show-close="false">
+        <template #header="{ close, titleId }">
+          <div class="dialogHead fx-sb">
+            <div>
+              <span class="titleClass marg-rt-10">设置学习兴趣</span>
+              <span class="ft-cl-des">打造你的专属在线学习平台</span>
+            </div>
+            <div class="butCont fx">
+              <span class="bt-grey marg-rt-15" @click="close">下次再选</span>
+              <span class="bt" @click="saveInterest">保存</span>
+            </div>
           </div>
-          <div class="butCont fx">
-            <span class="bt-grey marg-rt-15" @click="close">下次再选</span>
-            <span class="bt" @click="saveInterest">保存</span>
-          </div>
-        </div>
-      </template>
-      <CheckInterest :data="classCategorys" :initValue="interest" @setInterestList="setInterestList" ></CheckInterest>
+        </template>
+        <CheckInterest :data="classCategorys" :initValue="interest" @setInterestList="setInterestList"></CheckInterest>
       </el-dialog>
     </div>
     <div class="floatCont fx-fd-col fx-ct">
-      <router-link to="/main/coupon"> <img src="@/assets/btn_youhuiquan.png" alt="" /> </router-link> 
-      <img src="@/assets/btn_wentifankui.png" alt="" />
-      <img src="@/assets/btn_backtop.png" alt="" />
+      <router-link to="/main/coupon">
+        <img src="@/assets/coup.png" coupon alt="" />
+      </router-link>
+      <div class="cont">
+        <!-- <img src="@/assets/btn_wentifankui.png" alt="" /> -->
+        <img src="@/assets/btn_backtop.png" alt="" />
+      </div>
     </div>
   </div>
 </template>
@@ -78,7 +70,12 @@
 import { onMounted, ref } from "vue";
 import { isLogin } from "@/store";
 import { ElMessage } from "element-plus";
-import { getClassCategorys, getFreeClassList, setInterests, getInterests } from "@/api/class.js";
+import {
+  getClassCategorys,
+  getFreeClassList,
+  setInterests,
+  getInterests,
+} from "@/api/class.js";
 import ClassCategory from "./components/ClassCategory.vue";
 import CheckInterest from "./components/CheckInterest.vue";
 import Interest from "./components/Interest.vue";
@@ -95,7 +92,7 @@ const imags = [banner1, banner2, banner3];
 // 直播公开课的数据
 const freeClassData = ref([]);
 // 兴趣弹窗
-const interestDialog = ref(false)
+const interestDialog = ref(false);
 
 // mounted生命周期
 onMounted(() => {
@@ -105,7 +102,7 @@ onMounted(() => {
   getFreeClassListData();
   // 获取兴趣列表 （二级分类）
   if (isLogin()) {
-    getInterestData()
+    getInterestData();
   }
 });
 
@@ -119,23 +116,23 @@ const getClassCategoryData = async () => {
         classCategorys.value = res.data;
       } else {
         ElMessage({
-          message:res.data.msg,
-          type: 'error'
+          message: res.data.msg,
+          type: "error",
         });
       }
     })
     .catch(() => {
       ElMessage({
         message: "分类请求出错！",
-        type: 'error'
+        type: "error",
       });
     });
 };
 // 打开修改兴趣弹窗
 const setInterest = (val) => {
-  interestCatch.value = interest.value
-  interestDialog.value = val
-}
+  interestCatch.value = interest.value;
+  interestDialog.value = val;
+};
 // 精品公开课接口
 const getFreeClassListData = async () => {
   await getFreeClassList()
@@ -145,14 +142,14 @@ const getFreeClassListData = async () => {
       } else {
         ElMessage({
           message: res.data.msg,
-          type: 'error'
+          type: "error",
         });
       }
     })
     .catch(() => {
       ElMessage({
         message: "分类请求出错！",
-        type: 'error'
+        type: "error",
       });
     });
 };
@@ -183,79 +180,80 @@ const getGoodClassListData = async () => {
     .catch(() => {
       ElMessage({
         message: "分类请求出错！",
-        type: 'error'
+        type: "error",
       });
     });
 };
 // 保存设置的兴趣变量
-const interest = ref(new Set())
-const intKey = ref(1)
+const interest = ref(new Set());
+const intKey = ref(1);
 // 获取兴趣
 const getInterestData = async () => {
   await getInterests()
     .then((res) => {
       if (res.code == 200) {
-        if (res.data.length == 0){
+        if (res.data.length == 0) {
           interestDialog.value = true;
         }
-        interest.value = new Set(res.data)
+        interest.value = new Set(res.data);
       } else {
         ElMessage({
-        message: res.data.msg,
-        type: 'error'
-      });
+          message: res.data.msg,
+          type: "error",
+        });
         interestDialog.value(true);
       }
     })
     .catch(() => {
-        ElMessage({
-          message: "兴趣列表获取失败！",
-          type: 'error'
-        });
+      ElMessage({
+        message: "兴趣列表获取失败！",
+        type: "error",
+      });
     });
-} 
+};
 
 // 更改兴趣的时候记录
-const interestCatch = ref(new Set())
-const setInterestList = list =>{
-  interestCatch.value = list
-}
+const interestCatch = ref(new Set());
+const setInterestList = (list) => {
+  interestCatch.value = list;
+};
 
 // 保存兴趣
 const saveInterest = async () => {
-  let str = ""
-  for(let val of interestCatch.value){
-    if (typeof val == 'string'){
-      str == "" ? str = val : str+= `,${val}`;
+  let str = "";
+  for (let val of interestCatch.value) {
+    if (typeof val == "string") {
+      str == "" ? (str = val) : (str += `,${val}`);
     } else {
-      str == "" ? str = val.id : str+= `,${val.id}`;
+      str == "" ? (str = val.id) : (str += `,${val.id}`);
     }
   }
-  if (str == ""){
+  if (str == "") {
     ElMessage({
-          message: "您还没有选择兴趣，请先选择兴趣后再保存！",
-          type: 'success'
-        });
-    return     
+      message: "您还没有选择兴趣，请先选择兴趣后再保存！",
+      type: "success",
+    });
+    return;
   }
-  await setInterests({interestedIds:str})
+  await setInterests({ interestedIds: str })
     .then((res) => {
       if (res.code == 200) {
         ElMessage({
           message: "兴趣保存成功！",
-          type: 'success'
+          type: "success",
         });
-        getInterestData()
-        intKey.value++
-        interestDialog.value = false
+        getInterestData();
+        intKey.value++;
+        interestDialog.value = false;
       } else {
         ElMessage({
           message: res.data.msg,
-          type: 'error'
+          type: "error",
         });
       }
     })
-    .catch(() => {});
-}
+    .catch(() => { });
+};
 </script>
-<style lang="scss" src="./index.scss"> </style>
+<style lang="scss" src="./index.scss">
+</style>
