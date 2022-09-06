@@ -13,7 +13,7 @@
           <div class="tit fx-sb">
             <span>历史榜</span>
             <div>
-              <el-select v-model="season" class="m-2" placeholder="Select">
+              <el-select v-model="season" @change="selectHandle" class="m-2" placeholder="Select">
                 <el-option
                   v-for="item in seasonOptions"
                   :key="item.id"
@@ -123,6 +123,9 @@ const getHistorySeasonsData = () => {
       });
     });
 }
-
+// 选择赛季
+const selectHandle = (val) => {
+  getSeasonsData(val)
+}
 </script>
 <style lang="scss" src="./index.scss"> </style>
