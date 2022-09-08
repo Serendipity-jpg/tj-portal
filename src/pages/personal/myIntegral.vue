@@ -4,14 +4,16 @@
     <div class="personalCards">
       <CardsTitle class="marg-bt-20" title="我的积分" />
       <div class="title"></div>
-      <Calendar @pointsSign="pointsSign"></Calendar>
+      <!-- 打卡日历 -->
+      <Calendar @pointsSign="pointsSignHandle"></Calendar>
+      <!-- 积分获取 -->
       <div class="listCont fx-sb">
         <div class="list">
           <div class="tit">获取积分</div>
           <div class="tab">
             <div class="item fx-sb" v-for="item in access" :key="item.title">
-              <span>{{item.title}}</span>
-              <span class="bt">{{item.status ? "已完成" : "去完成"}}</span>
+              <span>{{item.desc}}</span>
+              <span>{{item.points}}/{{item.maxPoints}}</span>
             </div>
           </div>
         </div>
@@ -31,7 +33,7 @@
 /** 数据导入 **/
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { getSeasons, getSignRecords } from "@/api/class.js";
+import { getSeasons, getTodayPoints, pointsSign } from "@/api/class.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 
@@ -46,11 +48,11 @@ const store = dataCacheStore()
 const value = ref(new Date())
 
 const access = ref([
-  {'title': '课程学习', status: true},
-  {'title': '课程评论', status: false},
-  {'title': '课程问答', status: false},
-  {'title': '课程笔记', status: false},
-  {'title': '签到', status: false},
+  {value: 1, 'desc': '课程学习', points:0, maxPoints: 50},
+  {value: 2, 'desc': '每日签到', points:0, maxPoints: 2},
+  {value: 3, 'desc': '课程问答', points:0, maxPoints: 20},
+  {value: 4, 'desc': '课程笔记', points:0, maxPoints: 20},
+  {value: 5, 'desc': '课程评价', points:0, maxPoints: 999},
 ])
 
 // 课程目录
@@ -61,7 +63,7 @@ const baseClassTeacherData = ref([])
 onMounted(async () => {
  // 积分榜信息查询
  getSeasonsData()
- // 获取签到记录
+ // 积分获得记录
  getSignRecordsHandle()
 });
 
@@ -88,14 +90,20 @@ const getSeasonsData = () => {
       });
     });
 }
-// 获取签到记录
-const signRecordsDatas = ref([])
+// 用户本日积分情况查询失败
+const tadyPointsData = ref()
 const getSignRecordsHandle = async () => {
-  await getSignRecords()
+  await getTodayPoints()
     .then((res) => {
       if (res.code == 200 ){
-        console.log(898, res.data)
-        signRecordsDatas.value = res.data
+        access.value.map(n => {
+          res.data.forEach( val => {
+            if (val.type.value == n.value){
+              n.points = val.points
+            }
+          }) 
+        })
+        tadyPointsData.value = res.data
       } else {
         ElMessage({
           message: res.msg,
@@ -105,19 +113,20 @@ const getSignRecordsHandle = async () => {
     })
     .catch(() => {
       ElMessage({
-        message: "学霸榜请求失败！",
+        message: "用户本日积分情况查询失败",
         type: 'error'
       });
     });
 }
 // 打卡 - 返回积分
-// const clockAction = ref([])
-const pointsSign = async () => {
+const pointsSignHandle = async () => {
   await pointsSign()
     .then((res) => {
       if (res.code == 200 ){
-        console.log(res.data)
-        // signRecordsDatas.value = res.data
+        ElMessage({
+          message: '签到成功！',
+          type: 'success'
+        });
       } else {
         ElMessage({
           message: res.msg,
@@ -132,5 +141,6 @@ const pointsSign = async () => {
       });
     });
 }
+
 </script>
 <style lang="scss" src="./index.scss"> </style>

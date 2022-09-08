@@ -68,9 +68,10 @@ const getCouponData = async (id) => {
   await getCoupon({couponConfigId:id})
   .then((res) => {
       if (res.code == 200) {
+        getCollectableCouponData()
         ElMessage({
-          message:res.data.msg,
-          type: '优惠券领取成功！'
+          message:'优惠券领取成功!',
+          type: 'success'
         });
       } else {
         ElMessage({
@@ -94,6 +95,8 @@ const getCouponData = async (id) => {
 .discountChoiceWrapper{
   .couponItems{
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     padding: 50px 50px 20px 50px;
   }
   .mainCouponCards{

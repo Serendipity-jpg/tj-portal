@@ -102,7 +102,7 @@ export const getCoupon = (params) =>
 request({
 	url: `/coupon/receive`,
 	method: 'post',
-	params
+	data:params
 })	
 // 兑换码兑换优惠券
 export const exchangeCoupon = (data) =>
@@ -232,6 +232,12 @@ request({
 export const getSignRecords = () =>
 request({
 	url: `/points/sign/records`,
+	method: 'get',
+})
+// 获取签到记录
+export const getTodayPoints = () =>
+request({
+	url: `/points/today`,
 	method: 'get',
 })
 // 查询指定赛季信息

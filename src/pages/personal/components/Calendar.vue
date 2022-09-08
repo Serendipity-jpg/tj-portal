@@ -2,7 +2,7 @@
 <template>
   <div class="calendar">
     <div class="label">
-      <div class="fx marg-rt-20"><span></span>未打卡 </div>
+      <div class="fx marg-rt-20"><span></span> 未打卡 </div>
       <div class="fx"><span style="background: #ECF4FF; cursor: pointer;"></span>已打卡</div>
     </div>
     <div class="calendarHead">
@@ -10,8 +10,11 @@
     </div>
     <div class="calendarCont">
       <div class="day" v-for="item in calendarData">
-          <div class="taday" v-if="item.date==currentDay" @click="pointsSignHandle(item)">打卡</div>
-          <div :class="{noMonth: item.date.split('-')[1] != currentDay.split('-')[1]}" v-else>
+          <div class="taday" v-if="item.date==currentDay">
+            <span v-if="item.isRecords == 1">已打卡</span>
+            <span v-else @click="pointsSignHandle(item)">打卡</span>
+          </div>
+          <div :class="{noMonth: item.date.split('-')[1] != currentDay.split('-')[1], records: item.isRecords == 1,noRecords: item.isRecords == 0}" v-else>
             {{item.date.split('-')[2]}}
           </div>
       </div>
@@ -20,6 +23,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
+import { getSignRecords } from "@/api/class.js";
 import moment from 'moment';
 // 接收父组件数据
 const props = defineProps({
@@ -35,7 +39,8 @@ const calendarData = ref([])
 const currentDay = moment().format('YYYY-MM-DD')
 
 onMounted(() => {
-  getMounthDay(currentDay)
+  // 获取打卡数据
+  getSignRecordsHandel()
 })
 // 日历数据处理
 function getMounthDay(day){
@@ -49,19 +54,43 @@ function getMounthDay(day){
   const n = monthDay + (startDayWeek <= 6 ? startDayWeek+1 : 1);
   const calendarDay = n + (n % 7 == 0 ? 0 :7 - n % 7)
   for(let i = 0; i < calendarDay;i++){
-     arr.push({
-      date: moment(day).subtract(weekOfDate - i , 'd').format('YYYY-MM-DD'),
+    arr.push({
+      date: moment(startDay).subtract(weekOfDate - i , 'd').format('YYYY-MM-DD'),
       week: week[i],
+      isRecords: signData.value[i-startDayWeek] //0是未打卡 1 是已经打卡 99 是没到呢
     })
   }
-
+  console.log(89898, arr)
   calendarData.value = arr
 }
-// 打开
+// 打卡
 const pointsSignHandle = (val) => {
   emit("pointsSign", val)
 }
-
+// 获取打卡数据
+const signData = ref([])
+const getSignRecordsHandel = async () => {
+  await getSignRecords()
+    .then((res) => {
+      if (res.code == 200 ){
+        signData.value = res.data.signRecords
+        console.log(signData.value)
+        // 日历数据处理
+        getMounthDay(currentDay)
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "学霸榜请求失败！",
+        type: 'error'
+      });
+    });
+}
 </script>
 <style lang="scss" scoped>
 .calendar{
@@ -108,6 +137,13 @@ const pointsSignHandle = (val) => {
       }
       .noMonth{
         color: #ccc;
+      }
+      .records{
+        background: #ECF4FF;
+        color: var(--color-main);
+      }
+      .noRecords{
+        background: #E8E8E8;
       }
   }
 }
