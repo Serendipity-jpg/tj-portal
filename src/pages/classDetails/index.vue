@@ -4,7 +4,7 @@
     <div class="detailHead">
       <div class="backGround"><img :src="baseDetailsData.coverUrl" width="100%" alt=""/></div>
       <div class="container">
-        <Breadcrumb title="一级分类"></Breadcrumb>
+        <Breadcrumb :data="baseDetailsData.cateNames && baseDetailsData.cateNames.split('/').at(-1)"></Breadcrumb>
         <div class="topInfo fx">
           <div class=""><img :src="baseDetailsData.coverUrl" width="380" alt="" /></div>
           <div class="fx-1">
@@ -199,6 +199,7 @@ const getClassDetailsData = async () => {
     .then((res) => {
       if (res.code == 200) {
         baseDetailsData.value = res.data
+        console.log(23,res)
       } else {
         ElMessage({
           message:res.data.msg,
