@@ -23,6 +23,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
+import { ElMessage } from "element-plus";
 import { getSignRecords } from "@/api/class.js";
 import moment from 'moment';
 // 接收父组件数据
@@ -54,13 +55,14 @@ function getMounthDay(day){
   const n = monthDay + (startDayWeek <= 6 ? startDayWeek+1 : 1);
   const calendarDay = n + (n % 7 == 0 ? 0 :7 - n % 7)
   for(let i = 0; i < calendarDay;i++){
+    const date = moment(startDay).subtract(weekOfDate - i , 'd').format('YYYY-MM-DD')
+    console.log(moment(startDay).subtract(weekOfDate - i , 'd').format('YYYY-MM-DD'), week[7 - Number(moment(date).format('E'))])
     arr.push({
-      date: moment(startDay).subtract(weekOfDate - i , 'd').format('YYYY-MM-DD'),
-      week: week[i],
-      isRecords: signData.value[i-startDayWeek] //0是未打卡 1 是已经打卡 99 是没到呢
+      date,
+      week: week[7 - Number(moment(date).format('E'))],
+      isRecords: signData.value[i-startDayWeek] // 0是未打卡 1 是已经打卡 99 是没到呢
     })
   }
-  console.log(89898, arr)
   calendarData.value = arr
 }
 // 打卡
@@ -74,7 +76,6 @@ const getSignRecordsHandel = async () => {
     .then((res) => {
       if (res.code == 200 ){
         signData.value = res.data.signRecords
-        console.log(signData.value)
         // 日历数据处理
         getMounthDay(currentDay)
       } else {

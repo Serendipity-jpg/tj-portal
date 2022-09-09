@@ -40,7 +40,7 @@ import { dataCacheStore } from "@/store"
 
 // 组件导入
 import CardsTitle from './components/CardsTitle.vue'
-import BreadCrumb from '@/components/BreadCrumb.vue'
+import BreadCrumb from './components/BreadCrumb.vue'
 import IntegralRankTab from './components/IntegralRankTab.vue'
 
 const route = useRoute()
