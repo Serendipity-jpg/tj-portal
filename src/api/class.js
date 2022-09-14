@@ -15,7 +15,20 @@ export const getFreeClassList = (params) =>
 		method: 'get',
 		params
 	})
-
+// 获取新课推荐接口
+export const getNewClassList = (params) =>
+	request({
+		url: `/courses/TOP5/new`,
+		method: 'get',
+		params
+	})	
+// 获取精品好课接口
+export const getBestClassList = (params) =>
+	request({
+		url: `/courses/TOP5/best`,
+		method: 'get',
+		params
+	})		
 // 获取课程列表 - 分类id 查询对应的列表 （倒序 十条）
 export const getClassList = (id) =>
 	request({

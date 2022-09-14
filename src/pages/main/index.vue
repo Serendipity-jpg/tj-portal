@@ -32,7 +32,7 @@
     </div>
     <!-- 精品好课 -- start -->
     <div class="pd-tp-30">
-      <OpenClass title="精品好课" class="container" :data="freeClassData"></OpenClass>
+      <OpenClass title="精品好课" class="container" :data="bsetClassListData"></OpenClass>
     </div>
     <!-- 精品好课 -- end -->
     <!-- 兴趣选择设置 -- start -->
@@ -73,6 +73,8 @@ import { ElMessage } from "element-plus";
 import {
   getClassCategorys,
   getFreeClassList,
+  getNewClassList,
+  getBestClassList,
   setInterests,
   getInterests,
 } from "@/api/class.js";
@@ -99,11 +101,15 @@ onMounted(() => {
   // 获取三级分类信息
   getClassCategoryData();
   // 获取精品公开课
-  getFreeClassListData();
+  // getFreeClassListData();
   // 获取兴趣列表 （二级分类）
   if (isLogin()) {
     getInterestData();
   }
+  // 获取精品好课
+  getBestClassListData()
+  // 获取新课推荐
+  getNewClassListData()
 });
 
 /** 方法定义 **/
@@ -133,7 +139,7 @@ const setInterest = (val) => {
   interestCatch.value = interest.value;
   interestDialog.value = val;
 };
-// 精品公开课接口
+// 精品公开课接口 - 公开课取消
 const getFreeClassListData = async () => {
   await getFreeClassList()
     .then((res) => {
@@ -154,11 +160,12 @@ const getFreeClassListData = async () => {
     });
 };
 // 新课推荐
+const newClassListData = ref([])
 const getNewClassListData = async () => {
-  await getClassCategorys()
+  await getNewClassList()
     .then((res) => {
       if (res.code == 200) {
-        classCategorys.value = res.data;
+        newClassListData.value = res.data;
       } else {
         ElMessage(res.meg);
       }
@@ -168,11 +175,12 @@ const getNewClassListData = async () => {
     });
 };
 // 精品好课
-const getGoodClassListData = async () => {
-  await getClassCategorys()
+const bsetClassListData = ref([])
+const getBestClassListData = async () => {
+  await getBestClassList()
     .then((res) => {
       if (res.code == 200) {
-        classCategorys.value = res.data;
+        bsetClassListData.value = res.data;
       } else {
         ElMessage(res.meg);
       }
