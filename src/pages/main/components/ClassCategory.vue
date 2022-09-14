@@ -24,7 +24,7 @@
             <div class="fx ft-wt-600 pd-bt-10" v-for="item in categorys" :key="item.id">
               <span class="tit font-bt2" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv2',id:item.id}})">{{item.name}} :</span> 
               <div class="name fx-1">
-                <span class="ft-wt-400 cur-pt font-bt2" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv3',id:item.id}})" v-for="it in item.children" :key="it.id">{{it.name}}</span>
+                <span class="ft-wt-400 cur-pt font-bt2" @click="() => $router.push({path:'/search', query:{type:'categoryIdLv3',id:it.id}})" v-for="it in item.children" :key="it.id">{{it.name}}</span>
               </div>
             </div>
           </div>

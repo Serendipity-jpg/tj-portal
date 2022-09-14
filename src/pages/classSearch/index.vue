@@ -80,6 +80,12 @@ onMounted(() => {
 
 const dataCache = dataCacheStore()
 
+watchEffect(() => {
+  if(dataCache.getSearchKey != ''){
+    isShow.value = true
+  }
+})
+
 /** 方法定义 **/
 
 // 获取一、二、三级分类信息
