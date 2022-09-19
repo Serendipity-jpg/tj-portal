@@ -12,7 +12,7 @@
 </template>
 <script setup>
 // 数据引入
-import { onMounted, onUnmounted, reactive, watchEffect, defineEmits } from 'vue';
+import { onMounted, onUnmounted, reactive, watchEffect } from 'vue';
 import moment from 'moment'
 // 接收父级数据
 const props = defineProps({
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 // emit 初始化
-const emit = defineEmits('timeOver')
+const emit = defineEmits(['timeOver'])
 // 时间数据初始化
 const timeData = reactive({
   h:'00',

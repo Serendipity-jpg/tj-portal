@@ -5,7 +5,6 @@
       ref="formRef"
       :model="fromData"
       :rules="rules"
-      rules
       label-width="0px"
       class="demo-dynamic"
     >
@@ -27,7 +26,7 @@
         <div class="bt" @click="submitForm(formRef)">登 录</div>
       </el-form-item>
     </el-form>
-    <div class="font-bt text-center">
+    <div class="font-bt text-center" @click="goRegister">
         去注册
     </div>
   </div>
@@ -39,6 +38,7 @@ import { userLogins, getUserInfo } from "@/api/user"
 import { useUserStore } from '@/store'
 import { ElMessage } from "element-plus";
 
+const emit = defineEmits(['goHandle'])
 const store = useUserStore();
 const router = useRouter()
 
@@ -93,6 +93,10 @@ const submitForm = (formEl) => {
   });
 };
 
+// 去注册
+const goRegister = () => {
+  emit('goHandle', 'register')
+}
 </script>
 <style lang="scss" scoped>
 .loginPass {

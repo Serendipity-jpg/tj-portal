@@ -4,11 +4,11 @@
     <div class="container searchBar">
       <!-- 结果统计 -->
       <div class="result" v-if="isLogin() && isShow && searchParams.keyword">
-        <span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> <i class="close" @click="clearSearchKey">X</i></span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程
+        <span class="searchKey">关键词：<em>{{searchParams.keyword}}</em> <i class="close iconfont zhy-btn_qingchu1" @click="clearSearchKey"></i></span> 共找到 <em> {{count}} </em> 门“ <em> {{searchParams.keyword}} </em> ”相关课程
       </div>
       <!-- 筛选条件 -->
       <div class="title">全部课程</div>
-      <SearchKey :data="searchType" @searchKey="searchKey"></SearchKey>
+      <SearchKey :data="searchType" @searchKey="searchKey" :active="activeId" :key="activeId"></SearchKey>
       <SearchKey :data="searchCost" @searchKey="searchKey"></SearchKey>
     </div>
     <div class="searchContain bg-wt">
@@ -66,15 +66,21 @@ const page = ref(1);
 const route = useRoute()
 // 是否展示关键词及结果
 const isShow = ref(true)
+const fullPath = ref(route.fullPath)
+// 课程分类默认状态
+const activeId = ref('all')
 // mounted生命周期
 onMounted(() => {
   // 获取一、二、三级分类信息
   getClassCategoryData()
   // 搜索
   searchParams.value.keyword = dataCache.getSearchKey
-  searchParams.value.categoryIdLv1 = route.query.type && route.query.type == 'categoryIdLv1'? route.query.id : undefined
+  if (route.query.type && route.query.type == 'categoryIdLv1'){
+    searchParams.value.categoryIdLv2 = route.query.id
+  }
   searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
   searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
+  activeId.value = route.query.id
   search()
 });
 
@@ -83,6 +89,18 @@ const dataCache = dataCacheStore()
 watchEffect(() => {
   if(dataCache.getSearchKey != ''){
     isShow.value = true
+  }
+  console.log(route.fullPath != fullPath.value)
+  // 点击导航分类更新 url 触发这里的逻辑  点击全部课程下的分类不触发这里的逻辑
+  if (route.fullPath != fullPath.value){
+    fullPath.value = route.fullPath
+    if (route.query.type && route.query.type == 'categoryIdLv1'){
+      searchParams.value.categoryIdLv2 = route.query.id
+    }
+    searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
+    searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
+    activeId.value = route.query.id
+    search()
   }
 })
 

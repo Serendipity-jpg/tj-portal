@@ -14,6 +14,20 @@ export const userLogins = (params) =>
 		method: 'post',
 		data:params
 	})
+// 发送验证码
+export const verifycode = (params) =>
+request({
+	url: `/verifycode`,
+	method: 'post',
+	params
+})
+// 账号注册
+export const userRegist = (params) =>
+request({
+	url: `/students/register`,
+	method: 'post',
+	data:params
+})
 // 获取用户信息
 export const getUserInfo = (params) =>
 	request({

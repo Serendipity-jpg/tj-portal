@@ -6,17 +6,31 @@
 </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import {  onMounted, ref } from 'vue'
 
 // 引入父级传参
 const props = defineProps({
   data:{
     type: Object,
     default:{}
+  },
+  active:{
+    type: String,
+    default: 'all'
+  }
+})
+// 选中的状态
+const activeId = ref(props.active)
+onMounted(() => {
+  // 如果非一级分类 这改为全部
+  const dt = props.data.searchKeys.filter(n => n.id == props.active)
+  console.log(787, dt)
+  if (dt.length == 0){
+    activeId.value = 'all'
   }
 })
 const emit = defineEmits(['searchKey'])
-const activeId = ref('all')
+
 // 点击选中
 const activeHandle = (id) => {
   activeId.value = id

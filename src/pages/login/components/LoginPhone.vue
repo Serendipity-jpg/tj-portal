@@ -5,7 +5,6 @@
       ref="formRef"
       :model="fromData"
       :rules="rules"
-      rules
       label-width="0px"
       class="demo-dynamic"
     >
@@ -27,7 +26,7 @@
         <div class="bt" @click="submitForm(formRef)">登 录</div>
       </el-form-item>
     </el-form>
-    <div class="font-bt text-center">
+    <div class="font-bt text-center"  @click="goRegister">
         去注册
     </div>
   </div>
@@ -35,6 +34,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 
+const emit = defineEmits(['goHandle'])
 const formRef = ref();
 const fromData = reactive({
   username: "13500010003",
@@ -62,6 +62,10 @@ const submitForm = (formEl) => {
   });
 };
 
+// 去注册
+const goRegister = () => {
+  emit('goHandle', 'register')
+}
 </script>
 <style lang="scss" scoped>
 .loginPhone {

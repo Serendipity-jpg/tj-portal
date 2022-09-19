@@ -2,24 +2,28 @@ import { defineStore } from 'pinia';
 
 export const dataCacheStore = defineStore('notification', {
   state: () => ({
-    searchKey: '',
+    courseClassDataes: [], // 存储课程分类
+    searchKey: '', // 搜索关键词存储
     askDetails: '22',
-    learingDataes:{
+    learingDataes:{ // 学习相关信息存储 
       classDetailsData:{}, //课程详情的信息 - 打开课程详情时写入 
       teacherData:{}, // 讲师信息 - 打开课程详情时写入 
       planData:{} // 课程计划信息 
     },
-    currentPlayData:{},
+    currentPlayData:{}, // 视频的当前播放数据存储
     orderClassInfo:{}, //订单的课程信息 
   }),
   getters: {
+    // 获取对应的state的值
     getAskDetails: state => state.askDetails,
     getSearchKey: state => state.searchKey,
     getLearingDataes: state => state.learingDataes,
     getCurrentPlayData: state => state.currentPlayData,
-    getOrderClassInfo: state => state.orderClassInfo
+    getOrderClassInfo: state => state.orderClassInfo,
+    getCourseClassDataes: state => state.courseClassDataes
   },
   actions: {
+    // 设置state对应的值
     setAskDetails(data) {
       this.askDetails = data;
     },
@@ -34,6 +38,9 @@ export const dataCacheStore = defineStore('notification', {
     },
     setOrderClassInfo(data){
       this.orderClassInfo = data;
+    },
+    setCourseClassDataes(data){
+      this.courseClassDataes = data;
     }
   },
   persist: {

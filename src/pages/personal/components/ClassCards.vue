@@ -33,7 +33,6 @@
   </div>
 </template>
 <script setup>
-import { defineEmits } from 'vue';
 
 // 接收父组件传来的标题
 defineProps({
@@ -46,7 +45,7 @@ defineProps({
     default: '1'
   }
 })  
-const emit = defineEmits('planHandle')
+const emit = defineEmits(['planHandle'])
 
 const planActive = (it, type) => {
   emit('planHandle', {data: it, type})

@@ -58,7 +58,6 @@
         <img src="@/assets/coup.png" coupon alt="" />
       </router-link>
       <div class="cont">
-        <!-- <img src="@/assets/btn_wentifankui.png" alt="" /> -->
         <img src="@/assets/btn_backtop.png" alt="" />
       </div>
     </div>
@@ -68,7 +67,7 @@
 /** 数据导入 **/
 
 import { onMounted, ref } from "vue";
-import { isLogin } from "@/store";
+import { isLogin, dataCacheStore } from "@/store";
 import { ElMessage } from "element-plus";
 import {
   getClassCategorys,
@@ -78,7 +77,7 @@ import {
   setInterests,
   getInterests,
 } from "@/api/class.js";
-import ClassCategory from "./components/ClassCategory.vue";
+import ClassCategory from "@/components/ClassCategory.vue";
 import CheckInterest from "./components/CheckInterest.vue";
 import Interest from "./components/Interest.vue";
 import OpenClass from "./components/OpenClass.vue";
@@ -87,6 +86,7 @@ import banner1 from "@/assets/banner1.jpg";
 import banner2 from "@/assets/banner2.jpg";
 import banner3 from "@/assets/banner3.jpg";
 
+const dataCache = dataCacheStore();
 // 分类数据
 const classCategorys = ref([]);
 // banner幻灯片图片
@@ -120,6 +120,7 @@ const getClassCategoryData = async () => {
     .then((res) => {
       if (res.code == 200) {
         classCategorys.value = res.data;
+        dataCache.setCourseClassDataes(res.data)
       } else {
         ElMessage({
           message: res.data.msg,
