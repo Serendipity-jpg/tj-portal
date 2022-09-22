@@ -1,3 +1,4 @@
+<!-- 公用底部部组件 -->
 <template>
   <footer>
     <div class="container">

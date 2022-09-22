@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watchEffect, inject } from 'vue'
+import { ref, watchEffect, inject } from 'vue'
 
 // 引入父级传参
 const props = defineProps({

@@ -1,4 +1,4 @@
-<!-- 顶部Banner区域左侧列表 -->
+<!-- 顶部Banner区域右边幻灯片 -->
 <template>
 <div class="swiperWrapper fx-1">
    <swiper

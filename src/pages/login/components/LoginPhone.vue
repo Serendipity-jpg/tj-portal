@@ -33,14 +33,16 @@
 </template>
 <script setup>
 import { reactive, ref } from "vue";
+import { ElMessage } from "element-plus";
 
 const emit = defineEmits(['goHandle'])
+// 登录数据初始化
 const formRef = ref();
 const fromData = reactive({
   username: "13500010003",
   password: "123",
 });
-
+// 效验规则
 const rules = reactive({
   userName: [
     { required: true, message: "请输入正确的手机号", trigger: "blur" },
@@ -49,8 +51,11 @@ const rules = reactive({
     { required: true, message: "请输入正确的用验证码", trigger: "blur"},
   ],
 });
-
+// 数据提交
 const submitForm = (formEl) => {
+  ElMessage({
+      message: '暂不支持手机号登录， 请使用用户名密码登录',
+  });
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {

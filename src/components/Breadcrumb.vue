@@ -1,3 +1,4 @@
+<!-- 公用面包屑-所有详情页面使用 -->
 <template>
   <div class="breadcrumb ">
     <span class="font-bt2" @click="() => {$router.push('/')}" >首页</span>
@@ -6,7 +7,6 @@
   </div>
 </template>
 <script setup>
-import router from '../router';
 
 const props = defineProps({
   data: {

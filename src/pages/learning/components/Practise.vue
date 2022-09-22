@@ -1,4 +1,4 @@
-<!-- 学习目录 -->
+<!-- 学习练习 -->
 <template>
   <div class="practiseWrapper">
     <div class="preview">
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script setup>
-  import { onMounted, ref, reactive, onBeforeUnmount,watchEffect  } from 'vue'
+  import { onMounted, ref, reactive, onBeforeUnmount  } from 'vue'
   import {ElMessage, ElMessageBox} from 'element-plus'
   import { getSubject, postSubject } from '@/api/subject.js';
   import { dataCacheStore } from "@/store"

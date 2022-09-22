@@ -1,4 +1,4 @@
-<!-- 选择兴趣弹窗 -->
+<!-- 搜索按钮 -->
 <template>
 <div class="search fx">
   <div class="tit">{{data.title}}:</div>
@@ -24,7 +24,6 @@ const activeId = ref(props.active)
 onMounted(() => {
   // 如果非一级分类 这改为全部
   const dt = props.data.searchKeys.filter(n => n.id == props.active)
-  console.log(787, dt)
   if (dt.length == 0){
     activeId.value = 'all'
   }

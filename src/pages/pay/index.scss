@@ -152,12 +152,29 @@
   }
 }
 
-//
+// 购物车
 .cartsWrapper{
   .container{
     padding: 30px;
     border-radius: 8px;
     align-items: center;
+  }
+  .empty{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #80878C;
+    font-size: 14px;
+    height: calc(100vh - 515px);
+    .desc{
+      margin-bottom: 23px;
+    }
+    .bt{
+      width: 122px;
+      height: 36px;
+      line-height: 36px;
+    }
   }
   .cal{
     width: 200px;

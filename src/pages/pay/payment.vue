@@ -22,6 +22,7 @@
         <div v-if="payMethods.indexOf('weixinPay') != -1" @click="payMethodCheck('weixinPay')"  class="cont" :class="{act: payMethod == 'weixin'}"><img src="@/assets/icon_weixin.png" width="44" height="44" alt=""> 微信支付 </div>
       </div>
     </div>
+    <!-- 支付二维码弹窗 -->
     <el-dialog
       v-model="dialogVisible"
       width="440px"
@@ -58,7 +59,7 @@ onMounted(() => {
   // 获取订单的信息及时效
   getPayStateData()
 })
-
+// 支付二维码弹窗数据
 const dialogVisible = ref(false)
 const dialogCont = reactive({
   title: '',
@@ -155,7 +156,7 @@ const getPayStateData = async () => {
           orderInfo.value = res.data
         } else if (res.data.payStatus == 2 || res.data.payStatus == 5){
           clearInterval(timer.value)
-          router.push('/pay/success')
+          router.push({path:'/pay/success', query:{order: res.data.id}})
         } else {
           console.log('状态是非待支付或已支付成')
         }

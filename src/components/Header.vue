@@ -51,8 +51,10 @@
             </div>
           </div>
         </div>
-        <!-- 学习中心 - start -->
-        <div class="cur-pt font-bt2" v-if="!isToken"><span>注册 </span><span>/</span><span @click="() => $router.push('/login')"> 登录</span></div>
+        <!-- 登录注册 - start -->
+        <div class="cur-pt" v-if="!isToken">
+          <span class="font-bt2" >注册 </span><span>/</span>
+          <span class="font-bt2" @click="() => $router.push('/login')"> 登录</span></div>
         <div class="fx-al-ct" v-if="isToken && userInfo">
           <img class="headIcon" :src="userInfo.icon" :onerror="onerrorImg" alt="">
           <div >{{userInfo.name}} </div>

@@ -199,7 +199,6 @@ const getClassDetailsData = async () => {
     .then((res) => {
       if (res.code == 200) {
         baseDetailsData.value = res.data
-        console.log(23,res)
       } else {
         ElMessage({
           message:res.data.msg,

@@ -40,14 +40,14 @@ const store = useUserStore();
 const router = useRouter()
 
 const emit = defineEmits(['goHandle'])
-
+// 登录数据初始化
 const formRef = ref();
 const fromData = reactive({
   cellPhone: "",
   password: "",
   code: "123456"
 });
-
+// 手机号效验
 const verifyPone = (rull, value, callback) => {
   const reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
   if (value == '') {

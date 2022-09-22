@@ -1,4 +1,4 @@
-<!-- 登录页面 -->
+<!-- 登录页面 - 用户名密码登录 -->
 <template>
   <div class="loginPass">
     <el-form
@@ -44,12 +44,13 @@ const router = useRouter()
 
 const formRef = ref();
 const checked = ref(false)
+// 登录参数效验
 const fromData = reactive({
   username: "13600000000",
   password: "123456",
   type: 1
 });
-
+// 效验规则
 const rules = reactive({
   username: [
     { required: true, message: "请输入正确的用户名", trigger: "blur" },
@@ -66,6 +67,7 @@ const submitForm = (formEl) => {
       // 提交登录 
       await userLogins(fromData)
 			.then(async res => {
+        console.log(res)
 				if (res.code == 200) {
           // 用户token写入 pinia
 					store.setToken(res.data);
@@ -79,7 +81,7 @@ const submitForm = (formEl) => {
 					// 跳转到首页
 				} else {
           ElMessage({
-              message: res.msg,
+              message: res.data.msg,
               type: 'error'
           });
 					console.log('登录失败')
@@ -87,7 +89,10 @@ const submitForm = (formEl) => {
 			})
 			.catch(err => {});
     } else {
-      console.log("error submit!");
+      ElMessage({
+          message: '登录出错，请重新尝试',
+          type: 'error'
+      });
       return false;
     }
   });

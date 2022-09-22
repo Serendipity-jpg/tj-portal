@@ -1,3 +1,4 @@
+<!-- 标题组件 -->
 <template>
   <div class="mainTitle fx">
     <div class="marg-rt-10">{{ title }}</div>

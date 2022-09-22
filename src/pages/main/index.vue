@@ -24,7 +24,7 @@
     </div> -->
     <!-- 新课推荐 -->
     <div class="pd-tp-30 bg-wt">
-      <OpenClass title="新课推荐" class="container" :data="freeClassData"></OpenClass>
+      <OpenClass title="新课推荐" class="container" :data="newClassListData"></OpenClass>
     </div>
     <!-- 广告位 -->
     <div class="globalTopBanner" style="display: block;">
@@ -165,8 +165,10 @@ const newClassListData = ref([])
 const getNewClassListData = async () => {
   await getNewClassList()
     .then((res) => {
+      console.log(3333,res)
       if (res.code == 200) {
         newClassListData.value = res.data;
+        console.log(3333,res.data)
       } else {
         ElMessage(res.meg);
       }

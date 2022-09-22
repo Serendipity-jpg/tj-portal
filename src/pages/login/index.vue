@@ -13,7 +13,9 @@
         </div>
         <!-- 用户名密码登录 - start -->
         <LoginPass v-if="act == 'pass'" @goHandle="goHandle"></LoginPass>
+        <!-- 手机号登录 - start -->
         <LoginPhone v-if="act == 'phone'" @goHandle="goHandle"></LoginPhone>
+        <!-- 注册 - start -->
         <Register v-if="act == 'register'" @goHandle="goHandle"></Register>
       </div>
     </div>

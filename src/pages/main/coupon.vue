@@ -17,9 +17,10 @@
           <div class="info">
             <div class="tit">{{item.name}}</div>
             <div><em>适用平台：</em>{{item.rangeType == 1 ? '全平台' : '指定课程分类'}}</div>
-            <div><em>有效日期：</em>{{item.termEndTime}}</div>
+            <div><em>有效日期：</em>{{item.termValidity}} 天</div>
           </div>
-          <div class="butCont fx-ct"><span @click="getCouponData(item.id)" class="bt">立即领取</span></div>
+          <div class="butCont fx-ct" v-if="item.recieveStatus == 1"><span @click="getCouponData(item.id)" class="bt">立即领取</span></div>
+          <div class="butCont fx-ct" v-else><span class="bt-grey">立即领取</span></div>
        </div>
     </div>
   </div>
@@ -68,6 +69,7 @@ const getCouponData = async (id) => {
   await getCoupon({couponConfigId:id})
   .then((res) => {
       if (res.code == 200) {
+        // 领取成功之后重新刷新列表
         getCollectableCouponData()
         ElMessage({
           message:'优惠券领取成功!',

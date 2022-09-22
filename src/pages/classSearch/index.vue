@@ -38,7 +38,7 @@
 <script setup>
 /** 数据导入 **/
 
-import { onMounted, ref, watchEffect, nextTick } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, classSeach } from "@/api/class.js";
 // 组件导入
@@ -90,7 +90,6 @@ watchEffect(() => {
   if(dataCache.getSearchKey != ''){
     isShow.value = true
   }
-  console.log(route.fullPath != fullPath.value)
   // 点击导航分类更新 url 触发这里的逻辑  点击全部课程下的分类不触发这里的逻辑
   if (route.fullPath != fullPath.value){
     fullPath.value = route.fullPath
@@ -187,7 +186,6 @@ async function search (){
 }
 // 监听搜索关键词
 watchEffect(() => {
-  console.log(1111)
   if (searchParams.value.keyword != dataCache.getSearchKey){
     searchParams.value.keyword = dataCache.getSearchKey
     search()

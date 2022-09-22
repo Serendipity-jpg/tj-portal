@@ -1,3 +1,4 @@
+<!-- 发布成功页面 -->
 <template>
   <div class="success container bg-wt fx-fd-col fx-ct">
     <IconSuccess></IconSuccess>

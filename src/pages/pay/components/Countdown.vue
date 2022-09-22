@@ -1,8 +1,7 @@
+<!-- 倒计时处理 - 支付 -->
 <template>
   <div class="table-right flex-a-center">
       <div class="time-text">
-          <!-- <span class="timeTextSpan" v-for="item,index of timeData.h" >{{item}}</span>
-          <span class="timeTextSpan1" >时</span> -->
           <span class="timeTextSpan" v-for="item,index of timeData.m" >{{item}}</span>
           <span class="timeTextSpan1" >分</span>
           <span class="timeTextSpan" v-for="item,index of timeData.s" >{{item}}</span>

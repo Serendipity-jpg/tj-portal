@@ -1,9 +1,10 @@
 <!-- 购物车 -->
 <template>
   <div class="cartsWrapper">
+    <!-- 我的购物车-列表 - start -->
     <div class="container bg-wt marg-bt-20">
       <div class="title">我的购物车 <span>共{{cartsDataes.length}}门课程</span></div>
-      <div class="tab" >
+      <div class="tab" v-if="cartsDataes.length > 0" >
         <div class="tabHead fx-sb">
           <div>课程名称</div>
           <div class="fx">
@@ -33,8 +34,16 @@
         </div>
         </el-checkbox-group>
       </div>
+      <!-- 购物车数据为空 -->
+      <div class="empty" v-else>
+        <div><img src="@/assets/img_gouwuche.png" width="200" alt=""></div>
+        <div class="desc">看到喜欢的课程，点击【加入购物车】，在这里合并购买</div>
+        <div class="bt" @click="() => $router.push('/search/index')">继续逛逛</div>
+      </div>
     </div>
-    <div class="container bg-wt fx-sb">
+    <!-- 我的购物车-列表 - end -->
+    <!-- 我的购物车-结算 - start -->
+    <div class="container bg-wt fx-sb" v-if="cartsDataes.length > 0">
       <div class="allAction fx">
         <div class="marg-rt-20">
           <el-checkbox
@@ -53,6 +62,7 @@
         <div @click="goSettlement" class="bt bt-red">去下单</div>
       </div>
     </div>
+    <!-- 我的购物车-结算 - end -->
   </div>
 </template>
 <script setup>

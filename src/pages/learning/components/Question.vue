@@ -33,7 +33,7 @@
 </template>
 <script setup>
 import defaultImage from '@/assets/icon.jpeg'
-import { ref, onMounted, reactive, inject } from "vue"
+import { ref, onMounted, reactive } from "vue"
 import { postQuestions, getAskList, getMyAskList, putLiked } from "@/api/classDetails.js"
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";

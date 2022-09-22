@@ -1,4 +1,4 @@
-<!-- 选择兴趣弹窗 -->
+<!-- 提问注意事项-问答详情 -->
 <template>
   <div class="askCareful">
     <div class="tit">提问注意事项</div>
@@ -10,19 +10,7 @@
     </div>
   </div>
 </template>
-<script setup>
-// 引入父级传参
-defineProps({
-  data:{
-    type: Array,
-    default:[]
-  },
-  id:{
-    type:String,
-    default:''
-  }
-})
-</script>
+<script setup></script>
 <style lang="scss" scoped>
 .askCareful {
   width: 344px;

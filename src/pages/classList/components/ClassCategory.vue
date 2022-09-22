@@ -1,4 +1,4 @@
-<!-- 顶部Banner区域左侧列表 -->
+<!-- 分类 -->
 <template>
     <div class="classCategory ft-14">
       <div @mouseout="mouseoutHandle()">
@@ -25,7 +25,7 @@
     </div>
 </template>
 <script setup>
-import {onMounted, ref} from 'vue';
+import { ref } from 'vue';
   const isDetails = ref(false);
   // 接收的全部分类
   const props = defineProps({

@@ -1,4 +1,4 @@
-<!-- 选择兴趣弹窗 -->
+<!-- 相关问题 - 回答页面 -->
 <template>
   <div class="relatedQuestions">
     <div class="but"><span class="bt bt-round" @click="() => {$router.push({path:'/ask', query:{id, title}})}"> 发新问题 </span></div>
@@ -14,10 +14,6 @@
 <script setup>
 // 引入父级传参
 defineProps({
-  data:{
-    type: Array,
-    default:[]
-  },
   id:{
     type:String,
     default:''

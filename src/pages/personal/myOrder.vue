@@ -157,7 +157,6 @@ function orderStatus(item) {
 }
 // 取消订单
 const cancelOrderHandle = async (item) => {
-  console.log(item)
   ElMessageBox.confirm(
         `是否确认取消课程《 ${item.name} 》`,
         '取消订单',
