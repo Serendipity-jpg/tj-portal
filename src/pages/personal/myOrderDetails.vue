@@ -42,7 +42,7 @@
           <el-table-column label="操作" align="center" width="120">
             <template #default="scope">
               <div v-if="scope.row.canRefund" class="font-bt1" @click="openRefundDialog('refund', scope.row)">申请退款</div>
-              <div v-if="scope.row.canRead" class="font-bt1" @click="openRefundDialog('details', scope.row)">退款详情</div>
+              <div v-if="scope.row.canRead" class="font-bt1" @click="openRefundDialog('details', scope.row)">{{ orderDetails.status != 6 ? '退款中':'退款详情'}}</div>
               <span v-if="!scope.row.canRefund && !scope.row.canRead"> -- </span>
             </template>
           </el-table-column>
@@ -181,6 +181,7 @@ const refundApplyReq = () => {
   refundsApply(params)
     .then((res) => {
       if (res.code == 200 ){
+        refundDialog.value = false
         orderDetails.value = res.data
         refundInfo.canRead = true
       } else {
