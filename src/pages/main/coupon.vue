@@ -20,7 +20,8 @@
             <div><em>有效日期：</em>{{item.termValidity}} 天</div>
           </div>
           <div class="butCont fx-ct" v-if="item.recieveStatus == 1"><span @click="getCouponData(item.id)" class="bt">立即领取</span></div>
-          <div class="butCont fx-ct" v-else><span class="bt-grey">立即领取</span></div>
+          <div class="butCont fx-ct" v-if="item.recieveStatus == 2"><span  @click="() => $router => $router.push('/search/index')" class="bt">去使用</span></div>
+          <div class="butCont fx-ct" v-if="item.recieveStatus == 3"><span class="bt bt-grey">已领完</span></div>
        </div>
     </div>
   </div>
@@ -156,7 +157,9 @@ const getCouponData = async (id) => {
     .butCont{
       padding: 20px;
       span{
-        padding: 0px 20px;
+        display: inline-block;
+        width: 104px;
+        text-align: center;
         height: 40px;
         border-radius: 20px;
       }

@@ -68,6 +68,7 @@ function getMounthDay(day){
 // 打卡
 const pointsSignHandle = (val) => {
   emit("pointsSign", val)
+  val.isRecords = 1
 }
 // 获取打卡数据
 const signData = ref([])
