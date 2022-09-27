@@ -35,9 +35,12 @@
             <span class="price">{{(baseDetailsData.price / 100).toFixed(2) }}</span>
             <span class="desc">课前随时退 · 售后有保障</span> 
           </div>
-          <div class="buy">
+          <div class="buy" v-if="!isSignUp">
             <span class="bt-red1 bt-round marg-rt-20" @click="addCarts()">加入购物车</span>
             <span class="bt-red bt-round" @click="payHandle()" >立即购买</span>
+          </div>
+          <div class="buy" v-else @click="goLearning">
+            <span class="bt-red bt-round">马上学习</span>
           </div>
         </div>
         <div class="buyCont fx-sb" v-else >
@@ -183,7 +186,9 @@ onMounted(async () => {
   // 获取课程目录
   await getClassListData()
   // 获取本课程的学习情况 
-  await getCourseLearningData()
+  if(isLogin()){
+    await getCourseLearningData()
+  }
 
   store.setLearingDataes({
     classDetailsData:baseDetailsData.value, // 课程的信息
