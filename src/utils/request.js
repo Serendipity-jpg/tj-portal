@@ -58,7 +58,7 @@ instance.interceptors.response.use(
         return data;
       }
     } 
-    return response;
+    return response.data;
   },
   (err) => {
     const { config } = err;

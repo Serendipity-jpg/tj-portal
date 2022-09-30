@@ -1,7 +1,7 @@
 <!-- 页面头部组件 -->
 <template>
   <header class="bg-wt">
-    <div class="container fx">
+    <div class="container fx pt-rt">
       <div class="logo">
         <router-link to="/"> <img src="@/assets/logo.png" alt="" srcset="" /> </router-link>
       </div>
@@ -42,19 +42,19 @@
               <div class="fx-sb">
                 <span>正在学习：</span> 
                 <div class="fx">
-                  <span class="bt" @click="() => $router.push('/personal/main/myClass')">继续学习</span>
+                  <span class="bt" @click="() => $router.push({path: '/learning/index', query: {id: learnClassInfo.course.id}})">继续学习</span>
                   <span class="bt bt-grey" @click="() => $router.push('/personal/main/myClass')">全部课程</span>
                 </div>
               </div>
               <div class="tit">{{learnClassInfo && learnClassInfo.course.name}}</div>
-              <div class="perc fx-sb"> {{learnClassInfo && learnClassInfo.latestSectionName}}  <i>{{learnClassInfo && (learnClassInfo.learnedSections/learnClassInfo.course.sections)}}%</i></div>
+              <div class="perc fx-sb"> {{learnClassInfo && learnClassInfo.latestSectionName}}  <i>{{learnClassInfo && (learnClassInfo.learnedSections/learnClassInfo.course.sections * 100).toFixed(0)}}%</i></div>
             </div>
           </div>
         </div>
         <!-- 登录注册 - start -->
         <div class="cur-pt" v-if="!isToken">
-          <span class="font-bt2" >注册 </span><span>/</span>
-          <span class="font-bt2" @click="() => $router.push('/login')"> 登录</span></div>
+          <span class="font-bt2" @click="() => $router.push({path: '/login', query: {md: 'register'}})">注册 </span><span>/</span>
+          <span class="font-bt2" @click="() => $router.push({path: '/login', query: {md: 'pass'}})"> 登录</span></div>
         <div class="fx-al-ct" v-if="isToken && userInfo">
           <img class="headIcon" :src="userInfo.icon" :onerror="onerrorImg" alt="">
           <div >{{userInfo.name}} </div>
@@ -199,8 +199,8 @@ header {
   .courseClassList{
     position: absolute;
     z-index: 999;
-    top: 60px;
-    left: 160px;
+    top: 50px;
+    left: 102px;
     .firstItems{
       background-color: #fff;
     }

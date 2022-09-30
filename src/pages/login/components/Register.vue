@@ -99,6 +99,7 @@ const verifycodeHandle = async() => {
 }
 // 注册
 const submitForm = (formEl) => {
+  console.log(formEl)
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {

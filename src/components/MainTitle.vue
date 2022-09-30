@@ -2,17 +2,15 @@
 <template>
   <div class="mainTitle fx">
     <div class="marg-rt-10">{{ title }}</div>
-    <router-link v-if="more" class="fx-ct ft-cl-des ft-14 " :to="moreUrl">
-      <div  @click="moreHandle()" class="more fx-ct">
-        更多
-        <img src="@/assets/icon_more.png" alt="" />
-      </div>
-    </router-link>
+    <div  @click="() => this.$router.push(moreUrl)" class="more ft-cl-des ft-14 ">
+      更多
+      <img src="@/assets/icon_more.png" alt="" />
+    </div>
   </div>
 </template>
 <script setup>
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     default: "课程标题",
@@ -23,7 +21,7 @@ const props = defineProps({
   },
   moreUrl:{
     type: String,
-    default: "/",
+    default: '/search/index',
   },
 });
 
@@ -35,10 +33,14 @@ const props = defineProps({
   color: #19232b;
 
   .more {
+    display: flex;
+    align-items: center;
     cursor: pointer;
     img{
       width: 20px;
       height: 20px;
+      position: relative;
+      top: -1px;
     }
   }
 }

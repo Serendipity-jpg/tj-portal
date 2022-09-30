@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="pagination fx-ct">
+      <div class="pagination fx-ct" v-if="total > 10">
         <el-pagination
           v-model:currentPage="params.pageNo"
           v-model:page-size="params.pageSize"
