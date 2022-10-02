@@ -36,7 +36,7 @@ defineProps({
 
 const activeNames = ref([0])
 const handleChange = (val) => {
-  console.log(val)
+
 }
 const toPlayPage = (id) => {
   console.log(id);

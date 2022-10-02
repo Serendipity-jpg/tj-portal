@@ -46,11 +46,12 @@
       </div>
       <div class="info">
         <div><span>订单总价：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.totalAmount) || 0}}</span></div>
-        <div><span>优惠券：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.coupon_rule) || 0}}</span></div>
+        <div><span>优惠券：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.couponRule) || '无'}}</span></div>
         <div><span>优惠金额：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.discountAmount) || 0}}</span></div>
         <div><span>实付金额：</span><span class="pirc red">{{orderDetails && amountConversion(orderDetails.realAmount) || 0}}</span></div>
       </div>
     </div>
+    <!-- 申请退款 - start -->
     <el-dialog
       v-model="refundDialog"
       title="申请退款"
@@ -86,6 +87,8 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 申请退款 - end -->
+    <!-- 退款详情 - start -->
     <el-dialog
       v-model="refundDetailsDialog"
       title="退款详情"
@@ -108,11 +111,12 @@
         </div>    
         <div class="row">
           <p class="ft-wt-600">审批意见</p> 
-          <p class="ft-cl-des">{{refundDetailsData.approveOpinion}}</p>
+          <p class="ft-cl-des">{{refundDetailsData.approveOpinion || '暂无！'}}</p>
         </div>
        </div>
       </div>    
     </el-dialog>
+     <!-- 退款详情 - end -->
   </div>
 </template>
 <script setup>
@@ -136,7 +140,7 @@ const refundOrderDetail = ref({});
 const refundDialog = ref(false)
 const openRefundDialog = (val, detail) => {
   refundOrderDetail.value = detail;
-  val == 'details' ? refundDetailsReq() : refundDialog.value = true
+  val === 'details' ? refundDetailsReq() : refundDialog.value = true
 }
 
 // mounted生命周期
@@ -151,13 +155,13 @@ const refundReason = ref('')
 
 const refundDetailsDialog = ref(false)
 const refundApplyReq = () => {
-  if (refundReason.value == ''){
+  if (refundReason.value === ''){
     ElMessage({
         message: '请选择退款原因',
     });
      return false
   } 
-  if(questionDesc.value == ""){
+  if(questionDesc.value === ""){
     ElMessage({
         message: '请输入退款问题描述',
     });
@@ -168,6 +172,7 @@ const refundApplyReq = () => {
     questionDesc:questionDesc.value,
     refundReason:refundReason.value
   }
+  // 上面验证通过后申请退款
   refundsApply(params)
     .then((res) => {
       if (res.code == 200 ){
@@ -194,10 +199,9 @@ const refundApplyReq = () => {
 // 退款详情
 const refundDetailsData = ref()
 const refundDetailsReq = () => {
-
   refundsDetails(refundOrderDetail.value.id)
   .then((res) => {
-    if (res.code == 200 ){
+    if (res.code === 200 ){
       refundDetailsData.value = res.data
       refundDetailsDialog.value = true
     } else {
@@ -215,13 +219,12 @@ const refundDetailsReq = () => {
   });
 }
 
-/** 方法定义 **/
 // 获取订单详情信息
 const orderDetails = ref()
 const getOrderDetailsData = async () => {
     await getOrderDetails(route.query.id)
     .then((res) => {
-      if (res.code == 200 ){
+      if (res.code === 200 ){
         orderDetails.value = res.data
       } else {
         ElMessage({

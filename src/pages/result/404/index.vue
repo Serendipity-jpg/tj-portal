@@ -1,3 +1,4 @@
+<!-- 404页面 -->
 <template>
 <div class="noPage container fx-ct bg-wt">
   <result title="404 Not Found" tip="抱歉，您访问的页面不存在" type="404">

@@ -21,10 +21,6 @@ import LeftNav from "./components/LeftNav.vue";
 const route = useRoute()
 const store = dataCacheStore()
 
-// 结果 - 详情Id
-
-// 课程信息及讲师信息
-
 // 课程目录
 const classListData = ref([])
 const baseClassTeacherData = ref([])
@@ -35,9 +31,6 @@ onMounted(async () => {
 });
 
 /** 方法定义 **/
-// 获取详情数据
 
-
-// 
 </script>
 <style lang="scss" src="./index.scss"> </style>

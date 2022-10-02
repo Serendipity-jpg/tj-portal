@@ -45,7 +45,7 @@
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, getFreeClassList } from "@/api/class.js";
-import ClassCategory from "./components/ClassCategory.vue";
+import ClassCategory from "@/components/ClassCategory.vue";
 import OpenClass from "./components/OpenClass.vue";
 import Swiper from "./components/Swiper.vue";
 import banner1 from "@/assets/banner1.jpg";

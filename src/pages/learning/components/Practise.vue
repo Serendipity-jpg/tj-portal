@@ -1,4 +1,4 @@
-<!-- 学习目录 -->
+<!-- 学习练习 -->
 <template>
   <div class="practiseWrapper">
     <div class="preview">
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script setup>
-  import { onMounted, ref, reactive, onBeforeUnmount,watchEffect  } from 'vue'
+  import { onMounted, ref, reactive, onBeforeUnmount  } from 'vue'
   import {ElMessage, ElMessageBox} from 'element-plus'
   import { getSubject, postSubject } from '@/api/subject.js';
   import { dataCacheStore } from "@/store"
@@ -68,16 +68,13 @@
     },
   })
   
-  const emit = defineEmits('playHadle')
+  const emit = defineEmits(['goHandle'])
 
   // 生命周期
   onMounted(() => {
     // 根据小节或测试id获取练习题
     getSubjectList()
     // 开始答题
-  })
-  watchEffect(() => {
-    console.log(4545, store.getCurrentPlayData)
   })
   // 添加题型
   const subjectTypeWt = (type) => {

@@ -173,7 +173,7 @@ export default [
             path: 'myMessage',
             name: 'myMessage',
             component: () => import('@/pages/personal/myMessage.vue'),
-            meta: { title: '我的消息', active:'myMessage', icon: '&#xe612;'},
+            meta: { title: '我的消息', active:'myMessage',hidden: true, icon: '&#xe612;'},
           },
           {
             path: 'myIntegral',
@@ -182,10 +182,16 @@ export default [
             meta: { title: '我的积分', active:'myIntegral', icon: '&#xe610;'},
           },
           {
+            path: 'myIntegralRanking',
+            name: 'myIntegralRanking',
+            component: () => import('@/pages/personal/myIntegralRanking.vue'),
+            meta: { title: '我的积分',current: '优惠券说明', active:'myIntegral', hidden: true, icon: '&#xe610;'},
+          },
+          {
             path: 'myCollect',
             name: 'myCollect',
             component: () => import('@/pages/personal/myCollect.vue'),
-            meta: { title: '我的收藏', active:'myCollect', icon: '&#xe613;'},
+            meta: { title: '我的收藏', active:'myCollect', hidden: true, icon: '&#xe613;'},
           },
           {
             path: 'mySet',

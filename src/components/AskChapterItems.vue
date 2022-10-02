@@ -1,3 +1,4 @@
+<!-- 章节栏-问答模块、笔记 -->
 <template>
   <div class="chapterItems fx-sb">
       <div class="items fx-wp fx-1" :class="{'open':!isOpen}">
@@ -58,6 +59,7 @@ const openHandle = () => {
       color:var(--color-main);
       font-size: 14px;
       width: 50px;
+      height: 26px;
       text-align: center;
       line-height: 24px;
       cursor: pointer;

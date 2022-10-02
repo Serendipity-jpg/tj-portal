@@ -19,7 +19,20 @@ export const getRecommendClassList = (type) =>
 		url: `${SEARCH_API_PREFIX}/recommend/${type}`,
 		method: 'get'
 	})
-
+// 获取新课推荐接口
+export const getNewClassList = (params) =>
+	request({
+		url: `/courses/TOP5/new`,
+		method: 'get',
+		params
+	})	
+// 获取精品好课接口
+export const getBestClassList = (params) =>
+	request({
+		url: `/courses/TOP5/best`,
+		method: 'get',
+		params
+	})		
 // 获取课程列表 - 分类id 查询对应的列表 （倒序 十条）
 export const getClassList = (id) =>
 	request({
@@ -106,7 +119,7 @@ export const getCoupon = (params) =>
 request({
 	url: `${PROMOTION_API_PREFIX}/coupon/receive`,
 	method: 'post',
-	params
+	data:params
 })	
 // 兑换码兑换优惠券
 export const exchangeCoupon = (data) =>
@@ -220,3 +233,42 @@ request({
 	method: 'post',
 	data:params
 })
+
+
+
+/**  积分相关的接口 **/
+
+// 签到打卡功能，返回本次签到的积分值
+export const pointsSign = (params) =>
+request({
+	url: `/points/sign`,
+	method: 'post',
+	data:params
+})
+// 获取签到记录
+export const getSignRecords = () =>
+request({
+	url: `/points/sign/records`,
+	method: 'get',
+})
+// 获取签到记录
+export const getTodayPoints = () =>
+request({
+	url: `/points/today`,
+	method: 'get',
+})
+// 查询指定赛季信息
+export const getSeasons = (params) =>
+request({
+	url: `/boards/list`,
+	method: 'get',
+	params
+})
+// 查询赛季信息列表
+export const getSelectOptions = (params) =>
+request({
+	url: `/boards/seasons/list`,
+	method: 'get',
+	params
+})
+

@@ -1,3 +1,4 @@
+<!-- 课程展示卡片 - 首页、搜索页 -->
 <template>
   <div class="classCards" @click="goDetails(data.id)">
     <div class="image">

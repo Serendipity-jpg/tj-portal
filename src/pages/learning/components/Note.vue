@@ -1,4 +1,4 @@
-<!-- 学习目录 -->
+<!-- 学习笔记 -->
 <template>
   <div class="learnNoteWrapper">
     <div class="tabCheck">
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, reactive, inject } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import {useRoute} from "vue-router"

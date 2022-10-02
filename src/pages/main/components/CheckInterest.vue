@@ -40,7 +40,6 @@ function fileterinit(item){
 const activeHandle = id => {
   let { value } = activeList
   const n = value.has(id)
-  console.log(n, value)
   if (value.size >= 6 && !n){
     // 提示
     ElMessageBox.alert('最多可以选择6个兴趣哦', '提示：',{confirmButtonText: '知道了', callback:() => {}})

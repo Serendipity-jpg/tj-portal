@@ -4,7 +4,7 @@
     <div class="detailHead">
       <div class="backGround"><img :src="baseDetailsData.coverUrl" width="100%" alt=""/></div>
       <div class="container">
-        <Breadcrumb title="一级分类"></Breadcrumb>
+        <Breadcrumb :data="baseDetailsData.cateNames && baseDetailsData.cateNames.split('/').at(-1)"></Breadcrumb>
         <div class="topInfo fx">
           <div class=""><img :src="baseDetailsData.coverUrl" width="380" alt="" /></div>
           <div class="fx-1">
@@ -16,11 +16,11 @@
                 </div>
                 <div class="card">
                   <div class="tit">有效期</div>
-                  <div class="info">{{baseDetailsData.validDuration}}</div>
+                  <div class="info">{{baseDetailsData.validDuration > 99 ? '长期有效' : `${baseDetailsData.validDuration}月`}}</div>
                 </div>
                 <div class="card bd-non">
                   <div class="tit">评分</div>
-                  <div class="info">{{baseDetailsData.coureScore}}</div>
+                  <div class="info">{{baseDetailsData.score/10}}</div>
                 </div>
               </div>
               <div class="fx">
@@ -35,9 +35,12 @@
             <span class="price">{{(baseDetailsData.price / 100).toFixed(2) }}</span>
             <span class="desc">课前随时退 · 售后有保障</span> 
           </div>
-          <div class="buy">
+          <div class="buy" v-if="!isSignUp">
             <span class="bt-red1 bt-round marg-rt-20" @click="addCarts()">加入购物车</span>
             <span class="bt-red bt-round" @click="payHandle()" >立即购买</span>
+          </div>
+          <div class="buy" v-else @click="goLearning">
+            <span class="bt-red bt-round">马上学习</span>
           </div>
         </div>
         <div class="buyCont fx-sb" v-else >
@@ -160,10 +163,9 @@ const actId = ref(1)
 
 // 常见问题 - 静态数据
 const askData = [
-  {ask:'如何查看已购课程？', answer: '请用购课账号登录官网或APP，点击进入【我的学习】。'},
+  {ask:'如何查看已购课程？', answer: '请用购课账号登录，点击【我的学习】进入。'},
   {ask:'课程购买后可以更换吗？', answer: '如需更换课程请咨询在线客服为您确认是否可以更换。'},
-  {ask:'无法登录怎么办？', answer: '手机端请切换网络或者更新APP；电脑端请更换不同浏览器。'},
-  {ask:'如何用手机听课？', answer: '下载网易云课堂APP，进入我的学习，即可使用手机听课。'},
+  {ask:'无法登录怎么办？', answer: '请更换不同浏览器。'},
   {ask:'课程过期了怎么办？', answer: '课程过期无法观看了哦，请在有效期内进行观看课程。'},
 ]
 // 课程目录
@@ -184,7 +186,9 @@ onMounted(async () => {
   // 获取课程目录
   await getClassListData()
   // 获取本课程的学习情况 
-  await getCourseLearningData()
+  if(isLogin()){
+    await getCourseLearningData()
+  }
 
   store.setLearingDataes({
     classDetailsData:baseDetailsData.value, // 课程的信息
@@ -274,10 +278,6 @@ const getClassListData = async () => {
       });
     });
 };
-// 获取用户本节课的学习计划
-const getClassPlan = async () => {
-
-}
 // table切换 当前展示信息 课程介绍、课程目录
 const changeTable = id => {
   actId.value = id
@@ -358,9 +358,29 @@ const payHandle = () => {
   store.setOrderClassInfo([baseDetailsData.value])
   router.push({path: '/pay/settlement'})
 }
+// TODO 没有效验 松松那边没弄好 
+// 未登录处理购买、加入购物车点击问题
+const validation = () => {
+  if (!isLogin()) {
+    ElMessageBox.confirm(
+        `您还没有登录 去登陆`,
+        '确认登录',
+        {
+          confirmButtonText: '登录购买',
+          cancelButtonText: '继续浏览',
+          type: 'warning',
+        }
+      )
+      .then(() => {
+        router.push('login')
+      })
+  }
+  return false
+}
 
 // 加入购物车
 const addCarts = () => {
+  validation()
   putCarts({courseId: detailsId.value})
   .then((res) => {
     const { data } = res

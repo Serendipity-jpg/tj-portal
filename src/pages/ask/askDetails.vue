@@ -120,7 +120,7 @@
 /** 数据导入 **/
 import { onMounted, reactive, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { getQuestionsDetails, postAnswers, getAllQuestions, getReply, putLiked } from "@/api/classDetails.js";
 import RelatedQuestions from './components/RelatedQuestions.vue'
 import ReplayForm from './components/ReplayForm.vue'
@@ -128,17 +128,15 @@ import { useUserStore } from '@/store'
 const store = useUserStore();
 
 const route = useRoute()
-const router = useRouter()
 const askInfo = ref()
 
 onMounted(() => {
   // 获取问题详情
   getQuestionsDetailsData()
   // 获取回答的列表
-  
   getAllQuestionsData()
-
 })
+
 const dialogTableVisible = ref(false)
 // 获取问题详情
 const getQuestionsDetailsData = async () => {

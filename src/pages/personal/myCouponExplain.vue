@@ -1,4 +1,4 @@
-<!-- 我的优化券 -->
+<!-- 我的优化券 - 使用说明 -->
 <template>
   <div class="couponWrapperExplain">
     <div class="personalCards">

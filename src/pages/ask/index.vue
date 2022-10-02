@@ -61,6 +61,7 @@ import { getClassCourses, postQuestions, putQuestions, getQuestionsDetails } fro
 const route = useRoute()
 const router = useRouter()
 const classInfo = route.query
+
 const type = ref('add')
 onMounted(() => {
   // 获取章节列表 - 下拉选择
@@ -93,7 +94,6 @@ const ruleForm = reactive({
 
 // 获取章节列表 - 下拉使用
 let options = ref([])
-
 const getClassCoursesDataes = async () => {
   await getClassCourses(classInfo.id)
     .then((res) => {
@@ -200,13 +200,10 @@ const submitForm = (formEl) => {
         });
       });
     } else {
-      console.log('error submit!')
       return false
     }
   })
 }
-
-
 
 </script>
 <style lang="scss" src="./index.scss"> </style>

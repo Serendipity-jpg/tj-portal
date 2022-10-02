@@ -1,21 +1,27 @@
 <!-- 首页 - 选择优惠券 -->
 <template>
-  <div class="discountWrapper">
+  <div class="discountChoiceWrapper">
     <div class="container">
       <Breadcrumb data="优惠券"></Breadcrumb>
     </div>
     <div class="couponItems container bg-wt">
-       <div class="couponCards fx" v-for="(item, index) in couponData" :key="index">
-          <div class="price ft-cl-wt">
+       <div class="mainCouponCards fx" v-for="(item, index) in couponData" :key="index">
+          <div class="price ft-cl-wt" v-if="item.type == 4 || item.type == 1 || item.type == 3">
             <div>￥ <em>{{item.discountAmount}}</em></div>
-            <div>{{item.couponRule}}</div>
+            <div class="desc">{{item.couponRule}}</div>
+          </div>
+          <div class="price ft-cl-wt" v-if="item.type == 2 || item.type == 5">
+            <div><em>{{item.discountRate / 10}}</em> 折</div>
+            <div class="desc">{{item.couponRule}}</div>
           </div>
           <div class="info">
             <div class="tit">{{item.name}}</div>
-            <div><em>适用平台：</em>{{item.discountAmount}}</div>
-            <div><em>有效日期：</em>{{item.termEndTime}}</div>
+            <div><em>适用平台：</em>{{item.rangeType == 1 ? '全平台' : '指定课程分类'}}</div>
+            <div><em>有效日期：</em>{{item.termValidity}} 天</div>
           </div>
-          <div class="butCont fx-ct"><span @click="getCouponData(item.id)" class="bt">立即领取</span></div>
+          <div class="butCont fx-ct" v-if="item.recieveStatus == 1"><span @click="getCouponData(item.id)" class="bt">立即领取</span></div>
+          <div class="butCont fx-ct" v-if="item.recieveStatus == 2"><span  @click="() => $router => $router.push('/search/index')" class="bt">去使用</span></div>
+          <div class="butCont fx-ct" v-if="item.recieveStatus == 3"><span class="bt bt-grey">已领完</span></div>
        </div>
     </div>
   </div>
@@ -64,9 +70,11 @@ const getCouponData = async (id) => {
   await getCoupon({couponConfigId:id})
   .then((res) => {
       if (res.code == 200) {
+        // 领取成功之后重新刷新列表
+        getCollectableCouponData()
         ElMessage({
-          message:res.data.msg,
-          type: '优惠券领取成功！'
+          message:'优惠券领取成功!',
+          type: 'success'
         });
       } else {
         ElMessage({
@@ -87,57 +95,74 @@ const getCouponData = async (id) => {
 <style lang="scss" src="./index.scss"> </style>
 
 <style lang="scss"> 
-.couponCards{
-  width: calc(60% - 40px);
-  background: #FFFFFF;
-  border: 1px solid #EEEEEE;
-  border-left:none;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  margin-right: 40px;
-  .price{
-    width: 167px;
-    height: 150px;
-    background:url('@/assets/bg_yhq1.png') center center no-repeat;
-    background-size: cover;
+.discountChoiceWrapper{
+  .couponItems{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-weight: 400;
-    font-size: 14px;
-    em{
-      font-style: normal;
-      font-family: PingFangSC-Semibold;
-      font-weight: 600;
-      font-size: 48px;
-    }
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 50px 50px 20px 50px;
   }
-  .info{
-     display: flex;
-     padding-left: 30px;
-     text-align: left;
-    flex-direction: column;
-    justify-content: center;
-    font-size: 14px;
-    flex: 1;
-    line-height: 28px;
-    .tit{
-      font-weight: 500;
-      font-size: 20px;  
-      margin-bottom: 15px;
+  .mainCouponCards{
+    width: calc(50% - 20px);
+    background: #FFFFFF;
+    border: 1px solid #EEEEEE;
+    border-left:none;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    margin-right: 40px;
+    &:nth-child(2n){
+      margin-right: 0;
     }
-    em{
-      font-style: normal;
-      color: var(--color-font3);
+    .price{
+      width: 167px;
+      height: 150px;
+      background:url('@/assets/bg_yhq1.png') center center no-repeat;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: 400;
+      font-size: 14px;
+      em{
+        font-style: normal;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        font-size: 48px;
+      }
+      .desc{
+        padding: 0 15px;
+        text-align: center;
+      }
     }
-  }
-  .butCont{
-    padding: 20px;
-    span{
-      padding: 0px 20px;
-      height: 40px;
-      border-radius: 20px;
+    .info{
+      display: flex;
+      padding-left: 30px;
+      text-align: left;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 14px;
+      flex: 1;
+      line-height: 28px;
+      .tit{
+        font-weight: 500;
+        font-size: 20px;  
+        margin-bottom: 15px;
+      }
+      em{
+        font-style: normal;
+        color: var(--color-font3);
+      }
+    }
+    .butCont{
+      padding: 20px;
+      span{
+        display: inline-block;
+        width: 104px;
+        text-align: center;
+        height: 40px;
+        border-radius: 20px;
+      }
     }
   }
 }

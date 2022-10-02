@@ -205,19 +205,16 @@ const initPlay = (fileID, psign) => {
     currentPlayData.currentTime = player.value.currentTime();
   });
   player.value.on('pause', function() {
-    console.log('pause')
     // 每次视频暂停的时候 停止发送播放记录请求
     clearInterval(timer.value)
     timer.value = null
   });
   player.value.on('play', function() {
-    console.log('play')
     addPlayLogHandle()
     // 每次视频播放的时候 开始 发送播放记录
     timer.value = setInterval(addPlayLogHandle, 10000)
   });
   player.value.on('ended', function() {
-    console.log('pauseekedse')
     // 播放结束时 停止计算器 并提交最后一次播放状态
     clearInterval(timer.value)
     timer.value = null
@@ -276,7 +273,6 @@ const getMediasSignatureData = async (sectionId) => {
 // 点击小节
 const playHadle = async (val) => {
   const {item, tp} = val
-  console.log(item, tp)
   // 小节名称
   currentPlayData.sectionName = item.name
   // 练习返回

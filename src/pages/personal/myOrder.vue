@@ -20,7 +20,8 @@
             <span class="btCont">
               <span class="bt" v-if="isOrderPay(item)">评价课程</span>
               <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey">查看订单</span>
-              <span v-if="false" class="bt bt-grey">删除订单</span>
+              <span v-if="item.status == 1 " @click="cancelOrderHandle(item)" class="bt bt-grey">取消订单</span>
+              <span v-if="item.status == 3"  @click="delOrderHandle(item)" class="bt bt-grey">删除订单</span>
             </span>
           </div>
         </div>
@@ -43,10 +44,11 @@
 /** 数据导入 **/
 import { onMounted, ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
-import { getOrderListes } from "@/api/order.js";
+import { getOrderListes, cancelOrder, delOrder } from "@/api/order.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 import {amountConversion} from "@/utils/tool.js"
+import { ElMessageBox } from 'element-plus'
 
 // 组件导入
 import CardsTitle from './components/CardsTitle.vue'
@@ -58,25 +60,26 @@ const route = useRoute()
 const store = dataCacheStore()
 
 const tableBar = [
-  {id: 1, name: '全部'}, 
-  {id: 2, name: '待支付'}, 
-  {id: 3, name: '已完成'},
-  {id: 4, name: '已关闭'},
+  {id: 0, name: '全部'},
+  {id: 1, name: '待支付'},
+  {id: 2, name: '已支付'},
+  {id: 3, name: '已关闭'},
+  {id: 4, name: '已完成'},
   {id: 5, name: '已报名'},
-  {id: 6, name: '已退款'},
+  {id: 6, name: '已退款'}
 ]
 
 // tab切换
-const actId = ref(1)
+const actId = ref(0)
 const changeTable = id => {
   actId.value = id
-  params.status = actId.value-1 === 0 ? undefined : actId.value-1
+  params.status = actId.value === 0 ? undefined : actId.value
   getOrderListesData()
 }
 // 分页
 const count = ref(0)
 const params = reactive({
-  status: actId.value-1 === 0 ? undefined : actId.value-1, // 订单状态：1：待支付，2：已支付，3：已关闭，4：已完成，5：已报名
+  status: actId.value === 0 ? undefined : actId.value, // 订单状态：1：待支付，2：已支付，3：已关闭，4：已完成，5：已报名
   // refundStatus: 1, // 退款状态1：待审批，2：取消退款，3：同意退款，4：拒绝退款，5：退款成功，6：退款失败
   pageNo: 1,
   pageSize: 10,
@@ -103,7 +106,7 @@ const orderListData = ref()
 const getOrderListesData =  async () => {
   await getOrderListes(params)
     .then((res) => {
-      if (res.code == 200 ){
+      if (res.code === 200 ){
         orderListData.value = res.data.list
         count.value = Number(res.data.total)
       } else {
@@ -149,11 +152,90 @@ function orderStatus(item) {
       break
     }
     case 6: {
-      data = '退款'
+      data = '已退款'
       break
     }
   }
   return data
+}
+// 取消订单
+const cancelOrderHandle = async (item) => {
+  ElMessageBox.confirm(
+        `是否确认取消课程《 ${item.name} 》`,
+        '取消订单',
+        {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'delete',
+        }
+      )
+        .then(() => {
+          cancelOrderAction(item)
+        })
+        .catch(() => {
+        })
+}
+// 取消订单
+const cancelOrderAction = async (item) => {
+  await cancelOrder({id: item.id})
+    .then((res) => {
+      if (res.code === 200 ){
+        item.orderStatus = 3
+      } else {
+        ElMessage({
+        message: res.msg,
+        type: 'error'
+      });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "订单列表请求失败！",
+        type: 'error'
+      });
+    });
+}
+// 删除确认
+const delOrderHandle = async (item) => {
+  ElMessageBox.confirm(
+        `您确认删除该订单吗，点击确认将永久消失？`,
+        '确认删除',
+        {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'delete',
+        }
+      )
+        .then(() => {
+          delOrderAction()
+        })
+        .catch(() => {
+        })
+}
+
+// 删除订单
+const delOrderAction = async (item) => {
+  await delOrder({id: item.id})
+    .then((res) => {
+      if (res.code === 200 ){
+        getOrderListesData()
+        ElMessage({
+          message: '订单删除成功',
+          type: 'success'
+        });
+      } else {
+        ElMessage({
+          message: res.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "订单列表请求失败！",
+        type: 'error'
+      });
+    });
 }
 </script>
 <style lang="scss" src="./index.scss"> </style>

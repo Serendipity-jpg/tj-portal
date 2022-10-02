@@ -2,8 +2,7 @@
 <template>
   <div class="classCards fx-sb fx-ct">
     <div class="marg-rt-20">
-      <img src="@/assets/banner1.jpg" alt="">
-      <!-- <img :src="data.course.coverUrl" alt=""> -->
+      <img :src="data.course.coverUrl" alt="">
     </div>
     <div class="info fx-1">
       <div class="tit ">{{data.course && data.course.name}}</div>
@@ -33,7 +32,6 @@
   </div>
 </template>
 <script setup>
-import { defineEmits } from 'vue';
 
 // 接收父组件传来的标题
 defineProps({
@@ -46,7 +44,7 @@ defineProps({
     default: '1'
   }
 })  
-const emit = defineEmits('planHandle')
+const emit = defineEmits(['planHandle'])
 
 const planActive = (it, type) => {
   emit('planHandle', {data: it, type})

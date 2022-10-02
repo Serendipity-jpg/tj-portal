@@ -1,11 +1,10 @@
-<!-- 登录页面 -->
+<!-- 登录页面 - 用户名密码登录 -->
 <template>
   <div class="loginPass">
     <el-form
       ref="formRef"
       :model="fromData"
       :rules="rules"
-      rules
       label-width="0px"
       class="demo-dynamic"
     >
@@ -27,29 +26,32 @@
         <div class="bt" @click="submitForm(formRef)">登 录</div>
       </el-form-item>
     </el-form>
-    <div class="font-bt text-center">
+    <div class="font-bt text-center" @click="goRegister">
         去注册
     </div>
   </div>
 </template>
 <script setup>
+// 数据导入
 import { reactive, ref } from "vue";
 import { useRouter } from 'vue-router'
 import { userLogins, getUserInfo } from "@/api/user"
 import { useUserStore } from '@/store'
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 
+const emit = defineEmits(['goHandle'])
 const store = useUserStore();
 const router = useRouter()
 
 const formRef = ref();
 const checked = ref(false)
+// 登录参数效验
 const fromData = reactive({
   username: "18810966208",
   password: "123456",
   type: 1
 });
-
+// 效验规则
 const rules = reactive({
   username: [
     { required: true, message: "请输入正确的用户名", trigger: "blur" },
@@ -66,12 +68,12 @@ const submitForm = (formEl) => {
       // 提交登录 
       await userLogins(fromData)
 			.then(async res => {
-				if (res.code == 200) {
+				if (res.code === 200) {
           // 用户token写入 pinia
 					store.setToken(res.data);
 					// 获取用户信息
           const data = await getUserInfo()
-          if (data.code == 200) {
+          if (data.code === 200) {
               // 记录到store 并调转到首页
               store.setUserInfo(data.data)
               router.push('/main/index')
@@ -86,12 +88,19 @@ const submitForm = (formEl) => {
 			})
 			.catch(err => {});
     } else {
-      console.log("error submit!");
+      ElMessage({
+          message: '登录出错，请重新尝试',
+          type: 'error'
+      });
       return false;
     }
   });
 };
 
+// 去注册
+const goRegister = () => {
+  emit('goHandle', 'register')
+}
 </script>
 <style lang="scss" scoped>
 .loginPass {

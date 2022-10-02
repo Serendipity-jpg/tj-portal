@@ -1,13 +1,15 @@
 <!-- 购物车 -->
 <template>
   <div class="cartsWrapper">
+    <!-- 我的购物车-列表 - start -->
     <div class="container bg-wt marg-bt-20">
       <div class="title">我的购物车 <span>共{{carts.length}}门课程</span></div>
-      <div class="tab" >
+      <div class="tab" v-if="carts.length > 0" >
         <div class="tabHead fx-sb">
           <div>课程名称</div>
           <div class="fx">
-            <div class="cart-price">单价(元)</div>
+            <div class="cal">课程有效期</div>
+            <div class="cal">单价(元)</div>
             <div class="cal">操作</div>
           </div>
         </div>
@@ -34,8 +36,16 @@
         </div>
         </el-checkbox-group>
       </div>
+      <!-- 购物车数据为空 -->
+      <div class="empty" v-else>
+        <div><img src="@/assets/img_gouwuche.png" width="200" alt=""></div>
+        <div class="desc">看到喜欢的课程，点击【加入购物车】，在这里合并购买</div>
+        <div class="bt" @click="() => $router.push('/search/index')">继续逛逛</div>
+      </div>
     </div>
-    <div class="container bg-wt fx-sb">
+    <!-- 我的购物车-列表 - end -->
+    <!-- 我的购物车-结算 - start -->
+    <div class="container bg-wt fx-sb" v-if="carts.length > 0">
       <div class="allAction fx">
         <div class="marg-rt-20">
           <el-checkbox
@@ -54,6 +64,7 @@
         <div @click="goSettlement" class="bt bt-red">去下单</div>
       </div>
     </div>
+    <!-- 我的购物车-结算 - end -->
   </div>
 </template>
 <script setup>
@@ -62,6 +73,8 @@ import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { getCarts, delCarts } from "@/api/order.js";
 import router from "../../router";
+
+import { amountConversion } from "@/utils/tool.js"
 
 import { dataCacheStore } from "@/store"
 const store = dataCacheStore()
@@ -77,7 +90,7 @@ const carts = ref([])
 const getCartsData = async () => {
   await getCarts()
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         const { data } = res
         carts.value = data
       } else {
@@ -119,7 +132,7 @@ const delHandle = (item) => {
   const params = item != 'all' ? [item.id] : checkedList.value
   delCarts({idList: params})
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         ElMessage({
           message:`课程 ${item.courseName} 删除成功`,
           type: 'success'

@@ -24,6 +24,7 @@
         </div>
       </div>
     </div>
+    <!-- 支付二维码弹窗 -->
     <el-dialog
       v-model="dialogVisible"
       width="440px"
@@ -62,7 +63,7 @@ onMounted(() => {
   // 获取订单的信息及时效
   getPayStateData()
 })
-
+// 支付二维码弹窗数据
 const dialogVisible = ref(false)
 const dialogCont = reactive({
   title: '',
@@ -127,7 +128,6 @@ const getPayUrlData = async val => {
         timer.value = setInterval(() => {
           getPayStateData()
         }, 5000)
-        console.log(909, timer.value)
       } else {
         ElMessage({
           message:res.data.msg,
@@ -154,7 +154,7 @@ const getPayStateData = async () => {
           orderInfo.value = res.data
         } else if (res.data.status === 2 || res.data.status === 5){
           clearInterval(timer.value)
-          router.push('/pay/success')
+          router.push({path:'/pay/success', query:{order: res.data.id}})
         } else {
           console.log('状态是非待支付或已支付成')
         }

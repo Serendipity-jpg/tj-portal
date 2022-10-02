@@ -15,7 +15,7 @@
         <PlanTable  :data="planData"></PlanTable>
       </div>
       <!-- 全部课程 -->
-      <div v-if="myClassData != null && myClassData.length > 0">
+      <div id="allClass" v-if="myClassData != null && myClassData.length > 0">
         <div class="personalCards" >
           <CardsTitle class="marg-bt-20" title="全部课程" />
           <div class=""><span></span></div>
@@ -57,7 +57,6 @@ import moment from 'moment'
 import CardsTitle from './components/CardsTitle.vue'
 import ClassCards from './components/ClassCards.vue'
 import PlanTable from './components/PlanTable.vue'
-
 
 const route = useRoute()
 const store = dataCacheStore()
@@ -136,9 +135,9 @@ const currentData = ref();
 const planHandle = (val) => {
    const {data, type} = val
    dialogVisible.value = true
+   currentData.value = data
    if (type == 'edit'){
     const { weekFreq } = planData.value.filter(n => n.id == data.id)[0]
-    currentData.value = data
     number.value = weekFreq
     days.value = data.course.sections
     title.value = '修改计划'
@@ -150,9 +149,10 @@ const planHandle = (val) => {
 }
 // 创建、修改计划
 const createPlan = async () => {
+  console.log(currentData.value)
   const params = {
     freq: number.value,
-    courseId: currentData.value.course.id
+    courseId: currentData.value ? currentData.value.course.id : ''
   }
   await changeMyPlan(params)
     .then((res) => {
