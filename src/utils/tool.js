@@ -20,6 +20,7 @@ export const upperAlpha = (num) => {
   }
   return str
 }
+// 时间转换 h:m:s
 export const timeFormat = (time) => {
     //  秒
     let second = parseInt(time)

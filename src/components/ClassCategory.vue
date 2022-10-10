@@ -101,7 +101,7 @@ import {ref} from 'vue';
     border-radius: 8px;
     .cont{
       height: 360px;
-      overflow: hidden;
+      overflow-y: scroll;
     }
     .tit{
       display: inline-block;

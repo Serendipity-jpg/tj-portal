@@ -11,12 +11,12 @@
               <div class="title">{{baseDetailsData.name}}</div>
               <div class="item fx">
                 <div class="card">
-                  <div class="tit">课程数</div>
+                  <div class="tit">课程数 {{isSignUp}}</div>
                   <div class="info">{{baseDetailsData.cataTotalNum}}节</div>
                 </div>
                 <div class="card">
                   <div class="tit">有效期</div>
-                  <div class="info">{{baseDetailsData.validDuration > 99 ? '长期有效' : `${baseDetailsData.validDuration}月`}}</div>
+                  <div class="info">{{baseDetailsData.validDuration > 99 ? '永久有效' : `${baseDetailsData.validDuration}月`}}</div>
                 </div>
                 <div class="card bd-non">
                   <div class="tit">评分</div>
@@ -65,9 +65,9 @@
         <!-- 课程目录 -->
         <ClassCatalogue v-show="actId == 2" :data="classListData"></ClassCatalogue>
         <!-- 问答模块 -->
-        <ClassAsk v-if="isLogin() && actId == 3" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
+        <ClassAsk v-if="isLogin() && !isSignUp && actId == 3" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
         <!-- 笔记模块 -->
-        <Note  v-if="isLogin() && actId == 4" v-show="" :id="detailsId"></Note>
+        <Note  v-if="isLogin() && !isSignUp && actId == 4" v-show="" :id="detailsId"></Note>
         <div class="fx-ct ft-cl-des" style="height: 400px;" v-show="actId == 5" :id="detailsId">
           暂无数据！
         </div>
@@ -121,7 +121,7 @@ const baseClassTeacher = ref([])
 const logData = [{id: 1, name: '课程介绍'}, {id: 2, name: '课程目录'},{id: 3, name: '问答'},{id: 4, name: '笔记'}, {id: 5, name: '用户评价'}]
 const noLogData = [{id: 1, name: '课程介绍'}, {id: 2, name: '课程目录'}, {id: 5, name: '用户评价'}]
 const tableBar = computed(() => {
-  return isLogin() ? logData : noLogData
+  return isLogin() && isSignUp.value ? logData : noLogData
 })
 
 // 猜你喜欢 - 静态数据
@@ -280,6 +280,7 @@ const getClassListData = async () => {
 // table切换 当前展示信息 课程介绍、课程目录
 const changeTable = id => {
   actId.value = id
+  console.log(9090,id)
   switch (id) {
     case 2 : {
       break;
@@ -336,7 +337,7 @@ const getCourseLearningData = async () => {
     if (res.code == 200) {
       isSignUp.value = true
       planData.value = data
-    } else if (data.code == 1){
+    } else if (res.code == 1){
       isSignUp.value = false
     } else {
       ElMessage({

@@ -32,7 +32,7 @@
         width="30%"
       >
         <div class="dialogCont">
-          <div class="fx marg-bt-20"><span>每周学习节数:</span> <el-input v-model="number" min="1" type="number"></el-input></div>
+          <div class="fx marg-bt-20"><span>每周学习节数:</span> <el-input @input="planDayHandle" v-model="number" min="1" type="number"></el-input></div>
           <div class="fx"><span>预计学完时间:</span> <div class="lastTime">{{lastTime}}</div> </div>
         </div>
         <template #footer>
@@ -125,8 +125,16 @@ const number = ref(1)
 const lastTime = computed(() => {
   // 学完的时间按周 每周学n节 m = n/总节数 不足一周按一周算 从今天开始往后延 m*7天 
   const num =  Math.ceil(days.value / number.value) * 7
-  return moment().add(num, 'days').format("YYYY-MM-DD")
+  console.log(num, number)
+  return number.value ? moment().add(num, 'days').format("YYYY-MM-DD") : ''
 })
+// 处理计划天数不能小于1
+const planDayHandle = val => {
+
+  val != '' && val < 1 ? number.value = 1 : 
+  val != '' && val > 50 ? number.value = 50 : null
+
+}
 
 const dialogVisible = ref(false)
 const title = ref('创建计划')
@@ -159,7 +167,7 @@ const createPlan = async () => {
       if (res.code == 200 ){
         getPlanData()
         ElMessage({
-          message: `${title}成功`,
+          message: `${title.value}成功`,
           type: 'success'
         });
         dialogVisible.value = false

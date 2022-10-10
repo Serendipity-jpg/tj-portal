@@ -147,7 +147,7 @@ await delNote(item.id)
       if (res.code == 200) {
         ElMessage({
           message: '笔记删除成功',
-          type: 'error'
+          type: 'success'
         });
         getAskListsDataes()
       } else {
