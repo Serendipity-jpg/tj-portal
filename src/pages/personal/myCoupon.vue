@@ -14,7 +14,9 @@
       </div>
       <div class="myCouponItems">
         <CouponCards v-if="myCoupon.length > 0" :data="myCoupon" :type="actId"></CouponCards>
-        <div v-else class="nodata">暂无相关优惠券！</div>
+        <div v-else class="nodata">
+          <Empty ></Empty>
+        </div>
       </div>
     </div>
     <el-dialog
@@ -45,6 +47,7 @@ import { dataCacheStore } from "@/store"
 import CardsTitle from "./components/CardsTitle.vue";
 import TableSwitchBar from "./components/TableSwitch.vue";
 import CouponCards from "@/components/CouponCards.vue";
+import Empty from "@/components/Empty.vue";
 
 const route = useRoute()
 const store = dataCacheStore()

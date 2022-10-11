@@ -35,3 +35,10 @@ export const getUserInfo = (params) =>
 		method: 'get',
 		params
 	})	
+// 更改用户信息
+export const updateUserInfo = (params) =>
+	request({
+		url: `/students`,
+		method: 'put',
+		data:params
+	})		

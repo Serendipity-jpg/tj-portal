@@ -165,10 +165,8 @@ const newClassListData = ref([])
 const getNewClassListData = async () => {
   await getNewClassList()
     .then((res) => {
-      console.log(3333,res)
       if (res.code == 200) {
         newClassListData.value = res.data;
-        console.log(3333,res.data)
       } else {
         ElMessage(res.meg);
       }
@@ -242,7 +240,7 @@ const saveInterest = async () => {
   if (str == "") {
     ElMessage({
       message: "您还没有选择兴趣，请先选择兴趣后再保存！",
-      type: "success",
+      type: "error",
     });
     return;
   }

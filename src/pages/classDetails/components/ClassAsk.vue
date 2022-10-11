@@ -165,7 +165,7 @@ await delQuestions(id)
 // 去往详情页面
 const goDetails = (item) => {
   dataCache.setAskDetails(item)
-  router.push({path: '/askDetails', query:{id:item.id}})
+  router.push({path: '/askDetails', query:{id:item.id, detailsId: props.id, name: props.title}})
 }
 // 小节数据
 const chapterData = ref([])

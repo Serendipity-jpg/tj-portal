@@ -3,7 +3,7 @@
   <div class="calendar">
     <div class="label">
       <div class="fx marg-rt-20"><span></span> 未打卡 </div>
-      <div class="fx"><span style="background: #ECF4FF; cursor: pointer;"></span>已打卡</div>
+      <div class="fx"><span style="background: #ECF4FF;"></span>已打卡</div>
     </div>
     <div class="calendarHead">
       <span v-for="item in week" :key="item">{{item}}</span>
@@ -11,7 +11,7 @@
     <div class="calendarCont">
       <div class="day" v-for="item in calendarData">
           <div class="taday" v-if="item.date==currentDay">
-            <span v-if="item.isRecords == 1">已打卡</span>
+            <span v-if="item.isRecords == 1" style=" cursor: auto;">已打卡</span>
             <span v-else @click="pointsSignHandle(item)">打卡</span>
           </div>
           <div :class="{noMonth: item.date.split('-')[1] != currentDay.split('-')[1], records: item.isRecords == 1,noRecords: item.isRecords == 0}" v-else>
@@ -49,14 +49,12 @@ function getMounthDay(day){
   // 计算本月一号 和最后一天 及一号是周几
   const startDay = moment().startOf('month').format("YYYY-MM-DD") // 本月第一天
   const startDayWeek = Number(moment(startDay).format('E')) // 第一天是周几
-  const weekOfDate = Number(moment().format('E')) // 今天是周几
-  const monthDay = moment().daysInMonth()
+  const monthDay = moment().daysInMonth() // 
   // 计算当前月份日历的所有展示天总数
   const n = monthDay + (startDayWeek <= 6 ? startDayWeek+1 : 1);
   const calendarDay = n + (n % 7 == 0 ? 0 :7 - n % 7)
   for(let i = 0; i < calendarDay;i++){
-    const date = moment(startDay).subtract(weekOfDate - i , 'd').format('YYYY-MM-DD')
-    console.log(moment(startDay).subtract(weekOfDate - i , 'd').format('YYYY-MM-DD'), week[7 - Number(moment(date).format('E'))])
+    const date = moment(startDay).subtract(startDayWeek - i , 'd').format('YYYY-MM-DD')
     arr.push({
       date,
       week: week[7 - Number(moment(date).format('E'))],

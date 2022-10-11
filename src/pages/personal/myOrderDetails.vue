@@ -162,12 +162,14 @@ const refundApplyReq = () => {
   if (refundReason.value == ''){
     ElMessage({
         message: '请选择退款原因',
+        type: "error",
     });
      return false
   } 
   if(questionDesc.value == ""){
     ElMessage({
         message: '请输入退款问题描述',
+        type: "error",
     });
     return false
   }

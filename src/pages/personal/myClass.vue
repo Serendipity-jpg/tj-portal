@@ -125,7 +125,6 @@ const number = ref(1)
 const lastTime = computed(() => {
   // 学完的时间按周 每周学n节 m = n/总节数 不足一周按一周算 从今天开始往后延 m*7天 
   const num =  Math.ceil(days.value / number.value) * 7
-  console.log(num, number)
   return number.value ? moment().add(num, 'days').format("YYYY-MM-DD") : ''
 })
 // 处理计划天数不能小于1
@@ -157,7 +156,6 @@ const planHandle = (val) => {
 }
 // 创建、修改计划
 const createPlan = async () => {
-  console.log(currentData.value)
   const params = {
     freq: number.value,
     courseId: currentData.value ? currentData.value.course.id : ''

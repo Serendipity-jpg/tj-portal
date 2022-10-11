@@ -55,6 +55,7 @@ const verifyPone = (rull, value, callback) => {
   } else if(!reg.test(value)){
     callback(new Error('请输入正确的手机号'));
   }
+  callback()
 }
 // 效验
 const rules = reactive({
@@ -99,9 +100,8 @@ const verifycodeHandle = async() => {
 }
 // 注册
 const submitForm = (formEl) => {
-  console.log(formEl)
   if (!formEl) return;
-  formEl.validate(async (valid) => {
+  formEl.validate( async (valid) => {
     if (valid) {
       // 提交注册 
       await userRegist(fromData)
@@ -119,13 +119,9 @@ const submitForm = (formEl) => {
               message: res.msg,
               type: 'error'
           });
-					console.log('注册失败')
 				}
 			})
 			.catch(err => {});
-    } else {
-      console.log("error submit!");
-      return false;
     }
   });
 };

@@ -63,13 +63,13 @@
         <!-- 课程介绍 -->
         <ClassAbout v-show="actId == 1" :baseDetailsData="baseDetailsData" :baseClassTeacher="baseClassTeacher"></ClassAbout>
         <!-- 课程目录 -->
-        <ClassCatalogue v-show="actId == 2" :data="classListData"></ClassCatalogue>
+        <ClassCatalogue v-show="actId == 2" :isSignUp="isSignUp" :courseId="detailsId" :data="classListData"></ClassCatalogue>
         <!-- 问答模块 -->
-        <ClassAsk v-if="isLogin() && !isSignUp && actId == 3" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
+        <ClassAsk v-if="isLogin() && isSignUp && actId == 3" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
         <!-- 笔记模块 -->
-        <Note  v-if="isLogin() && !isSignUp && actId == 4" v-show="" :id="detailsId"></Note>
-        <div class="fx-ct ft-cl-des" style="height: 400px;" v-show="actId == 5" :id="detailsId">
-          暂无数据！
+        <Note  v-if="isLogin() && isSignUp && actId == 4" v-show="" :id="detailsId"></Note>
+        <div class="fx-ct ft-cl-des" style="height: 600px;" v-show="actId == 5" :id="detailsId">
+          <Empty ></Empty>
         </div>
       </div>
       <div class="ritCont">
@@ -97,6 +97,7 @@ import { dataCacheStore } from "@/store"
 // 组件导入
 import Breadcrumb from "@/components/Breadcrumb.vue";
 import TableSwitchBar from "@/components/TableSwitchBar.vue";
+import Empty from "@/components/Empty.vue";
 import ClassAbout from "./components/ClassAbout.vue";
 import LikeCards from "./components/LikeCards.vue";
 import Ask from "./components/Ask.vue";
@@ -163,7 +164,7 @@ const actId = ref(1)
 // 常见问题 - 静态数据
 const askData = [
   {ask:'如何查看已购课程？', answer: '请用购课账号登录，点击【我的学习】进入。'},
-  {ask:'课程购买后可以更换吗？', answer: '如需更换课程请咨询在线客服为您确认是否可以更换。'},
+  {ask:'课程购买后可以更换吗？', answer: '如需更换课程请咨询客服为您确认是否可以更换。'},
   {ask:'无法登录怎么办？', answer: '请更换不同浏览器。'},
   {ask:'课程过期了怎么办？', answer: '课程过期无法观看了哦，请在有效期内进行观看课程。'},
 ]
@@ -280,7 +281,6 @@ const getClassListData = async () => {
 // table切换 当前展示信息 课程介绍、课程目录
 const changeTable = id => {
   actId.value = id
-  console.log(9090,id)
   switch (id) {
     case 2 : {
       break;
@@ -346,12 +346,6 @@ const getCourseLearningData = async () => {
       });
     }
   })
-  .catch(() => {
-    ElMessage({
-      message: "用户学习信息数据请求出错！",
-      type: 'error'
-    });
-  });
 }
 // 立即购买
 const payHandle = () => {

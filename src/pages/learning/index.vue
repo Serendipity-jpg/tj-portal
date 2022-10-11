@@ -19,7 +19,7 @@
     <div class="learn" :class="{close: isClose}" >
        <div class="closeRt cur-pt" :class="{close: isClose}" @click="close"><i class="iconfont zhy-a-shouqi2x"></i></div>
        <div class="teachInfo fx">
-          <img :src="learningClassDetails && learningClassDetails.coverUrl" alt="">
+          <img @click="() => $router.push({path:'/details/index', query:{id: learningClassDetails.id}})" :src="learningClassDetails && learningClassDetails.coverUrl" alt="">
           <div class="">
             <div class="tit">{{learningClassDetails && learningClassDetails.name}}</div>
             <div class="teacher ft-14"> 讲师 : {{learningClassDetails && learningClassDetails.teacherName}}</div>
@@ -71,7 +71,6 @@ import Question from "./components/Question.vue";
 import Practise from "./components/Practise.vue";
 import Note from "./components/Note.vue";
 
-// import TcAdapter from 'tcadapter';
 import router from "../../router";
 import { reactive } from "@vue/reactivity";
 
@@ -151,16 +150,16 @@ const getLearningClassDetailsData = async () => {
       if (res.code == 200) {
        learningClassDetails.value = res.data
        // 第一次进入本课程 默认 第一章 第一节
-       if(res.data.latestSectionId == undefined && res.data.latestSectionId == undefined){
+       if(res.data.latestSectionId == undefined){
           learningClassDetails.value.latestChapterId = res.data.chapters[0].id || ''   // 章Id
           learningClassDetails.value.latestSectionId = res.data.chapters[0].sections[0].id || ""  // 小节Id
           learningClassDetails.value.latestSectionMoment = 0
        }
        // 小节的名称后端没有提供 前端遍历查询
         const data = res.data.chapters[0].sections.filter(n => n.id == learningClassDetails.value.latestSectionId)
-        learningClassDetails.value.latestSectionName = data[0].name;
+        learningClassDetails.value.latestSectionName = data.length > 0 ? data[0].name : null;
         // 缓存当前播放内容
-        currentPlayData.duration = data[0].mediaDuration
+        currentPlayData.duration = data.length > 0 ? data[0].mediaDuration : null
         currentPlayData.chapterId = learningClassDetails.value.latestChapterId, // 章Id
         currentPlayData.sectionId = learningClassDetails.value.latestSectionId,  // 小节Id
         currentPlayData.currentTime = learningClassDetails.value.currentTime, // 播放时间
@@ -175,7 +174,7 @@ const getLearningClassDetailsData = async () => {
         });
       }
     })
-    .catch(() => {
+    .catch((err) => {
       ElMessage({
         message: "请求出错！",
         type: 'error'
@@ -186,7 +185,7 @@ const getLearningClassDetailsData = async () => {
 
 // 组件卸载的时候触发 - 页面跳转的时候触发
 onUnmounted(() => {
-  clearInterval(timer.value)
+  clearTimeHadle(timer.value)
 })
 
 // 初始化视频播放器并播放视频 视频ID、播放器签名
@@ -206,26 +205,31 @@ const initPlay = (fileID, psign) => {
   });
   player.value.on('pause', function() {
     // 每次视频暂停的时候 停止发送播放记录请求
-    clearInterval(timer.value)
-    timer.value = null
+    clearTimeHadle(timer.value)
   });
   player.value.on('play', function() {
+    clearTimeHadle(timer.value)
     addPlayLogHandle()
     // 每次视频播放的时候 开始 发送播放记录
     timer.value = setInterval(addPlayLogHandle, 10000)
   });
   player.value.on('ended', function() {
     // 播放结束时 停止计算器 并提交最后一次播放状态
-    clearInterval(timer.value)
-    timer.value = null
+    clearTimeHadle(timer.value)
     addPlayLogHandle()
   });
   player.value.ready(() => {
+    clearTimeHadle(timer.value)
     player.value.currentTime(currentPlayData.currentTime || 0)
     player.value.play()
   })
 }
 
+//清理定时提交
+const clearTimeHadle = (time)=> {
+  clearInterval(time)
+  time = null
+}
 // 目录、问答、笔记滚动
 const load = () => {}
 
@@ -273,6 +277,7 @@ const getMediasSignatureData = async (sectionId) => {
 // 点击小节
 const playHadle = async (val) => {
   const {item, tp} = val
+  console.log(33333,item)
   // 小节名称
   currentPlayData.sectionName = item.name
   // 练习返回

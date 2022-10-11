@@ -68,7 +68,6 @@ const submitForm = (formEl) => {
       // 提交登录 
       await userLogins(fromData)
 			.then(async res => {
-        console.log(res)
 				if (res.code == 200) {
           // 用户token写入 pinia
 					store.setToken(res.data);
@@ -82,10 +81,9 @@ const submitForm = (formEl) => {
 					// 跳转到首页
 				} else {
           ElMessage({
-              message: res.data.msg,
+              message: res.msg,
               type: 'error'
           });
-					console.log('登录失败')
 				}
 			})
 			.catch(err => {});

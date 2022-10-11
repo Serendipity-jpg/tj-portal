@@ -21,7 +21,7 @@
     </div>
     <div class="questCont">
       <el-input class="title" v-model.number="quest.title" maxlength="64" @input="ruleshandle"  show-word-limit placeholder="请输入"/>
-      <el-input v-model="quest.description" rows="4" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
+      <el-input v-model="quest.description" rows="4" resize="none" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
       <div class="fx-sb fx-al-ct" style="margin-top: 4px;">
         <div><el-checkbox v-model="quest.anonymity" label="私密" size="large" /></div>
         <div class="subCont">

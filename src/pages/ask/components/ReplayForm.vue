@@ -33,8 +33,6 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useUserStore } from "@/store";
-import { postAnswers } from "@/api/classDetails.js";
-import { ElMessage } from "element-plus";
 
 const props = defineProps({
   name: String,

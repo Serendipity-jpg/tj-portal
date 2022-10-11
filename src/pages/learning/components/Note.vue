@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="questCont">
-      <el-input v-model="noteParams.content" rows="4" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
+      <el-input v-model="noteParams.content" rows="4" resize="none" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
       <div class="fx-sb fx-al-ct" style="margin-top: 12px;">
         <div></div>
         <div class="subCont">

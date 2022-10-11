@@ -44,12 +44,12 @@ instance.interceptors.response.use(
           type: 'warning',
         }
       )
-        .then(() => {
-          router.push('/login')
-        })
-        .catch(() => {
-          router.go(0)
-        })
+      .then(() => {
+        router.push('/login')
+      })
+      .catch(() => {
+        router.go(0)
+      })
       return false 
     }
     if (response.status === 200) {

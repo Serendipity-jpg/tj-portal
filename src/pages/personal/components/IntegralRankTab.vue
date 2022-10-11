@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="onData" v-else>
-        暂无数据！
+      <Empty ></Empty>
     </div>
   </div>
 </template>
@@ -30,6 +30,7 @@
 import rank1 from "@/assets/icon_rank1.png";
 import rank2 from "@/assets/icon_rank2.png";
 import rank3 from "@/assets/icon_rank3.png";
+import Empty from "@/components/Empty.vue";
 
 // 前三名图片展示
 const ranks = [rank1, rank2, rank3];

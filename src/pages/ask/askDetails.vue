@@ -70,7 +70,6 @@
                         </div>
                       </div>
                       <!-- 插入回复框的位置 -->
-                      <!-- <ReplayForm v-if="isReplay == it.id"></ReplayForm> -->
                       <component :is="openReplyFormId == it.id ? ReplayForm : null" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"  @commentHandle="commentHandle"></component>
                     <!-- 回复列表 -->
                     </div>
@@ -79,14 +78,12 @@
                 </div>
                 <div></div>
                 <p @click="clickLoad" v-if="!noMore" class="fx-ct ft-14 ft-cl-des">点击查看更多</p>
-                <!-- <p v-infinite-scroll="load" style="overflow: auto" :infinite-scroll-disabled="disabled"
-                 class="fx-ct ft-14 ft-cl-des" v-if="loading">Loading...</p> -->
                 <p class="fx-ct ft-14 ft-cl-des" v-if="noMore">没有更多了</p>
               </div>
             </div>
           </div>
           <!-- 相关问题 写死 -->
-          <RelatedQuestions :id="askInfo.id" :title="askInfo.title"></RelatedQuestions>
+          <RelatedQuestions :id="route.query.detailsId" :title="route.query.name"></RelatedQuestions>
       </div>
     </div>
     <el-dialog v-model="dialogTableVisible" :title="`全部回复(${replyCont})`" width="80%" top="5vh" >
@@ -316,7 +313,6 @@ const answerHandle = async (type) => {
           getReplyData(isReplay.value, 'one')
         } else {
           getReplyData(isReplay.value, 'one')
-          // replayHandle(item, 'answer')
         }
       } else {
         ElMessage({

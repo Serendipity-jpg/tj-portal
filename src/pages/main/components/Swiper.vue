@@ -4,7 +4,8 @@
    <swiper
       :modules="[ Pagination ]"
       :space-between="20"
-      autoplay
+      :autoplay="true"
+      :loop="true"
       :pagination="{ clickable: true }"
     >
       <swiper-slide

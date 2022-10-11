@@ -33,6 +33,7 @@
 }
 .nodata{
     width: 100%;
+    height: calc(100vh - 450px);
     text-align: center;
     line-height: 100px;
     color:var(--color-font2)

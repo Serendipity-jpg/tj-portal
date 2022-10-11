@@ -29,7 +29,7 @@
                 </div>
               </el-form-item>
               <el-form-item label="问题标题:" prop="title" >
-                <el-input v-model.number="ruleForm.title" maxlength="64" @input="ruleshandle"  show-word-limit placeholder="请输入"/>
+                <el-input v-model="ruleForm.title" maxlength="64" @input="ruleshandle"  show-word-limit placeholder="请输入"/>
               </el-form-item>
               <el-form-item label="问题描述:" prop="description">
                 <el-input v-model="ruleForm.description" rows="11" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
