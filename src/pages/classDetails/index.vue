@@ -11,7 +11,7 @@
               <div class="title">{{baseDetailsData.name}}</div>
               <div class="item fx">
                 <div class="card">
-                  <div class="tit">课程数 {{isSignUp}}</div>
+                  <div class="tit">课程数</div>
                   <div class="info">{{baseDetailsData.cataTotalNum}}节</div>
                 </div>
                 <div class="card">
@@ -86,7 +86,7 @@
 
 /** 数据导入 **/
 import { computed, onMounted, ref } from "vue";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { getClassDetails, getClassTeachers, getClassList } from "@/api/classDetails.js";
 import { setOrder, putCarts } from "@/api/order.js";
 
@@ -349,6 +349,9 @@ const getCourseLearningData = async () => {
 }
 // 立即购买
 const payHandle = () => {
+  if(!validation()) {
+    return false
+  }
   store.setOrderClassInfo([baseDetailsData.value])
   router.push({path: '/pay/settlement'})
 }
@@ -368,13 +371,16 @@ const validation = () => {
       .then(() => {
         router.push('login')
       })
+      return false
   }
-  return false
+  return true
 }
 
 // 加入购物车
 const addCarts = () => {
-  validation()
+  if(!validation()) {
+    return false
+  }
   putCarts({courseId: detailsId.value})
   .then((res) => {
     const { data } = res

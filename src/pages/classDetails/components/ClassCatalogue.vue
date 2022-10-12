@@ -10,7 +10,7 @@
             </div>
           </template>
           <div @click="playHandle(it)" class="item fx-sb" v-for="(it, ind) in item.sections">
-            <div><iconVideo v-if="it.type == 2" class="icon" /> <iconJdks v-if="it.type == 3" class="icon" /> {{it.index}}、{{it.name}} <span v-if="trailer" class="learn" >试学</span></div>
+            <div><iconVideo v-if="it.type == 2" class="icon" /> <iconJdks v-if="it.type == 3" class="icon" /> {{it.index}}、{{it.name}} <span v-if="it.trailer" class="learn" >试学</span></div>
             <div class="time">{{(it.mediaDuration/60).toFixed(0)+':'+it.mediaDuration % 60}}</div>
           </div>
         </el-collapse-item>

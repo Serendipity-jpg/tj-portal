@@ -2,9 +2,12 @@
 <template>
 <div class="swiperWrapper fx-1">
    <swiper
-      :modules="[ Pagination ]"
+      :modules="[Autoplay, Pagination]"
       :space-between="20"
-      :autoplay="true"
+      :autoplay="{
+        delay: 5000,
+        disableOnInteraction: false,
+      }"
       :loop="true"
       :pagination="{ clickable: true }"
     >
@@ -20,14 +23,14 @@
 </template>
 <script setup>
 import { Swiper, SwiperSlide } from "swiper/vue";
-import {  Pagination } from 'swiper';
+import { Autoplay, Pagination } from "swiper";
 
-const props = defineProps({
+defineProps({
   data:{
-    type: Array,
-    default:[]
+    type: Object,
+    default: {}
   }
-})
+}) 
 
 </script>
 <style lang="scss" scoped>
