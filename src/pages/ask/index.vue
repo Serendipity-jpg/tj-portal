@@ -36,7 +36,7 @@
               </el-form-item>
               <el-form-item>
                 <div class="fx-sb fx-al-ct">
-                  <div><el-checkbox v-model="ruleForm.anonymity" label="是否匿名" size="large" /></div>
+                  <div><el-checkbox v-model="ruleForm.anonymity" label="匿名提问" size="large" /></div>
                   <div class="subCont">
                     <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="submitForm(ruleFormRef)">发布</span>
                     </div>

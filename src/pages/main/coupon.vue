@@ -20,7 +20,7 @@
             <div><em>有效日期：</em> {{item.termValidity ? `${item.termValidity}天` : moment(item.termEndTime).format('YYYY-MM-DD')}}</div>
           </div>
           <div class="butCont fx-ct" v-if="item.recieveStatus == 1"><span @click="getCouponData(item.id)" class="bt">立即领取</span></div>
-          <div class="butCont fx-ct" v-if="item.recieveStatus == 2"><span  @click="() => $router => $router.push('/search/index')" class="bt">去使用</span></div>
+          <div class="butCont fx-ct" v-if="item.recieveStatus == 2"><span  @click="() => $router.push('/search/index')" class="bt">去使用</span></div>
           <div class="butCont fx-ct" v-if="item.recieveStatus == 3"><span class="bt bt-grey">已领完</span></div>
        </div>
     </div>

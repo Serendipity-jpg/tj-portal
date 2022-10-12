@@ -22,7 +22,7 @@
                 <div class="fx-1">
                   <el-input v-model="description" rows="11" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请发表高见" />
                   <div class="fx-sb fx-al-ct">
-                    <div><el-checkbox v-model="anonymity" label="是否匿名" size="large" /></div>
+                    <div><el-checkbox v-model="anonymity" label="匿名提问" size="large" /></div>
                     <div class="subCont">
                       <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="answerHandle('first')">回答</span>
                       </div>
