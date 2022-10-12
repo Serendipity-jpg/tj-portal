@@ -191,6 +191,10 @@ await postQuestions(quest)
       });
     });
 }
+// 输入文字的input
+const ruleshandle = (val) => {
+
+}
 </script>
 <style lang="scss" scoped>
 .questionWrapper{

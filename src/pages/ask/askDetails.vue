@@ -158,6 +158,7 @@ const getQuestionsDetailsData = async () => {
 } 
 // 获取全部回答
 const questParams = reactive({
+  admin:false,
   id: route.query.id,
   pageNo: 1,
   pageSize: 10
@@ -292,7 +293,7 @@ function commentHandle (val){
 // 提交回复
 const answerHandle = async (type) => {
   params.questionId = askInfo.value.id
-  params.targetUserId = ''
+  params.targetUserId = type ? askInfo.value.user.id : answerInfo.value.replier.id
   if(params.content == ''){
     params.content = description.value
     params.anonymity = anonymity.value

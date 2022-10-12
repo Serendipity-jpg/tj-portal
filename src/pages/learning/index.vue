@@ -134,7 +134,8 @@ onMounted(async ()=>{
   //TODO 判断课程是否有播放记录 - 如果课程没有看过 - 从第一节开始播放
   //TODO 如果课程已经看过了 需要最后一次播放的信息 小节ID 小节名称 小节播放时间 到哪里了
   detailsId.value = route.query.id  // 课程id
-  
+  console.log(route.query)
+
   // 使用课程id获取当前课程的细节
   await getLearningClassDetailsData()
   // 获取上传播放的小节及时间
@@ -149,24 +150,38 @@ const getLearningClassDetailsData = async () => {
     .then((res) => {
       if (res.code == 200) {
        learningClassDetails.value = res.data
+       // 试看某个课程的时候 
+       if(route.query && route.query.sectionsId){
+        learningClassDetails.value.latestSectionId = route.query.sectionsId
+       }
        // 第一次进入本课程 默认 第一章 第一节
+       console.log('课程信息：：', res.data)
        if(res.data.latestSectionId == undefined){
           learningClassDetails.value.latestChapterId = res.data.chapters[0].id || ''   // 章Id
           learningClassDetails.value.latestSectionId = res.data.chapters[0].sections[0].id || ""  // 小节Id
           learningClassDetails.value.latestSectionMoment = 0
        }
-       // 小节的名称后端没有提供 前端遍历查询
-        const data = res.data.chapters[0].sections.filter(n => n.id == learningClassDetails.value.latestSectionId)
+        // 小节的名称后端没有提供 前端遍历查询
+        let data = [] // 当前小节的数据
+        let chaptersId = '' // 当前小节对应的章的Id
+        res.data.chapters.forEach(el => {
+            const item = el.sections.filter(n => n.id == learningClassDetails.value.latestSectionId)
+            if (item.length > 0 ){
+              data = item
+              chaptersId = el.id
+            }
+        });
         learningClassDetails.value.latestSectionName = data.length > 0 ? data[0].name : null;
+        console.log('播放信息：' , learningClassDetails)
         // 缓存当前播放内容
         currentPlayData.duration = data.length > 0 ? data[0].mediaDuration : null
         currentPlayData.chapterId = learningClassDetails.value.latestChapterId, // 章Id
         currentPlayData.sectionId = learningClassDetails.value.latestSectionId,  // 小节Id
         currentPlayData.currentTime = learningClassDetails.value.currentTime, // 播放时间
-        currentPlayData.sectionName = learningClassDetails.value.latestSectionName // 小节名称
-       // 默认展开对应的章
-       actIndex.value = res.data.chapters[0].id || "" 
-       playId.value = res.data.chapters[0].sections[0].id || "" 
+        currentPlayData.sectionName = learningClassDetails.value.latestSectionName ||  learningClassDetails.value.name // 小节名称
+       // 默认展开对应的章 
+       actIndex.value = chaptersId
+       playId.value = data[0].id
       } else {
         ElMessage({
           message:res.data.msg,
