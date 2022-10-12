@@ -14,7 +14,7 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-10" @click="() => $router.push({path:'/askDetails/index', query:{id:item.id}})">回答</span>
+            <span class="marg-rt-10" @click="() => $router.push({path:'/askDetails/index', query:{id:item.id}})">回答 {{item.answerAmount}}</span>
           </div>
         </div>
       </div>
@@ -64,6 +64,7 @@ onMounted(() => {
 
 // 问答列表参数
 const params = ref({
+  admin:false,
   courseId: route.query.id,
   isAsc:true,
   pageNo: 1,
@@ -72,7 +73,7 @@ const params = ref({
   sortBy: ''
 });
 //
-const isSend = ref(true)
+const isSend = ref(false)
 // 提问数据
 const quest = reactive({
   sectionId: currentPlayData.sectionId, // 小节Id
@@ -171,6 +172,13 @@ const handleCurrentChange = (val) => {
 }
 // 提交问题
 const submitForm = async () => {
+if (!isSend.value){
+  ElMessage({
+    message:'请输入标题和描述',
+    type:'error'
+  })
+  return 
+}  
 await postQuestions(quest)
     .then((res) => {
       if (res.code == 200) {
@@ -193,7 +201,7 @@ await postQuestions(quest)
 }
 // 输入文字的input
 const ruleshandle = (val) => {
-  if (quest.content != ''){
+  if (quest.title != '' &&  quest.description != ''){
     isSend.value = true
   } else {
     isSend.value = false

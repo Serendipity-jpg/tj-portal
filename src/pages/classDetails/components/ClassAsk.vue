@@ -83,6 +83,7 @@ onMounted(() => {
 })
 // 问答列表参数
 const params = ref({
+  admin:false,
   courseId: route.query.id,
   isAsc:true,
   pageNo: 1,

@@ -75,6 +75,7 @@ onMounted(() => {
 })
 // 问答列表参数
 const params = ref({
+  admin:false,
   isAsc:true,
   pageNo: 1,
   pageSize: 10,

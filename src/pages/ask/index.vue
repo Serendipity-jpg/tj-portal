@@ -172,6 +172,7 @@ const ruleshandle = () => {
 
 // 寻找提问章节
 const handleChange = (val) => {
+  type.value == 'edit' ? ruleForm.id = route.query.queryId : null
   ruleForm.chapterId = val[0]
   ruleForm.sectionId = val[1]
   ruleshandle()
@@ -182,7 +183,8 @@ const submitForm = (formEl) => {
   formEl.validate(async (valid) => {
     if (valid) {
     //  根据不同模式执行新增或编辑提问
-     const subFunc = type == 'edit' ? putQuestions : postQuestions;
+     const subFunc = type.value == 'edit' ? putQuestions : postQuestions;
+
      await subFunc(ruleForm).then((res) => {
         if (res.code == 200) {
           router.push({path: '/result/success', query: '查看我的问题'})
@@ -195,7 +197,7 @@ const submitForm = (formEl) => {
       })
       .catch(() => {
         ElMessage({
-          message: type == 'edit' ? '问题修改出错！':'问题发布出错！',
+          message: type.value == 'edit' ? '问题修改出错！':'问题发布出错！',
           type: 'error'
         });
       });

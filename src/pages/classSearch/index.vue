@@ -130,6 +130,7 @@ const clearSearchKey = () => {
   searchParams.value.keyword = ""
   isShow.value = false
   dataCache.setSearchKey('')
+  initPage()
   search()
 }
 
@@ -148,12 +149,19 @@ async function searchKey(item){
   if (item.key == 'categoryIdLv1') {
     searchParams.value[item.key] = item.value != 'all' ? item.value : undefined;
   }
+  initPage()
   search()
 }
 // 排序操作
 const sortHandle = (item) => {
   searchParams.value.sortBy = item != 'all' ? item : undefined;
+  initPage()
   search()
+}
+// 初始化分页页码
+const initPage = () => {
+  page.value = 1
+  searchParams.value.pageNo = page.value
 }
 // 分页操作
 const pagesHandle = (item) => {
@@ -188,6 +196,7 @@ async function search (){
 watchEffect(() => {
   if (searchParams.value.keyword != dataCache.getSearchKey){
     searchParams.value.keyword = dataCache.getSearchKey
+    initPage()
     search()
   }
 })

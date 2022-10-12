@@ -13,7 +13,7 @@
           <img :src="item.author && item.author.icon" alt="" srcset="">
           {{item.author && item.author.name}}
         </div>
-        <div>{{item.noteMoment}}</div>
+        <div>{{item.noteMoment == 0 ? '0:00' :(item.noteMoment/60).toFixed(0)+':'+ item.noteMoment % 60}}</div>
       </div>
         
         <div class="note">
@@ -23,16 +23,19 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-10" @click="editNoteHandle(item)">
-              编辑
+            <span class="marg-rt-10" @click="editNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+              <i class="iconfont zhy-a-icon-xiugai22x"></i> 编辑
             </span>
-            <span class="marg-rt-10" @click="delNoteHandle(item)" >
-              删除
+            <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:item.isGathered}">
+              <i class="iconfont zhy-a-ico-caiji2x"></i> 采集
             </span>
-            <span class="" @click="putLikedHandle(item)" >
+            <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+              <i class="iconfont zhy-a-icon-delete22x" styel="font-size: 20px;"></i> 删除
+            </span>
+            <!-- <span class="" @click="putLikedHandle(item)" >
               <i v-show="!item.liked" class="iconfont zhy-a-icon-zan2x"></i> 
               <i v-show="item.liked" class="iconfont zhy-a-btn_zan_sel2x"></i>
-            </span>
+            </span> -->
           </div>
         </div>
       </div>
@@ -50,7 +53,7 @@
 </template>
 <script setup>
 import { onMounted, ref, reactive } from 'vue'
-import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes } from "@/api/notes.js"
+import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes, notesGathers, unNotesGathers } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import {useRoute} from "vue-router"
 import { useUserStore, dataCacheStore } from '@/store'
@@ -68,6 +71,7 @@ const props = defineProps({
     default: ''
   }
 })
+
 // 笔记数据
 const noteParams = reactive({
   isPrivate:false, // 是否是隐私笔记，默认false  新增的全部都是正常的
@@ -100,7 +104,8 @@ const noteListsDataes = ref({})
 const total = ref(0)
 // 问答列表参数
 const params = ref({
-  isAsc:true,
+  admin:false,
+  isAsc:false,
   pageNo: 1,
   pageSize: 10,
   sectionId: currentPlayData.sectionId,
@@ -140,6 +145,54 @@ const ruleshandle = (item) =>{
     isSend.value = false
   }
 }
+// 采集
+const gathersHandle = async item => {
+  item.isGathered ? unNotesGathersData(item) : notesGathersData(item) 
+}
+// 采集笔记
+const notesGathersData = async item => {
+await notesGathers(item.id)
+    .then((res) => {
+      if (res.code == 200) {
+        // 采集笔记成功
+        getAskListsDataes()
+        item.isGathered = !item.isGathered
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "采集笔记请求出错！",
+        type: 'error'
+      });
+    });
+} 
+// 取消采集笔记
+const unNotesGathersData = async item => {
+await unNotesGathers(item.id)
+    .then((res) => {
+      if (res.code == 200) {
+        // 取消采集笔记成功！
+        getAskListsDataes()
+        item.isGathered = !item.isGathered
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "采集笔记请求出错！",
+        type: 'error'
+      });
+    });
+} 
 // 删除
 const delNoteHandle = async (item) => {
 await delNote(item.id)
@@ -323,5 +376,8 @@ const editNoteHandle = async (item) => {
       }
     }
   }
+  .activeLiked, .activeLiked .iconfont{
+        color: var(--color-main) !important;
+      }
 }
 </style>

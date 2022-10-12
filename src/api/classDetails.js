@@ -62,7 +62,7 @@ request({
 // 编辑提问
 export const putQuestions = (params) =>
 	request({
-		url: `/questions/${id}`,
+		url: `/questions/${params.id}`,
 		method: 'put',
 		params,
 	})			
