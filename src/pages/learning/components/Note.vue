@@ -28,7 +28,7 @@
           <span class="marg-rt-10" @click="editNoteHandle(item)" v-if="userInfo.id == item.author.id ">
             <i class="iconfont zhy-a-icon-xiugai22x"></i> 编辑
           </span>
-          <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:item.isGathered}">
+          <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:false && item.isGathered}">
             <i class="iconfont zhy-a-ico-caiji2x"></i> 采集
           </span>
           <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
@@ -41,7 +41,7 @@
         </div>
       </div>
       </div>
-      <div class="noData">
+      <div class="noData" v-if="noteListsDataes.length <= 0">
         <Empty :type="true"></Empty>
       </div>
     </div>
@@ -113,7 +113,7 @@ const params = ref({
   admin:false,
   isAsc:false,
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 1000,
   sectionId: currentPlayData.sectionId,
   courseId: currentPlayData.courseId,
   sortBy: ''
@@ -160,6 +160,10 @@ const notesGathersData = async item => {
 await notesGathers(item.id)
     .then((res) => {
       if (res.code == 200) {
+        ElMessage({
+          message:'笔记采集成功！',
+          type: 'success'
+        });
         // 采集笔记成功
         getAskListsDataes()
         item.isGathered = !item.isGathered
@@ -170,15 +174,11 @@ await notesGathers(item.id)
         });
       }
     })
-    .catch(() => {
-      ElMessage({
-        message: "采集笔记请求出错！",
-        type: 'error'
-      });
-    });
 } 
 // 取消采集笔记
 const unNotesGathersData = async item => {
+  ElMessage({ message:'该笔记已采集过了'});
+  return
 await unNotesGathers(item.id)
     .then((res) => {
       if (res.code == 200) {

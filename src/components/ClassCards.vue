@@ -48,6 +48,7 @@ const goDetails = id => {
 </script>
 <style lang="scss" scoped>
 .classCards{
+    position: relative;
     width: 23%;
     background: #FFFFFF;
     border: 1px solid #EEEEEE;
@@ -57,6 +58,8 @@ const goDetails = id => {
     cursor: pointer;
     &:hover{
       box-shadow: 0 4px 6px 2px rgba(108,112,118,0.17);
+      
+      top: -3px;
     }
     .title{
         line-height: 22px;

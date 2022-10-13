@@ -68,7 +68,7 @@
     },
   })
   
-  const emit = defineEmits(['goHandle'])
+  const emit = defineEmits(['goHandle', 'playHadle'])
 
   // 生命周期
   onMounted(() => {

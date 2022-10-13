@@ -95,13 +95,13 @@ import {ref} from 'vue';
     width: 537px;
     overflow: hidden;
     height: 388px;
-    padding: 20px 30px;
+    padding: 20px 30px 20px 20px;
     background: #FFFFFF;
     box-shadow: 0 4px 6px 2px rgba(108,112,118,0.17);
     border-radius: 8px;
     .cont{
       height: 360px;
-      overflow-y: scroll;
+      // overflow-y: scroll;
     }
     .tit{
       display: inline-block;

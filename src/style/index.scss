@@ -64,7 +64,7 @@ a{
 }
 // logo定义 - 
 .logo img{
-  width: 144px;
+  width: 158.33px;
   height: 48px;
 }
 
@@ -157,7 +157,7 @@ a{
   color: var(--color-main);
   cursor: pointer;
   &:hover{
-    color: var(--color-hover);
+    color: var(--color-main);
   }
   &:active{
     color: var(--color-active);
@@ -167,7 +167,18 @@ a{
   color: var(--color-font1);
   cursor: pointer;
   &:hover, &:active{
-    color: var(--color-hover);
+    color: var(--color-main);
+  }
+}
+.font-bt3{
+  cursor: pointer;
+  &:hover{
+    color: var(--color-white);
+    background-color: #8E9BA5;
+  }
+  &:active{
+    color: var(--color-white);
+    background-color: var(--color-font1);
   }
 }
 

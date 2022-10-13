@@ -2,7 +2,7 @@
 <template>
   <div class="mainTitle fx">
     <div class="marg-rt-10">{{ title }}</div>
-    <div  @click="() => this.$router.push(moreUrl)" class="more ft-cl-des ft-14 ">
+    <div  @click="() => this.$router.push(moreUrl)" class="more ft-cl-des ft-14 font-bt1">
       更多
       <img src="@/assets/icon_more.png" alt="" />
     </div>

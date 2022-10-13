@@ -72,7 +72,7 @@ const params = ref({
   courseId: route.query.id,
   isAsc:true,
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 1000,
   sectionId: currentPlayData.sectionId,
   sortBy: ''
 });

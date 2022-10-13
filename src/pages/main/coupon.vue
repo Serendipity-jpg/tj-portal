@@ -17,7 +17,7 @@
           <div class="info">
             <div class="tit">{{item.name}}</div>
             <div><em>适用平台：</em>{{item.rangeType == 1 ? '全平台' : '指定课程分类'}}</div>
-            <div><em>有效日期：</em> {{item.termValidity ? `${item.termValidity}天` : moment(item.termEndTime).format('YYYY-MM-DD')}}</div>
+            <div><em>有效日期：</em> {{item.termValidity ? `${item.termValidity}天` : moment(item.termEndTime).format('YYYY-MM-DD hh:mm:ss')}}</div>
           </div>
           <div class="butCont fx-ct" v-if="item.recieveStatus == 1"><span @click="getCouponData(item.id)" class="bt">立即领取</span></div>
           <div class="butCont fx-ct" v-if="item.recieveStatus == 2"><span  @click="() => $router.push('/search/index')" class="bt">去使用</span></div>

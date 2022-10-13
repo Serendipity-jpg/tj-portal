@@ -18,12 +18,12 @@
     <div class="settiementInfo">
       <div class="coupon fx">
         <div >
-          优惠券： <el-select v-if="orderInfo.coupons && orderInfo.coupons.length > 0" v-model="couponIds" placeholder="Select">
+          优惠券： <el-select v-if="orderInfo.coupons && orderInfo.coupons.length > 0" @change="changeHandle" v-model="couponIds" placeholder="请选择优惠券">
                     <el-option
                       v-for="item in orderInfo.coupons"
                       :key="item.value"
-                      :label="item.label"
-                      :value="discountAmount"
+                      :label="item.rule"
+                      :value="item"
                       :disabled="item.disabled"
                     />
                   </el-select>
@@ -31,7 +31,7 @@
         </div>
         <div class="price">
           <div><span>订单总价：</span> ￥ {{amountConversion(orderInfo.totalAmount)}}</div>
-          <div><span>优惠金额：</span> - ￥ {{amountConversion(discountAmount) || 0}}</div>
+          <div><span>优惠金额：</span>  ￥ {{amountConversion(discountAmount) || 0}}</div>
         </div>
       </div>
       <div class="paid"><span>实付金额：</span><span class="ft-cl-err">{{price}}</span></div>
@@ -88,11 +88,14 @@ const comfirePageInfoHandle = async () => {
       });
     });
 } 
+const changeHandle = val => {
+  discountAmount.value = val.discountAmount
+}
 // 下单 
 const orderHandle = async () => {
   const courseIdList = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
-  const params = {courseIdList}
-  
+  const couponIdList = couponIds.value.id != null ? [couponIds.value.id] : undefined
+  const params = {courseIdList, couponIdList}
   await setOrder(params)
     .then((res) => {
       if (res.code == 200) {
