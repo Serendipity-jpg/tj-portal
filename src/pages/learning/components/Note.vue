@@ -13,7 +13,10 @@
           <img :src="item.author && item.author.icon" alt="" srcset="">
           {{item.author && item.author.name}}
         </div>
-        <div>{{item.noteMoment == 0 ? '0:00' :(item.noteMoment/60).toFixed(0)+':'+ item.noteMoment % 60}}</div>
+        <div>
+          <i class="iconfont zhy-a-icon-sp22x"></i>
+          {{item.noteMoment == 0 ? '0:00' :(item.noteMoment/60).toFixed(0)+':'+ item.noteMoment % 60}}
+        </div>
       </div>
         
         <div class="note">

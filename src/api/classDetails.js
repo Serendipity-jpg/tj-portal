@@ -64,7 +64,7 @@ export const putQuestions = (params) =>
 	request({
 		url: `/questions/${params.id}`,
 		method: 'put',
-		params,
+		data:params,
 	})			
 // 删除提问
 export const delQuestions = (id) =>
