@@ -360,7 +360,7 @@ const payHandle = () => {
 const validation = () => {
   if (!isLogin()) {
     ElMessageBox.confirm(
-        `您还没有登录 去登陆`,
+        `您还没有登录 请先去登录`,
         '确认登录',
         {
           confirmButtonText: '登录购买',

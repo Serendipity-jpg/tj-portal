@@ -57,12 +57,12 @@ watchEffect(() => {
 const startIcon = (item) => {
   let data = 'iconfont zhy-a-ico-sp-sei2x'
 
-  if(item.type == '2'){
+  if(item.type == 2){
     if(item.finished != undefined && item.finished == false){  // 未播放完成
       data = 'iconfont zhy-a-ico-502x1'
-    } else if(item.finished != undefined && item.finished == true){ // 播放完成
+    } else if(item.finished && item.finished == true){ // 播放完成
       data = 'iconfont zhy-a-ico-wc2x'
-    } {
+    } else {
       data = 'iconfont zhy-a-ico-sp-sei2x' // 未播放过
     }
   } else if(item.type == '3'){
@@ -82,6 +82,7 @@ const activeKey = ref('all')
 // 点击小节 type == 1 是点击视频 2 点击练习
 const play = (item, tp) => {
   playId.value = item.id
+  item.finished == undefined ? item.finished = false : null
   emit('playHadle', {item, tp})
 }
 </script>
@@ -103,6 +104,19 @@ const play = (item, tp) => {
     }
   }
   .subTitle{
+    position: relative;
+    ::before{
+      position: relative;
+      z-index: 2;
+    }
+    ::after{
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 21px;
+      border-left: 1px dashed #667280;
+      height: calc( 100% - 2px);
+    }
     line-height: 20px;
     i{
       position: relative;
@@ -110,7 +124,7 @@ const play = (item, tp) => {
       margin-right: 4px;
     }
     cursor: pointer;
-    margin: 20px 0;
+    margin: 5px 0 20px 0;
     color: #A0A9B2;
     .subTit{
       width: 230px;
@@ -136,10 +150,22 @@ const play = (item, tp) => {
     }
 
   }
+  :deep(.el-collapse-item__content){
+      padding-bottom: 5px;
+    }
+  .subTitle:last-child{
+    margin-bottom: 0;
+    ::after{
+      display: none;
+    }
+  }
    .playAct{
-    color: #2080F7;
+    ::after{
+      border-color: var(--color-main);
+    }
+    color: var(--color-main);
     .chapter{
-      background: #2080F7 !important;
+      background: var(--color-main) !important;
       color: #FFFFFF !important;
     }
   }

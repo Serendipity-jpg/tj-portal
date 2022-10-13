@@ -5,7 +5,7 @@
       <div class="head fx-sb" > 
         <div class="fx cur-pt" @click="() => $router.go(-1)">
           <img src="@/assets/icon_back.png" alt="">
-          <div>返回 | {{currentPlayData.sectionName}}</div>
+          <div>返回 <span class="line">|</span> {{currentPlayData.sectionName}}</div>
         </div>
       </div>
       <div class="videoCont">
@@ -58,18 +58,19 @@
 </template>
 <script setup>
 /** 数据导入 **/
-import { onMounted, ref, onUnmounted, provide } from "vue";
-import { ElMessage } from "element-plus";
+import { onMounted, ref, onUnmounted, provide, h } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { getMediasSignature, addPlayLog, getLearningClassDetails } from "@/api/class.js";
   import { startExamination } from '@/api/subject.js';
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 // 组件导入
-import TableSwitchBar from "@/components/TableSwitchBar.vue";
+import TableSwitchBar from "./components/TableSwitchBar.vue";
 import Catalogue from "./components/Catalogue.vue";
 import Question from "./components/Question.vue";
 import Practise from "./components/Practise.vue";
 import Note from "./components/Note.vue";
+import icon from '@/assets/icon_good.png'
 
 import router from "../../router";
 import { reactive } from "@vue/reactivity";
@@ -83,8 +84,6 @@ const pageType = ref(1)
 const detailsId = ref({})
 // 课程信息及讲师信息
 const tableBar = [{id: 1, name: '目录'}, {id: 2, name: '问答'}, {id: 3, name: '笔记'}]
-// 课程目录
-const classListData = ref([])
 
 const videoRef = ref(null)
 
@@ -134,7 +133,6 @@ onMounted(async ()=>{
   //TODO 判断课程是否有播放记录 - 如果课程没有看过 - 从第一节开始播放
   //TODO 如果课程已经看过了 需要最后一次播放的信息 小节ID 小节名称 小节播放时间 到哪里了
   detailsId.value = route.query.id  // 课程id
-  console.log(route.query)
 
   // 使用课程id获取当前课程的细节
   await getLearningClassDetailsData()
@@ -145,9 +143,21 @@ onMounted(async ()=>{
   await getMediasSignatureData(learningClassDetails.value.latestSectionId);
 })
 // 使用课程id获取当前课程的细节
-const getLearningClassDetailsData = async () => {
+const getLearningClassDetailsData = async (type) => {
   await getLearningClassDetails({courseId: detailsId.value})
     .then((res) => {
+      // 播放完成之后 查询过滤使用  如果是过滤的话 只更新数据不走下面的逻辑
+      if (type == 'filter'){
+        learningClassDetails.value = res.data
+        let isFinish = true
+        res.data.chapters.forEach(item => {
+          const dt = item.sections.every(n => n.type == 1 || n.type == 2 && n.finished == true )
+          !dt ? isFinish = false : null
+        })
+        // 课程上完了 弹窗
+        isFinish ? classFinished() : null
+        return
+      }
       if (res.code == 200) {
        learningClassDetails.value = res.data
        // 试看某个课程的时候 
@@ -189,15 +199,32 @@ const getLearningClassDetailsData = async () => {
         });
       }
     })
-    .catch((err) => {
-      ElMessage({
-        message: "请求出错！",
-        type: 'error'
-      });
-    });
     store.setCurrentPlayData(currentPlayData)
 };
-
+// 课程上完了 弹窗 去个人中心
+const classFinished = () => {
+  ElMessageBox({
+    title: '',
+    message: h('div', null, [
+      h('div', {style: 'display:flex'}, 
+      [h('img', {src: icon, style: 'width:52px;height:52px;margin-right: 10px;'}),
+        [h('div',null, 
+          [
+            h('div', {style: 'font-size: 18px;font-weight: 500;'}, '你真棒！'),
+            h('div', {style: 'line-height:30px'}, '所有内容全部学完，可以开始新的征程了~')
+          ])
+        ]
+      ]
+      ),
+      
+    ]),
+    showCancelButton: false,
+    confirmButtonText: '我知道了',
+  })
+  .then(() => {
+    router.push('/personal/main/myClass')
+  })
+}
 // 组件卸载的时候触发 - 页面跳转的时候触发
 onUnmounted(() => {
   clearTimeHadle(timer.value)
@@ -232,6 +259,8 @@ const initPlay = (fileID, psign) => {
     // 播放结束时 停止计算器 并提交最后一次播放状态
     clearTimeHadle(timer.value)
     addPlayLogHandle()
+    // 播放结束 更新一下数据获取是否全部播放完了
+    getLearningClassDetailsData('filter')
   });
   player.value.ready(() => {
     clearTimeHadle(timer.value)
@@ -292,7 +321,6 @@ const getMediasSignatureData = async (sectionId) => {
 // 点击小节
 const playHadle = async (val) => {
   const {item, tp} = val
-  console.log(33333,item)
   // 小节名称
   currentPlayData.sectionName = item.name
   // 练习返回

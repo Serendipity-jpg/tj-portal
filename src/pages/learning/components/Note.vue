@@ -9,7 +9,7 @@
     <div class="noteCont" >
       <div class="noteLists" v-for="item in noteListsDataes">
       <div class="userInfo fx-sb">
-        <div class=" fx">
+        <div class="fx ft-cl-wt">
           <img :src="item.author && item.author.icon" alt="" srcset="">
           {{item.author && item.author.name}}
         </div>
@@ -18,29 +18,31 @@
           {{item.noteMoment == 0 ? '0:00' :(item.noteMoment/60).toFixed(0)+':'+ item.noteMoment % 60}}
         </div>
       </div>
-        
-        <div class="note">
-          <div class="tit ft-14">{{item.content}}</div>
-          <div class="font-bt2" @click="goDetails(item)" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
+      <div class="note">
+        <div class="tit ft-14">{{item.content}}</div>
+        <div class="font-bt2" @click="goDetails(item)" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
+      </div>
+      <div class="time fx-sb">
+        <div class="tm">{{item.createTime}}</div>
+        <div class="actBut">
+          <span class="marg-rt-10" @click="editNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+            <i class="iconfont zhy-a-icon-xiugai22x"></i> 编辑
+          </span>
+          <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:item.isGathered}">
+            <i class="iconfont zhy-a-ico-caiji2x"></i> 采集
+          </span>
+          <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+            <i class="iconfont zhy-a-icon-delete22x" styel="font-size: 20px;"></i> 删除
+          </span>
+          <!-- <span class="" @click="putLikedHandle(item)" >
+            <i v-show="!item.liked" class="iconfont zhy-a-icon-zan2x"></i> 
+            <i v-show="item.liked" class="iconfont zhy-a-btn_zan_sel2x"></i>
+          </span> -->
         </div>
-        <div class="time fx-sb">
-          <div>{{item.createTime}}</div>
-          <div class="actBut">
-            <span class="marg-rt-10" @click="editNoteHandle(item)" v-if="userInfo.id == item.author.id ">
-              <i class="iconfont zhy-a-icon-xiugai22x"></i> 编辑
-            </span>
-            <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:item.isGathered}">
-              <i class="iconfont zhy-a-ico-caiji2x"></i> 采集
-            </span>
-            <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
-              <i class="iconfont zhy-a-icon-delete22x" styel="font-size: 20px;"></i> 删除
-            </span>
-            <!-- <span class="" @click="putLikedHandle(item)" >
-              <i v-show="!item.liked" class="iconfont zhy-a-icon-zan2x"></i> 
-              <i v-show="item.liked" class="iconfont zhy-a-btn_zan_sel2x"></i>
-            </span> -->
-          </div>
-        </div>
+      </div>
+      </div>
+      <div class="noData">
+        <Empty :type="true"></Empty>
       </div>
     </div>
     <div class="questCont">
@@ -60,6 +62,7 @@ import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes, notesG
 import {ElMessage} from 'element-plus'
 import {useRoute} from "vue-router"
 import { useUserStore, dataCacheStore } from '@/store'
+import Empty from '@/components/Empty.vue'
 
 const currentPlayData = dataCacheStore().getCurrentPlayData
 
@@ -288,7 +291,7 @@ const editNoteHandle = async (item) => {
 <style lang="scss" scoped>
 .learnNoteWrapper{
   .tabCheck{
-    margin: 10px auto;
+    margin: 10px auto 20px auto;
     display:flex;
     justify-content: center;
     width: 204px;
@@ -336,10 +339,13 @@ const editNoteHandle = async (item) => {
       }
       .time{
         color: var(--color-font3);
-        padding-bottom:10px;
+        padding-bottom:16px;
         margin-bottom: 19px;
         border-bottom: 1px solid #000000;
         line-height: 20px;
+        .tm{
+          color:var(--color-ft2)
+        }
         .actBut{
           color: #A0A9B2;
           cursor: pointer;
@@ -359,6 +365,9 @@ const editNoteHandle = async (item) => {
         }
       }
     }
+    .noData{
+      height: calc(100vh - 488px);
+    }
   }
   .questCont{
     position: absolute;
@@ -377,6 +386,9 @@ const editNoteHandle = async (item) => {
         height: 28px;
         line-height: 28px;
       }
+    }
+    :deep(.el-textarea__inner){
+      color: #fff;
     }
   }
   .activeLiked, .activeLiked .iconfont{

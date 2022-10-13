@@ -8,8 +8,8 @@
     <div class="title">授课老师</div>
     <div class="classTeacher">
       <div class="navigat">
-        <div class="next"><span class="iconfont zhy-a-shouqi2x"></span></div>
         <div class="prev"><span class="iconfont zhy-a-shouqi2x"></span></div>
+        <div class="next"><span class="iconfont zhy-a-shouqi2x"></span></div>  
       </div>
       <swiper
           :centeredSlides="true"
@@ -140,7 +140,7 @@ const secondSwiper = ref(null);
           text-align: center;
         }
       }
-      .next{
+      .prev{
         transform: rotate(180deg);
       }
       .swiper-button-disabled{

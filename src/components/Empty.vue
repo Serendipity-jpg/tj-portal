@@ -1,16 +1,21 @@
 <!-- 标题组件 -->
 <template>
   <div class="empty fx">
-    <img src="@/assets/img_empty.png"  alt="">
-    <div>{{desc}}</div>
+    <img class="imgcs" v-if="type" src="@/assets/img_empty1.png" alt="">
+    <img v-else src="@/assets/img_empty.png"  alt="">
+    <div :class="{wt: type}">{{desc}}</div>
   </div>
 </template>
 <script setup>
 
 defineProps({
+  type: {
+    type: Boolean,
+    default: false,
+  },
   desc: {
     type: String,
-    default: "暂无数据",
+    default: "一条数据也没有～",
   },
 });
 
@@ -29,6 +34,13 @@ defineProps({
     img{
         width:162px;
         height:144px;
+    }
+    .imgcs{
+      width:104px;
+      height:94px;
+    }
+    .wt{
+      color: #fff;
     }
 }
 </style>

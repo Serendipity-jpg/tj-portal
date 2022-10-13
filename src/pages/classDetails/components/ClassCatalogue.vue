@@ -103,6 +103,7 @@ const playHandle = (val) => {
   }
   :deep(.el-collapse-item__content){
     padding-bottom: 0;
+    font-size: 14px;
   }
 
 }

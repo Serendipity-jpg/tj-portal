@@ -57,9 +57,7 @@ export const classSeach = (params) =>
 		params
 	})
 
-
 // 学习相关接口
-
 export const getLearningClassDetails = (params) =>
 	request({
 		url: `/lessons/course`,

@@ -3,7 +3,7 @@
   <div class="questionWrapper marg-bt-20">
     <div class="askCont" >
       <div class="askLists" v-for="item in askListsDataes">
-        <div class="userInfo fx">
+        <div class="userInfo fx ">
           <img :src="item.user.icon" :onerror="onerrorImg(item.user)" alt="" srcset="">
           {{item.user.name}}
         </div>
@@ -18,9 +18,12 @@
           </div>
         </div>
       </div>
+      <div class="noData" v-if="askListsDataes && askListsDataes.length <= 0">
+        <Empty :type="true"></Empty>
+      </div>
     </div>
     <div class="questCont">
-      <el-input class="title" v-model.number="quest.title" maxlength="64" @input="ruleshandle"  show-word-limit placeholder="请输入"/>
+      <el-input class="title" v-model.number="quest.title" maxlength="64" @input="ruleshandle" show-word-limit placeholder="请输入"/>
       <el-input v-model="quest.description" rows="4" resize="none" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
       <div class="fx-sb fx-al-ct" style="margin-top: 4px;">
         <div><el-checkbox v-model="quest.anonymity" label="匿名提问" size="large" /></div>
@@ -38,6 +41,7 @@ import { postQuestions, getAskList, getMyAskList, putLiked } from "@/api/classDe
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
+import Empty from '@/components/Empty.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -270,6 +274,9 @@ const ruleshandle = (val) => {
         }
       }
     }
+    .noData{
+      height: calc(100vh - 488px);
+    }
   }
   .questCont{
     position: absolute;
@@ -289,7 +296,24 @@ const ruleshandle = (val) => {
         line-height: 28px;
       }
     }
+    input::-webkit-input-placeholder{
+      color:#000000;
+    }
+    :deep(.el-input__inner){
+      color: #fff;
+    }
+    :deep(.el-textarea__inner){
+      color: #fff;
+    }
+    :deep(.el-input__count){
+      color: #7A838A;
+    }
   }
   
 }
+</style>
+<style>
+  input::-webkit-input-placeholder{
+    color:#fff;
+  }
 </style>
