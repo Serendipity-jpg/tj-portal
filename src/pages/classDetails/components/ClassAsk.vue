@@ -3,8 +3,8 @@
   <div class="classAsk bg-wt marg-bt-20">
     <div class="tabLab fx-sb">
       <div class="lable">
-        <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部问答</span> 
-        <span @click="askCheck('my')" :class="{act:askType == 'my'}">我的问答</span>
+        <span @click="askCheck('all')" :class="{act:askType == 'all','bt-grey2': askType == 'my'}" class="marg-rt-20 ">全部问答</span> 
+        <span @click="askCheck('my')" :class="{act:askType == 'my','bt-grey2': askType == 'all'}">我的问答</span>
       </div> 
       <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: $props.id, title: $props.title}})" class="bt bt-round ft-14">提问</span></div>
     </div>
@@ -214,7 +214,9 @@ const handleCurrentChange = (val) => {
       align-items: center;
        span{
         display: inline-block;
-        width: 96px;
+        padding: 5px 20px;
+        border-radius: 20px;
+        font-size: 16px;
         text-align: center;
         cursor: pointer;
       }

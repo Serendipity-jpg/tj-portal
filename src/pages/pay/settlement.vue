@@ -17,8 +17,8 @@
     </div>
     <div class="settiementInfo">
       <div class="coupon fx">
-        <div >
-          优惠券： <el-select v-if="orderInfo.coupons && orderInfo.coupons.length > 0" @change="changeHandle" v-model="couponIds" placeholder="请选择优惠券">
+        <div v-if="orderInfo.coupons && orderInfo.coupons.length > 0" >
+          优惠券： <el-select @change="changeHandle" v-model="couponIds" placeholder="请选择优惠券">
                     <el-option
                       v-for="item in orderInfo.coupons"
                       :key="item.value"
@@ -27,8 +27,8 @@
                       :disabled="item.disabled"
                     />
                   </el-select>
-                  <span v-else class="noData"> 暂无可用优惠券</span>
         </div>
+        <div v-else class="noData"> 优惠券： 暂无可用优惠券</div>
         <div class="price">
           <div class="fx-sb"><span>订单总价：</span> <span>￥ {{amountConversion(orderInfo.totalAmount)}}</span></div>
           <div class="fx-sb"><span>优惠金额：</span>  <span>￥ {{amountConversion(discountAmount) || 0}}</span></div>

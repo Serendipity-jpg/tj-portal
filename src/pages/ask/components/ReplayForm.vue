@@ -65,6 +65,7 @@ const answerHandle = async () => {
   params.anonymity = anonymity.value
   emit('commentHandle', params);
   description.value = '';
+  anonymity.value = ''
 };
 </script>
 <style lang="scss">

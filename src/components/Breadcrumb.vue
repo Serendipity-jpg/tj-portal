@@ -2,7 +2,7 @@
 <template>
   <div class="breadcrumb ">
     <span class="font-bt2" @click="() => {$router.push('/')}" >首页</span>
-    <span> / </span>
+    <span style="padding:0 6px"> / </span>
     <span>{{data}}</span>
   </div>
 </template>

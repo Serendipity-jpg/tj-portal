@@ -175,3 +175,11 @@
 .el-table, .el-table thead{
   color: var(--color-font1);
  }
+
+ .el-checkbox__input.is-checked .el-checkbox__inner{
+  background-color: var(--color-main);
+  border-color:var(--color-main);
+ }
+ .el-checkbox__input.is-checked+.el-checkbox__label {
+  color: var(--color-main);
+}

@@ -8,7 +8,7 @@
       <div class="tit ">{{data.course && data.course.name}}</div>
       <div><span>有效日期：</span>{{data.expireTime == null ? '永久有效' : data.createTime + '-' + data.expireTime}}</div>
       <div><span>已学习：</span><em>{{data.learnedSections}}</em> / {{data.course.sections}}</div>
-      <div v-if="type == '1'"><span>正在学习：</span>第{{data.learnedSections}}节 {{data.course.name}}</div>
+      <div v-if="type == '1'"><span>正在学习：</span>第{{data.latestSectionIndex}}节 {{data.course.name}}</div>
     </div>
     <div class="btnCont">
       <div class="btn" v-if="type == '1'" @click="() => $router.push({path: '/learning/index', query: {id: data.course.id}})">

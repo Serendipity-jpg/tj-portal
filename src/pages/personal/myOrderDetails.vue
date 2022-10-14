@@ -137,6 +137,7 @@ import {amountConversion} from "@/utils/tool.js"
 // 组件导入
 import BreadCrumb from "./components/BreadCrumb.vue";
 import CardsTitle from './components/CardsTitle.vue'
+import router from "../../router";
 
 const route = useRoute()
 const store = dataCacheStore()
@@ -184,14 +185,16 @@ const refundApplyReq = () => {
   refundsApply(params)
     .then((res) => {
       if (res.code == 200 ){
-        refundDialog.value = false
-        orderDetails.value = res.data
-        refundInfo.canRead = true
+        ElMessage({
+          message: "退款成功",
+          type: 'success'
+        });
+        router.push('/personal/main/myOrder')
       } else {
         ElMessage({
-        message: res.msg,
-        type: 'error'
-      });
+          message: res.msg,
+          type: 'error'
+        });
       }
     })
     .catch(() => {

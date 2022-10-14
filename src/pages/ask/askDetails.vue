@@ -175,11 +175,16 @@ const clickLoad = () => {
 }
 // 获取回答列表
 const getAllQuestionsData = async (val) => {
-  console.log(999,val, questParams)
   await getAllQuestions(questParams)
     .then((res) => {
       if (res.code == 200) {
-        questionData.value = questionData.value.concat(res.data.list)
+        if (val == 'more') {
+          questionData.value = questionData.value.concat(res.data.list)
+        } else if(questParams.pageNo == 1){
+          questionData.value = res.data.list
+        } else {
+          questionData.value = questionData.value.splice(0, (questParams.pageNo - 1) * questParams.pageSize).concat(res.data.list)
+        }
         count.value = Number(res.data.total)
         loading.value = false
       } else {
@@ -191,7 +196,7 @@ const getAllQuestionsData = async (val) => {
     })
     .catch(() => {
       ElMessage({
-        message: "课程问题数据请求出错！",
+        message: "数据请求出错！",
         type: 'error'
       });
     });
@@ -288,17 +293,10 @@ const params = reactive({
 function commentHandle (val){
   params.content = val.content
   params.anonymity = val.anonymity
-  answerHandle()
+  answerHandle() // 评论
 }
 // 提交回复
 const answerHandle = async (type) => {
-  if (description.value == '') {
-    ElMessage({
-          message:'请输入您的内容！',
-          type: 'success'
-        });
-    return 
-  }
   params.questionId = askInfo.value.id
   params.targetUserId = type ? askInfo.value.user.id : answerInfo.value.replier.id
   if(params.content == ''){
@@ -307,6 +305,13 @@ const answerHandle = async (type) => {
   }
   params.answerId = answerInfo.value.id
   params.targetReplyId = targetInfo.value.id
+  if (params.content == '') {
+    ElMessage({
+          message:'请输入您的内容！',
+          type: 'success'
+        });
+    return 
+  }
  await postAnswers(params)
     .then((res) => {
       if (res.code == 200) {
@@ -314,16 +319,21 @@ const answerHandle = async (type) => {
           message:'回复成功！',
           type: 'success'
         });
-        params.content = description.value = ''
-        params.anonymity = anonymity.value = ''
-        isSend.value = false
+        
+        // 第一层的回答
         if (type == 'first'){
           getAllQuestionsData()
+          // questionData.value 
         } else if(dialogTableVisible) {
           getReplyData(isReplay.value, 'one')
         } else {
           getReplyData(isReplay.value, 'one')
         }
+        params.content = ''
+        description.value = ''
+        params.anonymity = ''
+        anonymity.value = ''
+        isSend.value = false
       } else {
         ElMessage({
           message:res.data.msg,

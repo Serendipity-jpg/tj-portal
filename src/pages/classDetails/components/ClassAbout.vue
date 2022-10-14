@@ -81,6 +81,7 @@ const secondSwiper = ref(null);
     .classTeacher{
         position: relative;
         width: calc(80vw - 425px);
+        margin-bottom: 30px;
         left: 50%;
         transform: translate(-50%);
         max-width: 1015px;

@@ -68,6 +68,10 @@
       color: #FFFFFF;
     }
   }
+  .noData{
+    position: relative;
+    bottom: 10px;
+  }
 }
 
 // 支付页面
@@ -115,11 +119,16 @@
   }
   .dialog-footer{
     text-align: center;
+    justify-content: center;
+    flex-direction: column;
     line-height: 26px;
     em{
       font-style: normal;
       color: #FF4C4C;
     }
+  }
+  .el-dialog__header{
+    text-align: center;
   }
 }
 // 支付成功

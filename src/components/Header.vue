@@ -43,7 +43,7 @@
                 <span>正在学习：</span> 
                 <div class="fx">
                   <span class="bt" @click="() => $router.push({path: '/learning/index', query: {id: learnClassInfo.course.id}})">继续学习</span>
-                  <span class="bt bt-grey" @click="() => $router.push('/personal/main/myClass')">全部课程</span>
+                  <span class="bt bt-grey1" @click="() => $router.push('/personal/main/myClass')">全部课程</span>
                 </div>
               </div>
               <div class="tit">{{learnClassInfo && learnClassInfo.course.name}}</div>

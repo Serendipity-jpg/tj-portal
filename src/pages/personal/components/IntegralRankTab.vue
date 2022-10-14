@@ -12,7 +12,7 @@
     <div v-if="data.boardList">
       <div
         class="item fx-sb"
-        v-for="(item, index) in data.boardList"
+        v-for="(item, index) in data.boardList.slice(0, 10)"
         :key="index"
       >
         <img v-if="index <= 2" :src="ranking(index + 1)" alt="" />
