@@ -50,7 +50,7 @@ const playHandle = (val) => {
 </script>
 <style lang="scss" scoped>
 .classList{
-  padding-top: 10px;
+  padding-top: 16px;
   .time{
       font-size: 14px;
       color: #80878C;
@@ -59,6 +59,7 @@ const playHandle = (val) => {
       line-height: 50px;
     }
   .item{
+    font-size: 16px;
     line-height: 50px;
     padding: 0 20px;
     cursor: pointer;

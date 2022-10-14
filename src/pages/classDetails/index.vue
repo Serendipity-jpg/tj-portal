@@ -24,7 +24,7 @@
                 </div>
               </div>
               <div class="fx">
-                <div @click="collectionHandle" class="bt-wt bt-round marg-rt-15 ft-14" :class="{isCollection:isCollection}"> <i class="iconfont zhy-a-icon_shoucang2x"></i> 收藏</div>
+                <div @click="collectionHandle" class="bt-wt bt-round marg-rt-15 ft-14" :class="{isCollection:isCollection}"> <i :class="{iconfont:true, 'zhy-btn_shoucang':!isCollection, 'zhy-btn_yishoucang':isCollection}"></i> 收藏</div>
                 <div class="bt-wt bt-round ft-14"><weixin class="wx"></weixin> 分享</div>
               </div>
           </div>

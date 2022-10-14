@@ -71,7 +71,7 @@ a{
 // 原子化CSS定义 将高频使用的样式单独抽离 使用时拼合到calss里
 
 // 按钮
-.bt, .bt-grey{
+.bt, .bt-grey, .bt-grey1{
   display: block;
   line-height: 40px;
   width: 100%;
@@ -97,6 +97,17 @@ a{
   }
   &:active{
     background-color: var(--color-active);
+  }
+}
+.bt-grey1{
+  color: var(--color-font1);
+  background: var(--color-background3);
+  cursor: pointer;
+  &:hover{
+    background-color: var(--color-background6);
+  }
+  &:active{
+    background-color: var(--color-background6);
   }
 }
 .bt-red{
@@ -179,6 +190,13 @@ a{
   &:active{
     color: var(--color-white);
     background-color: var(--color-font1);
+  }
+}
+.font-bt4{
+  color: var(--color-font3);
+  cursor: pointer;
+  &:hover, &:active{
+    color: var(--color-main);
   }
 }
 

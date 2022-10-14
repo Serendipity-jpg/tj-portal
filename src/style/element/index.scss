@@ -160,3 +160,10 @@
 .myOrderDetailsWrapper .el-dialog__headerbtn{
   right: 8px;
 }
+
+.el-textarea__inner:focus{
+  box-shadow: 0 0 0 1px var(--color-font1) inset;
+}
+.el-cascader .el-input.is-focus .el-input__wrapper {
+  box-shadow: 0 0 0 1px var(--color-font1,var(--color-font1)) inset;
+}

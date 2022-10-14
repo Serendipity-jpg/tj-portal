@@ -52,7 +52,7 @@
           @change="handleCheckAllChange"
           >全选</el-checkbox>
         </div>
-        <div class="bt bt-grey" @click="delHandle('all')">删除</div>
+        <div class="bt bt-grey bt-grey1" @click="delHandle('all')">删除</div>
       </div>
       <div class="count ft-14 fx fx-1">
         <div>
@@ -134,6 +134,13 @@ const checkPrice = computed(() => {
 // 删除
 const delHandle = (item) => {
   const params = item != 'all' ? [item.id] : checkedList.value
+  if (params == '' || params.length <= 0){
+    ElMessage({
+          message:`请选择操作课程`,
+          type: 'error'
+        });
+    return 
+  }
   delCarts({idList: params})
     .then((res) => {
       if (res.code == 200) {

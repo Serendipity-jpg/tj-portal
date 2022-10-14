@@ -250,7 +250,10 @@ const likedHandle = (item) => {
     .lable{
       display: flex;
       align-items: center;
-       span{
+      span{
+        display: inline-block;
+        width: 96px;
+        text-align: center;
         cursor: pointer;
       }
     }

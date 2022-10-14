@@ -158,7 +158,7 @@ const getPayStateData = async () => {
           clearInterval(timer.value)
           router.push({path:'/pay/success', query:{order: res.data.id}})
         } else {
-          ElMessage('状态是非待支付或已支付成')
+          // ElMessage('状态是非待支付或已支付成')
         }
       } else {
         ElMessage({

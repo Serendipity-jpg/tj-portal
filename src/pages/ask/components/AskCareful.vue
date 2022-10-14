@@ -14,7 +14,7 @@
 <style lang="scss" scoped>
 .askCareful {
   width: 344px;
-  height: 444px;
+  height: min-content;
   background: #FFFFFF;
   border-radius: 8px;
   padding:30px;
@@ -26,7 +26,7 @@
     margin-bottom: 30px;
   }
   p{
-    margin: 10px 0;
+    margin: 28px 0;
   }
   .tit{
     font-weight: 600;

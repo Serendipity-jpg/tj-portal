@@ -213,6 +213,9 @@ const handleCurrentChange = (val) => {
       display: flex;
       align-items: center;
        span{
+        display: inline-block;
+        width: 96px;
+        text-align: center;
         cursor: pointer;
       }
     }

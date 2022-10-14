@@ -30,11 +30,11 @@
                   <span v-else class="noData"> 暂无可用优惠券</span>
         </div>
         <div class="price">
-          <div><span>订单总价：</span> ￥ {{amountConversion(orderInfo.totalAmount)}}</div>
-          <div><span>优惠金额：</span>  ￥ {{amountConversion(discountAmount) || 0}}</div>
+          <div class="fx-sb"><span>订单总价：</span> <span>￥ {{amountConversion(orderInfo.totalAmount)}}</span></div>
+          <div class="fx-sb"><span>优惠金额：</span>  <span>￥ {{amountConversion(discountAmount) || 0}}</span></div>
         </div>
       </div>
-      <div class="paid"><span>实付金额：</span><span class="ft-cl-err">{{price}}</span></div>
+      <div class="paid"><span>实付金额：</span><span class="ft-cl-err"> ￥ {{price}}</span></div>
       <div @click="orderHandle"><span class="bt bt-red">去结算</span></div>
     </div>
   </div>
