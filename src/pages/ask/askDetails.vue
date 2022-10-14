@@ -65,7 +65,7 @@
                           <div class="ft-cl-des">{{it.createTime}}</div>
                           <div>
                             <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'targe')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                            <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                            <span :class="{'cur-pt':true, activeLiked: it.liked}" @click="likedHandle(it)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
                           </div>
                         </div>
                       </div>
@@ -99,7 +99,7 @@
               <div class="ft-cl-des">{{it.createTime}}</div>
               <div>
                 <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'target')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                <span :class="{'cur-pt':true, activeLiked: it.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@ const isReplay = ref();
 const openReply = (item) => {
   // 获取回答的答复的列表
   if (item.id != isReplay.value) {
-    getReplyData(item.id)
+    getReplyData(item.id, 'one')
     replayHandle(item, 'answer')
   }
 }
@@ -261,7 +261,9 @@ const getReplyData = async (id, st) => {
     .then((res) => {
       if (res.code == 200) {
        replyLoding.value = false
+       console.log(899, st)
        replyData.value = st == 'one' ? res.data.list : replyData.value.concat(res.data.list)
+
        replyCont.value = Number(res.data.total)
        isReplay.value = id
       } else {
@@ -323,7 +325,6 @@ const answerHandle = async (type) => {
         // 第一层的回答
         if (type == 'first'){
           getAllQuestionsData()
-          // questionData.value 
         } else if(dialogTableVisible) {
           getReplyData(isReplay.value, 'one')
         } else {

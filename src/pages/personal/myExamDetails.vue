@@ -30,14 +30,14 @@
           </div>
           <div  class="td fx-1">
             <div class="marg-bt-10 ft-wt-600 ft-cl-1">总 分 数</div>
-            <div>{{$route.query.objectiveScore + $route.query.subjectiveScore || 0}} / {{total}}</div>
+            <div>{{$route.query.objectiveScore || 0}} / {{total}}</div>
           </div>
         </div>
       </div>
      </div>
      <div class="answerCardTitle" v-if="myExamDetails">答题卡</div>
      <div class="answerCards">
-      <span v-for="(item, index) in myExamDetails" :class="{right:item.correct,wrong:!item.correct && item.answer != ''}">{{index}}</span>
+      <span v-for="(item, index) in myExamDetails" :class="{right:item.correct,wrong:!item.correct && item.answer != ''}">{{index + 1}}</span>
      </div>
      <div class="examCont" >
         <div class="item" v-for="(item, index) in myExamDetails">
@@ -46,8 +46,8 @@
             <img v-if="item.correct" src="@/assets/icon_right.png" alt="">
             <img v-else src="@/assets/icon_wrong.png" alt="">
           </div>
-          <div class="quest">
-            {{index+1}}. {{item.question.name}}
+          <div class="quest fx">
+            {{index+1}}. <span v-html="item.question.name"></span>
           </div>
         </div>
         <div class="answer">

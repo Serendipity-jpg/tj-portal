@@ -179,7 +179,8 @@
         if(res.code == 200){
           subjectList.value = res.data
           isSubmit.value = true
-          emit('playHadle', {item: props.currentPlayData, tp: '9'})
+          console.log(currentPlayData)
+          emit('playHadle', {item: currentPlayData, tp: '9'})
         } else {
           ElMessage({
             message: res.msg,
