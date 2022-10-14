@@ -1,7 +1,9 @@
 
 // 我的考试 - 列表
 .myExamWrapper{
-
+    .el-table, .el-table thead{
+        color: var(--color-font1);
+    }
 }
 // 我的考试 - 详情
 .myExamDetails{

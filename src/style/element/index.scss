@@ -167,3 +167,11 @@
 .el-cascader .el-input.is-focus .el-input__wrapper {
   box-shadow: 0 0 0 1px var(--color-font1,var(--color-font1)) inset;
 }
+
+.el-pagination.is-background .el-pager li:not(.is-disabled).is-active{
+  background-color: var(--color-main);
+}
+
+.el-table, .el-table thead{
+  color: var(--color-font1);
+ }

@@ -10,7 +10,7 @@
       <!-- 学习计划 -->
       <div class="personalCards" v-if="planData && typeof(planData) != 'string'" >
         <CardsTitle title="学习计划" > 
-          <div class="ft-wt-400"><span class="marg-rt-20">本周计划：{{weekFinishedAmount || 0}} / {{weekPlanAmount || 0}}</span> <span>积分奖励：{{totalPoints || 0}}</span></div>
+          <div class="ft-wt-400"><span class="marg-rt-20">本周计划：<em>{{weekFinishedAmount || 0}}</em> / {{weekPlanAmount || 0}}</span> <span>积分奖励：<em>{{totalPoints || 0}}</em></span></div>
         </CardsTitle>
         <PlanTable  :data="planData"></PlanTable>
       </div>

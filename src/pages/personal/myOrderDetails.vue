@@ -114,8 +114,9 @@
             </div>
         </div>    
         <div class="row">
-          <p class="ft-wt-600">审批意见：</p> 
-          <p class="ft-cl-des">{{refundDetailsData.approvalOpinion || '暂无！'}}</p>
+          <p class="ft-wt-600">处理结果：</p> 
+          <p class="ft-cl-des" v-if="refundDetailsData.resultApproval != null">审批结果：{{refundDetailsData.resultApproval ? '同意' : '拒绝退款'}}</p>
+          <p class="ft-cl-des">审批意见：{{refundDetailsData.approvalOpinion || '暂无！'}}</p>
         </div>
        </div>
       </div>    

@@ -7,7 +7,7 @@
     <div class="info fx-1">
       <div class="tit ">{{data.course && data.course.name}}</div>
       <div><span>有效日期：</span>{{data.expireTime == null ? '永久有效' : data.createTime + '-' + data.expireTime}}</div>
-      <div><span>已学习：</span>{{data.learnedSections}} / {{data.course.sections}}</div>
+      <div><span>已学习：</span><em>{{data.learnedSections}}</em> / {{data.course.sections}}</div>
       <div v-if="type == '1'"><span>正在学习：</span>第{{data.learnedSections}}节 {{data.course.name}}</div>
     </div>
     <div class="btnCont">
@@ -61,6 +61,15 @@ const planActive = (it, type) => {
   .info{
     line-height: 30px;
     font-size: 14px;
+    em{
+      font-style: normal;
+      color: var(--color-main);
+    }
+    span{
+      display: inline-block;
+      color: var(--color-font3);
+      min-width: 85px;
+    }
     .tit{
       font-size: 20px;
       font-weight: 500;

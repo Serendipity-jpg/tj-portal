@@ -171,11 +171,11 @@ const noMore = computed(() => questionData.value.length >= count.value)
 const clickLoad = () => {
   loading.value = false
   questParams.pageNo++
-  getAllQuestionsData()
+  getAllQuestionsData('more')
 }
 // 获取回答列表
-
-const getAllQuestionsData = async () => {
+const getAllQuestionsData = async (val) => {
+  console.log(999,val, questParams)
   await getAllQuestions(questParams)
     .then((res) => {
       if (res.code == 200) {
@@ -292,6 +292,13 @@ function commentHandle (val){
 }
 // 提交回复
 const answerHandle = async (type) => {
+  if (description.value == '') {
+    ElMessage({
+          message:'请输入您的内容！',
+          type: 'success'
+        });
+    return 
+  }
   params.questionId = askInfo.value.id
   params.targetUserId = type ? askInfo.value.user.id : answerInfo.value.replier.id
   if(params.content == ''){
@@ -307,7 +314,9 @@ const answerHandle = async (type) => {
           message:'回复成功！',
           type: 'success'
         });
-        description.value = ''
+        params.content = description.value = ''
+        params.anonymity = anonymity.value = ''
+        isSend.value = false
         if (type == 'first'){
           getAllQuestionsData()
         } else if(dialogTableVisible) {

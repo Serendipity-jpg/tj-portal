@@ -1,6 +1,6 @@
 <!-- 我的考试 -->
 <template>
-  <div class="myExam">
+  <div class="myExamWrapper">
     <div class="personalCards" v-if="myExamData != null">
       <CardsTitle class="marg-bt-20" title="我的考试" />
       <div v-if="count == 0" class="nodata">

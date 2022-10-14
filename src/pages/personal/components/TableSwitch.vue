@@ -1,7 +1,7 @@
 <!-- table切换头部 -->
 <template>
   <div class="tableSwitchBar">
-    <span :class="{title:true, act:actId == item.id}" @click="checkHandle(item.id)" v-for="(item, index) in data" :key="index">
+    <span :class="{title:true, act:actId == item.id, 'font-bt2':actId != item.id}" @click="checkHandle(item.id)" v-for="(item, index) in data" :key="index">
       {{item.name}}
     </span>
   </div>

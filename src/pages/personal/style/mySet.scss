@@ -21,13 +21,21 @@
         }
         .uploadBut{
             background: #E1E6F0;
+            color: var(--color-font1);
             width: 114px;
             line-height: 40px;
-            background: #E1E6F0;
             border-radius: 20px;
             font-size: 14px;
             text-align: center;
             margin-top: 20px;
+            &:hover{
+                color: var(--color-font1);
+                background-color: var(--color-background6);
+            }
+            &:active{
+                color: var(--color-font1);
+                background-color: var(--color-background6);
+            }
         }
         .avatar {
             width: 100px;
