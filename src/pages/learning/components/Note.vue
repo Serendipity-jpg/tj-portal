@@ -29,7 +29,7 @@
             <i class="iconfont zhy-a-icon-xiugai22x"></i> 编辑
           </span>
           <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:false && item.isGathered}">
-            <i class="iconfont zhy-a-ico-caiji2x"></i> 采集
+            <i class="iconfont zhy-a-ico-caiji2x"></i> {{item.isGathered ? '已采集' : '采集'}}
           </span>
           <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
             <i class="iconfont zhy-a-icon-delete22x" styel="font-size: 20px;"></i> 删除
@@ -60,13 +60,11 @@
 import { onMounted, ref, reactive } from 'vue'
 import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes, notesGathers, unNotesGathers } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
-import {useRoute} from "vue-router"
 import { useUserStore, dataCacheStore } from '@/store'
 import Empty from '@/components/Empty.vue'
 
 const currentPlayData = dataCacheStore().getCurrentPlayData
 
-const route = useRoute()
 const store = useUserStore();
 
 const userInfo = ref(null)
