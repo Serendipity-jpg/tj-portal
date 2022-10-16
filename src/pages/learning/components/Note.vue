@@ -329,6 +329,11 @@ const editNoteHandle = async (item) => {
           border-radius: 26px;
           margin-right: 10px;
         }
+        i{
+          position: relative;
+          top: 2px;
+          font-size: 18px;
+        }
       }
       .note{
         color: #A0A9B2;
