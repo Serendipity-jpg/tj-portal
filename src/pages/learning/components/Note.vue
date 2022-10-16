@@ -15,7 +15,7 @@
         </div>
         <div>
           <i class="iconfont zhy-a-icon-sp22x"></i>
-          {{item.noteMoment == 0 ? '0:00' :(item.noteMoment/60).toFixed(0)+':'+ item.noteMoment % 60}}
+          {{item.noteMoment == 0 ? '00:00' :Math.trunc(item.noteMoment/60)+':'+ item.noteMoment % 60}}
         </div>
       </div>
       <div class="note">
@@ -57,11 +57,12 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref, reactive, watchEffect } from 'vue'
 import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes, notesGathers, unNotesGathers } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import { useUserStore, dataCacheStore } from '@/store'
 import Empty from '@/components/Empty.vue'
+import { string } from 'css-tree/lib/lexer/generic'
 
 const currentPlayData = dataCacheStore().getCurrentPlayData
 
@@ -73,6 +74,9 @@ const props = defineProps({
   id:{
     type: String,
     default: ''
+  },
+  currentTime:{
+    default: 0
   }
 })
 
@@ -225,8 +229,6 @@ const subType = ref('add')
 const editParams = ref({})
 // 点赞或者取消 
 const putLikedHandle = async (item) => {
-ElMessage({message: '该功能暂未实现！'})
-return 
 await likeed(item.id, !item.liked)
     .then((res) => {
       if (res.code == 200) {
@@ -245,13 +247,19 @@ await likeed(item.id, !item.liked)
       });
     });
 }
+watchEffect(() => {
+  noteParams.noteMoment = props.currentTime
+})
+
 // 新增/编辑-笔记
 const submitForm = async () => {
   const query = subType.value == 'add' ? addNotes : updateNotes
   let params = noteParams
   if(subType.value == 'edit'){
-  editParams.value.content = noteParams.content
-  params = editParams.value
+    editParams.value.content = noteParams.content
+    params = editParams.value
+  } else {
+    params.noteMoment = props.currentTime
   }
   await query(params)
     .then((res) => {

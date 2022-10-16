@@ -15,7 +15,7 @@
           </div>
           <div>
             <span @click="play(it, it.type == 2 ? 1 :it.type)"
-              v-if="it.mediaDuration != 0">{{(it.mediaDuration/60).toFixed(0)}} 分钟</span>
+              v-if="it.mediaDuration != 0">{{Math.trunc(it.mediaDuration/60)}}  {{}}分钟</span>
           </div>
         </div>
       </el-collapse-item>

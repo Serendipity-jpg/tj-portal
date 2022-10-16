@@ -42,7 +42,7 @@
         </div>
         <!-- 笔记 -->
         <div class="note" v-if="actId == 3" v-infinite-scroll="load" style="overflow: auto">
-          <Note></Note>
+          <Note :currentTime="currentPlayTime"></Note>
         </div>
       </div>
     </div>
@@ -237,7 +237,7 @@ const classFinished = () => {
 onUnmounted(() => {
   clearTimeHadle(timer.value)
 })
-
+const currentPlayTime = ref(0)
 // 初始化视频播放器并播放视频 视频ID、播放器签名
 const player = ref(null)
 const initPlay = (fileID, psign) => {
@@ -251,8 +251,9 @@ const initPlay = (fileID, psign) => {
     hlsConfig: {},
   });
   player.value.on('timeupdate', function () {
-
     currentPlayData.currentTime = player.value.currentTime();
+    currentPlayTime.value = currentPlayData.currentTime
+    console.log('palytime',currentPlayTime.value)
   });
   player.value.on('pause', function () {
     // 每次视频暂停的时候 停止发送播放记录请求
@@ -273,7 +274,6 @@ const initPlay = (fileID, psign) => {
   });
   player.value.ready(() => {
     clearTimeHadle(timer.value)
-
     player.value.currentTime(currentPlayData.currentTime || 0)
     player.value.play()
   })
