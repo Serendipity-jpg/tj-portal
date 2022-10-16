@@ -332,6 +332,7 @@ const playHadle = async (val) => {
   currentPlayData.sectionId = item.id  // 小节Id
   currentPlayData.currentTime =  item.currentTime // 播放时间
   currentPlayData.duration = item.mediaDuration // 总时长
+  console.log(89898,val, tp)
   // 视频播放
   if(tp == '1'){
     pageType.value = 1

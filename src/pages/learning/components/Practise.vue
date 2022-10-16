@@ -4,7 +4,7 @@
     <div class="preview">
       <div class="previewTit">答题卡</div>
       <div class="previewList">
-        <span v-for="(item, index) in params" :class="{act: String(item.answers) != '' && item.answers != undefined }" :key="index">{{index + 1}}</span>
+        <span v-for="(item, index) in params" :class="{act: item.answers != undefined && String(item.answers) != ''}" :key="index">{{index + 1}}</span>
       </div>
       <div class="previewSub" @click="submit" ><span class="bt">提交试卷</span></div>
       
