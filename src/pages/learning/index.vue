@@ -360,6 +360,8 @@ const playHadle = async (val) => {
 // 考试开始时提交
   const examId = ref('')
   const startExaminationHandle = (item) => {
+    console.log(8891,item)
+    debugger
     const param = {
       sectionId: item.id, // 小节id
       type: item.type == 2 ? 0 : 1,  // 类型，0-练习，1-考试  item.type对应章节的类型，2-视频（小节），3-考试
