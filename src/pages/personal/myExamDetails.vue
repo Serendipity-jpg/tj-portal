@@ -56,7 +56,7 @@
         <div class="analysis">
           <div class="fx marg-bt-20">
             <div class="col ft-wt-600">你的答案：{{answerChange(item.question.subjectType, item.answer)}}</div> 
-            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.question.subjectType, item.question.analysis)}}</div>
+            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.question.subjectType, item.question.answers)}}</div>
             <div class="col">难易程度：{{defficultyChange(item.question.difficulty)}}</div>
             <div>得分：{{item.score}}</div>
           </div>
@@ -114,7 +114,6 @@ const getExamDetailsData = async () => {
 }
 // 问题类型，1：单选题，2：多选题，3：不定向选择题，4：判断题，5：主观题
 const answerChange = (type, val) => {
-  
   let data = ''
   switch (type){
     case 1 : {
@@ -122,7 +121,7 @@ const answerChange = (type, val) => {
       break
     }
     case 2 || 3: {
-      const arr = val.split(',')
+      const arr = typeof val == 'string' ? val.split(',') : val
       data = arr.map(n => isNaN(Number(n)) ? n : upperAlpha(Number(n))).join(',')
       break
     }

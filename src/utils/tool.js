@@ -1,7 +1,8 @@
  // 转换 A、B、C、D
-export const upperAlpha = (num) => {
+export const upperAlpha = (num, type) => {
   let str = ''
-  switch(num){
+  let n = type && type == 0 ? num : num - 1
+  switch(n){
     case 0 :
       str = 'A';
       break
