@@ -4,7 +4,7 @@
     <div class="preview">
       <div class="previewTit">答题卡</div>
       <div class="previewList">
-        <span v-for="(item, index) in params" :class="{act: item.answers != undefined && String(item.answers) != ''}" :key="index">{{index + 1}}</span>
+        <span v-for="(item, index) in params" :class="{act: item && item.answers != undefined && String(item.answers) != ''}" :key="index">{{index + 1}}</span>
       </div>
       <div class="previewSub" @click="submit" ><span class="bt">提交试卷</span></div>
       
@@ -73,6 +73,7 @@
   // 生命周期
   onMounted(() => {
     // 根据小节或测试id获取练习题
+    console.log(8880,currentPlayData.sectionId)
     getSubjectList()
     // 开始答题
   })
@@ -120,8 +121,9 @@
   } 
 
   // 根据小节或测试id获取练习题
-  const subjectList = ref()
+  const subjectList = ref([])
   const getSubjectList = async () => {
+    console.log(8881,currentPlayData.sectionId)
     await getSubject(currentPlayData.sectionId)
       .then((res) => {
         if(res.code == 200){
