@@ -123,7 +123,6 @@
   // 根据小节或测试id获取练习题
   const subjectList = ref([])
   const getSubjectList = async () => {
-    console.log(8881,currentPlayData.sectionId)
     await getSubject(currentPlayData.sectionId)
       .then((res) => {
         if(res.code == 200){
@@ -147,7 +146,7 @@
   const isSubmit = ref(false)
 
   // 确认提交试卷
-  const params = reactive(subjectList)
+  const params = ref(subjectList)
   const submit = () =>{
     const Effective = params.value.filter(n => n.answers != "" && n.answers != undefined )
     if(Effective.length < subjectList.value.length){
