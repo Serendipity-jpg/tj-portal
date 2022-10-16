@@ -25,9 +25,9 @@ export const timeFormat = (time) => {
     //  秒
     let second = parseInt(time)
     //  分
-    let minute = 0
+    let minute = '00'
     //  小时
-    let hour = 0
+    let hour = '00'
 
     if (second > 60) {
         //  获取分钟，除以60取整数，得到整数分钟
@@ -46,7 +46,7 @@ export const timeFormat = (time) => {
 }
 
 export const amountConversion = (item) => {
-  let amount = 0
+  let amount = '00'
   if (item){
     amount = (item / 100).toFixed(2)
   } 

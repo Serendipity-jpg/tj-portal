@@ -77,6 +77,11 @@
             margin-bottom: 10px;
             li{
                 list-style-type:upper-alpha;
+                span{
+                    p,  div, li {
+                        display: inline-block;
+                    }
+                }
             }
         }
         .analysis{
@@ -90,6 +95,9 @@
             }
             .rt{
                 color: #26BA9B;
+            }
+            .fx:last-child{
+                margin-bottom: 0;
             }
         }
     }

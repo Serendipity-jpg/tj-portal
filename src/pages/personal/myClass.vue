@@ -80,6 +80,7 @@ const getLearningData = async () => {
     .then((res) => {
       if (res.code == 200 && res.data != null){
         learningData.value = res.data
+        store.setMyLearnClassInfo(res.data)
       }
     })
     .catch(() => {

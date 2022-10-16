@@ -29,7 +29,8 @@
               </div>
           </div>
         </div>
-        <div class="buyCont fx-sb" v-if="baseDetailsData.price != '0'" >
+        <div v-if="baseDetailsData">
+          <div class="buyCont fx-sb" v-if="baseDetailsData.price != '0'" >
           <div class="fx-ct">
             <span class="price">￥</span>
             <span class="price">{{(baseDetailsData.price / 100).toFixed(2) }}</span>
@@ -54,6 +55,8 @@
             <span class="bt-red bt-round">马上学习</span>
           </div>
         </div>
+        </div>
+        
       </div>
     </div>
     <!-- 主体部分 - start -->

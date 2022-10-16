@@ -15,7 +15,7 @@
       </el-table-column>
       <el-table-column prop="subjectiveScore" align="center" label="分数" width="180" >
         <template #default="scope">
-          <span>{{scope.row.subjectiveScore ? scope.row.subjectiveScore : '0'}}</span>
+          <span>{{scope.row.objectiveScore ? scope.row.objectiveScore : '0'}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="120">

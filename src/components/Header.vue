@@ -34,7 +34,7 @@
           <i class="iconfont">&#xe6f3;</i> 购物车
         </div>
         <!-- 学习中心 - start -->
-        <div>
+        <div v-if="learnClassInfo && learnClassInfo.course">
           <span class="marg-lr-40 font-bt2" style="padding:27px 0" @click="() => {$router.push('/personal/main/myClass')}" @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false">学习中心</span>
           <div class="learningCont" v-show="learningShow && learnClassInfo"  @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false">
             <div class="count"><em>{{learnClassInfo && learnClassInfo.totalCourseAmount}}</em> 门课程</div>
@@ -73,7 +73,7 @@ import router from "../router";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import ClassCategory from "./ClassCategory.vue";
-import {getMyLearning}from '@/api/class.js'
+import {getMyLearning, getClassCategorys}from '@/api/class.js'
 
 const store = useUserStore();
 const userInfo = ref()
@@ -84,7 +84,7 @@ const userStore = getToken();
 const dataCache = dataCacheStore();
 const courseClass = ref([]) // 分类数据
 const isShow = ref(false)  // 分类展示
-const learnClassInfo = ref() // 我真正学习的课程信息-学习中心展示
+const learnClassInfo = ref(dataCache.getMyLearnClassInfo) // 我真正学习的课程信息-学习中心展示
 const learningShow = ref(false) // 学习中心hover模块展示
 
 onMounted(() => {
@@ -102,7 +102,7 @@ onMounted(() => {
   }
   if(isLogin()){
     // 查询我正在学习的课程
-    getLearnClassInfoHandle()
+    JSON.stringify(learnClassInfo.value) == '{}' ?  getLearnClassInfoHandle() : null
   }
 })
 // 监听路由 清空搜索框的值
@@ -113,6 +113,9 @@ watchEffect(() => {
   if (route.path == '/search/index') {
     input.value = dataCache.getSearchKey
   }
+  if(dataCache.getMyLearnClassInfo){
+    learnClassInfo.value = dataCache.getMyLearnClassInfo
+  }
 })
 // 学习中心的信息
 
@@ -122,7 +125,7 @@ const getLearnClassInfoHandle = async() => {
     .then((res) => {
       if (res.code == 200) {
         learnClassInfo.value = res.data;
-        // dataCache.setMyLearnClassInfo(res.data)
+        dataCache.setMyLearnClassInfo(res.data)
       } else {
         ElMessage({
           message: res.data.msg,

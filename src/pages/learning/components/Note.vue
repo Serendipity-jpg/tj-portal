@@ -337,9 +337,10 @@ const editNoteHandle = async (item) => {
       }
       .note{
         color: #A0A9B2;
+        margin-top: 0px;
         .tit{
           line-height: 24px;
-          margin-top: 6px;
+          margin-top: 0px;
         }
       }
       .time{

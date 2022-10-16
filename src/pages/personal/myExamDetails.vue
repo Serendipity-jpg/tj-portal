@@ -51,16 +51,16 @@
           </div>
         </div>
         <div class="answer">
-          <li v-for="it in item.question.options">{{it}}</li>
+          <li v-for="it in item.question.options"><span v-html="it"></span></li>
         </div>
         <div class="analysis">
           <div class="fx marg-bt-20">
-            <div class="col ft-wt-600">你的答案：{{answerChange(item.subjectType, item.answer)}}</div> 
-            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.subjectType, item.question.analysis)}}</div>
+            <div class="col ft-wt-600">你的答案：{{answerChange(item.question.subjectType, item.answer)}}</div> 
+            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.question.subjectType, item.question.analysis)}}</div>
             <div class="col">难易程度：{{defficultyChange(item.question.difficulty)}}</div>
             <div>得分：{{item.score}}</div>
           </div>
-          <div v-if="item.question.analysis">答案解析：{{item.question.analysis}}</div>
+          <div class="fx" v-if="item.question.analysis">答案解析：<span v-html="item.question.analysis"></span></div>
         </div>
         </div>
      </div>
@@ -92,7 +92,7 @@ onMounted(async () => {
 /** 方法定义 **/
 
 // 查询我的考试记录
-const total = ref(100)
+const total = ref(0)
 // 查询我的详情
 const myExamDetails = ref()
 const getExamDetailsData = async () => {
@@ -101,7 +101,7 @@ const getExamDetailsData = async () => {
       if (res.code == 200 && res.data != null){
         myExamDetails.value = res.data
         res.data.forEach(el => {
-          total.value += el.score
+          total.value += el.question.score
         });
       }
     })
@@ -114,16 +114,16 @@ const getExamDetailsData = async () => {
 }
 // 问题类型，1：单选题，2：多选题，3：不定向选择题，4：判断题，5：主观题
 const answerChange = (type, val) => {
+  
   let data = ''
   switch (type){
     case 1 : {
-      data = upperAlpha(val)
+      data = isNaN(Number(val)) ? val : upperAlpha(Number(val))
       break
     }
     case 2 || 3: {
       const arr = val.split(',')
-      arr.map(n => upperAlpha(val))
-      data = arr.toString()
+      data = arr.map(n => isNaN(Number(n)) ? n : upperAlpha(Number(n))).join(',')
       break
     }
     case 4 : {
