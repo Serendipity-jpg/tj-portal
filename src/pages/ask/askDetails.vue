@@ -257,6 +257,7 @@ const load = () => {
 const getReplyData = async (id, st) => {
     replyLoding.value = true
     replyParams.id = id
+    replyParams.admin = false
     await getReply(replyParams)
     .then((res) => {
       if (res.code == 200) {
