@@ -9,10 +9,10 @@
       class="demo-dynamic"
     >
       <el-form-item prop="username" label="">
-        <el-input v-model="fromData.username" placeholder="请输入用户名" />
+        <el-input v-model="fromData.username" placeholder="请输入手机号/密码" />
       </el-form-item>
       <el-form-item prop="password" label="">
-        <el-input type="pass" :show-password="true" v-model="fromData.password" placeholder="请输入密码" />
+        <el-input type="pass" :show-password="true" v-model="fromData.password" placeholder="验证手机号/密码" />
       </el-form-item>
       <el-form-item class="marg-b-10">
         <div class="fx-sb">

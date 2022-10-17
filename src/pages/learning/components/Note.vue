@@ -32,7 +32,7 @@
             <i class="iconfont zhy-a-ico-caiji2x"></i> {{item.isGathered ? '已采集' : '采集'}}
           </span>
           <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
-            <i class="iconfont zhy-a-icon-delete22x" styel="font-size: 20px;"></i> 删除
+            <i class="iconfont zhy-a-icon-delete22x" style="font-size: 23px;top: 3px;"></i> 删除
           </span>
           <!-- <span class="" @click="putLikedHandle(item)" >
             <i v-show="!item.liked" class="iconfont zhy-a-icon-zan2x"></i> 

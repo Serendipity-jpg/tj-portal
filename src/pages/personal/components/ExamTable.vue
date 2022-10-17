@@ -13,12 +13,17 @@
           <span>{{scope.row.commitTime ? scope.row.commitTime : '--'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="subjectiveScore" align="center" label="分数" width="180" >
+      <el-table-column prop="commitTime" align="center" label="类型" width="100" >
+        <template #default="scope">
+          <span>{{scope.row.type == 0 ? '练习' : '考试'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="subjectiveScore" align="center" label="分数" width="60" >
         <template #default="scope">
           <span>{{scope.row.objectiveScore ? scope.row.objectiveScore : '0'}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="120">
+      <el-table-column label="操作" align="center" width="100">
         <template #default="scope">
           <div class="font-bt1" @click="() => $router.push({path:'myExamdetails', query:scope.row})">查看</div>
         </template>
