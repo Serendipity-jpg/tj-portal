@@ -47,21 +47,22 @@ a{
 }
 // 全局容器
 .container{
-  width: 80%;
-  max-width: 1440px;
-  min-width: 1220px;
+  // width: 80%;
+  // max-width: 1440px;
+  // min-width: 1220px;
+  width: 1200px;
   margin: 0 auto;
 }
-@media screen and (max-width: 1300px){
-  .container{
-    width: 1220px;
-    padding:0 60px;
-    margin: 0 auto;
-    .courseClassList{
-      left: 160px !important;
-    }
-  }
-}
+// @media screen and (max-width: 1300px){
+//   .container{
+//     width: 1220px;
+//     padding:0 60px;
+//     margin: 0 auto;
+//     .courseClassList{
+//       left: 160px !important;
+//     }
+//   }
+// }
 // logo定义 - 
 .logo img{
   width: 158.33px;
