@@ -2,7 +2,7 @@
 <template>
  <div class="couponCards fx" v-for="(item, index) in data" :key="index">
     <div class="price ft-cl-wt">
-        <div>￥ <em>1000</em></div>
+        <div>￥ <em>{{item.discountAmount / 100}}</em></div>
         <div class="desc">{{item.couponRule}}</div>
     </div>
     <div class="info">

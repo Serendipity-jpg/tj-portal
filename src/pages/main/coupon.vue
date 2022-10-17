@@ -7,7 +7,7 @@
     <div class="couponItems container bg-wt">
        <div class="mainCouponCards fx" v-for="(item, index) in couponData" :key="index">
           <div class="price ft-cl-wt" v-if="item.type == 4 || item.type == 1 || item.type == 3">
-            <div>￥ <em>{{item.discountAmount}}</em></div>
+            <div>￥ <em>{{item.discountAmount / 100}}</em></div>
             <div class="desc">{{item.couponRule}}</div>
           </div>
           <div class="price ft-cl-wt" v-if="item.type == 2 || item.type == 5">

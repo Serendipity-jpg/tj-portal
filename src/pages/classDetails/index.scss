@@ -26,9 +26,13 @@
                 border-radius: 8px;
                 margin-right: 40px;
             }
-            i, .wx{
+            i{
                 position: relative;
-                top: 2px;
+                top: 1px;
+            }
+            .wx{
+                position: relative;
+                top: 3px;
             }
             .item{
                 margin-bottom: 40px;
@@ -53,6 +57,9 @@
                     font-weight: 600;
                     font-size: 18px;
                 }
+            }
+            .bt-wt{
+                line-height: 22px;
             }
             
         }
