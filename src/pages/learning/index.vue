@@ -361,9 +361,23 @@ const playHadle = async (val) => {
     }
   } else if (tp == '2' || tp == '3') {
     // 打开练习题 开始考试 
-    startExaminationHandle(item)
-  }
-
+    if (item.type != 2 ){
+        ElMessageBox.confirm(
+        `温馨提示：考试只能考一次，如果中途退出或未提交结果，将不会允许再次考试，确认考试请点击 继续考试`,
+        '确认考试',
+          {
+            confirmButtonText: '继续考试',
+            cancelButtonText: '等会再来',
+            type: 'warning',
+          }
+        )
+        .then(() => {
+          startExaminationHandle(item)
+        })
+      } else {
+        startExaminationHandle(item)
+      }
+    }
   store.setCurrentPlayData(currentPlayData)
 }
 
@@ -378,13 +392,14 @@ const startExaminationHandle = async (item) => {
   }
   await startExamination(param)
     .then((res) => {
+      console.log(8888888,res)
       if (res.code == 200) {
         examId.value = res.data
         player.value.pause()
         pageType.value = 2;
       } else {
         ElMessage({
-          message: res.data.msg,
+          message: res.msg || res.data.msg,
           type: 'error'
         });
       }
