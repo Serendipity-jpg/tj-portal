@@ -6,7 +6,7 @@
       <span class="line"></span>
       <span class="fx-1 cur-pt" @click="activeHandle(2)" :class="{act: actIndex == 2}">全部笔记</span>
     </div>
-    <div class="noteCont" >
+    <div class="noteCont" v-if="noteListsDataes.length > 0">
       <div class="noteLists" v-for="item in noteListsDataes">
       <div class="userInfo fx-sb">
         <div class="fx ft-cl-wt">
@@ -41,9 +41,9 @@
         </div>
       </div>
       </div>
-      <div class="noData" v-if="noteListsDataes.length <= 0">
-        <Empty :type="true"></Empty>
-      </div>
+    </div>
+    <div class="noData" v-else>
+      <Empty :type="true"></Empty>
     </div>
     <div class="questCont">
       <el-input v-model="noteParams.content" rows="4" resize="none" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
@@ -62,7 +62,6 @@ import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes, notesG
 import {ElMessage} from 'element-plus'
 import { useUserStore, dataCacheStore } from '@/store'
 import Empty from '@/components/Empty.vue'
-import { string } from 'css-tree/lib/lexer/generic'
 
 const currentPlayData = dataCacheStore().getCurrentPlayData
 
@@ -126,7 +125,8 @@ const getAskListsDataes = async () => {
   await questFun(params.value)
     .then((res) => {
       if (res.code == 200) {
-        if(res.data.list.length > 0){
+        if(res.data.list.length > 0){ 
+          console.log(2434,res.data)
           if (actIndex.value == 2){
             noteListsDataes.value = res.data.list
           } else {
@@ -135,6 +135,8 @@ const getAskListsDataes = async () => {
               return n
             })
           }
+        } else {
+          noteListsDataes.value = []
         }
         total.value =  Number(res.data.total)
       } else {
@@ -377,10 +379,10 @@ const editNoteHandle = async (item) => {
         }
       }
     }
-    .noData{
+  }
+  .noData{
       height: calc(100vh - 488px);
     }
-  }
   .questCont{
     position: absolute;
     width: 100%;

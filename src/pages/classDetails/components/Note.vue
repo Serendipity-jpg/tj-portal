@@ -96,7 +96,7 @@ const askCheck = type => {
 }
 const checkCahpter = (id) => {
   params.value.pageNo = 1
-  params.value.pageSize = 10
+  params.value.pageSize = 100
   params.value.sectionId = id
   getAskListsDataes()
 }
