@@ -392,7 +392,6 @@ const startExaminationHandle = async (item) => {
   }
   await startExamination(param)
     .then((res) => {
-      console.log(8888888,res)
       if (res.code == 200) {
         examId.value = res.data
         player.value.pause()
