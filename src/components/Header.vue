@@ -34,9 +34,9 @@
           <i class="iconfont">&#xe6f3;</i> 购物车
         </div>
         <!-- 学习中心 - start -->
-        <div v-if="learnClassInfo && learnClassInfo.course">
+        <div>
           <span class="marg-lr-40 font-bt2" style="padding:27px 0" @click="() => {$router.push('/personal/main/myClass')}" @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false">学习中心</span>
-          <div class="learningCont" v-show="learningShow && learnClassInfo"  @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false">
+          <div v-if="learnClassInfo && learnClassInfo.course" class="learningCont" v-show="learningShow && learnClassInfo"  @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false">
             <div class="count"><em>{{learnClassInfo && learnClassInfo.totalCourseAmount}}</em> 门课程</div>
             <div class="info">
               <div class="fx-sb">

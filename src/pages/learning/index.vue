@@ -253,7 +253,6 @@ const initPlay = (fileID, psign) => {
   player.value.on('timeupdate', function () {
     currentPlayData.currentTime = player.value.currentTime();
     currentPlayTime.value = currentPlayData.currentTime
-    console.log('palytime',currentPlayTime.value)
   });
   player.value.on('pause', function () {
     // 每次视频暂停的时候 停止发送播放记录请求

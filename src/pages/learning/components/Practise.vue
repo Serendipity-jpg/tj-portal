@@ -182,6 +182,10 @@ const postSubjectHandle = async () => {
       if (res.code == 200) {
         subjectList.value = res.data
         isSubmit.value = true
+        ElMessage({
+          message: '答案提交成功, 请前往个人中心查看',
+          type: 'success'
+        })
         emit('playHadle', { item: currentPlayData.value, tp: '9' })
       } else {
         ElMessage({
