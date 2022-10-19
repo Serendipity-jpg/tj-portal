@@ -23,7 +23,7 @@
                       v-for="item in orderInfo.coupons"
                       :key="item.value"
                       :label="item.rule"
-                      :value="item"
+                      :value="item.id"
                       :disabled="item.disabled"
                     />
                   </el-select>
@@ -89,20 +89,22 @@ const comfirePageInfoHandle = async () => {
     });
 } 
 const changeHandle = val => {
-  discountAmount.value = val.discountAmount
+  const value = orderInfo.value.coupons.filter(n => n.id == val)
+  discountAmount.value = value[0].discountAmount
 }
 // 下单 
 const orderHandle = async () => {
   const courseIdList = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
-  const couponIdList = couponIds.value.id != null ? [couponIds.value.id] : undefined
+  const couponIdList = couponIds.value != null ? [couponIds.value] : undefined
   const params = {courseIdList, couponIdList}
   await setOrder(params)
     .then((res) => {
+      console.log(res)
       if (res.code == 200) {
         router.push({path:'/pay/payment',query:{orderId: res.data.orderId}})
       } else {
         ElMessage({
-          message:res.data.msg,
+          message:res.msg || res.data.msg,
           type: 'error'
         });
       }

@@ -183,3 +183,19 @@
  .el-checkbox__input.is-checked+.el-checkbox__label {
   color: var(--color-main);
 }
+.el-select-dropdown__item.selected{
+  font-size: 14px;
+  font-weight: 400;
+  color: #19232B;
+  :hover{
+    color: var(--color-main);
+  }
+}
+.el-select-dropdown__item.hover{
+  color:var(--color-main);
+  // background-color: #fff;
+}
+.el-select-dropdown__item:hover{
+  // background-color: var(--color-hover);
+  color: var(--color-main);
+}

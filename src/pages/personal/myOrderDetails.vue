@@ -45,16 +45,16 @@
               <div v-if="scope.row.canRead && orderDetails.status != 6" class="font" >退款中</div>
               <div v-if="scope.row.canRead && orderDetails.status == 6" class="font-bt1" @click="openRefundDialog('details', scope.row)"> 退款详情 </div>
               <div v-if="!scope.row.canRefund && !scope.row.canRead && orderDetails.status == 1" @click="cancelOrderHandle(orderDetails)" class="font-bt1" >取消订单</div>
-              <span v-if="!scope.row.canRefund && !scope.row.canRead && orderDetails.status != 1"> {{scope.row.canRefund}} </span>
+              <span v-if="!scope.row.canRefund && !scope.row.canRead && orderDetails.status != 1"> -- </span>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="info">
-        <div><span>订单总价：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.totalAmount) || 0}}</span></div>
-        <div><span>优惠券：</span><span class="pirc">{{orderDetails && orderDetails.couponRule ? orderDetails.couponRule : '无'}}</span></div>
-        <div><span>优惠金额：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.discountAmount) || 0}}</span></div>
-        <div><span>实付金额：</span><span class="pirc red">{{orderDetails && amountConversion(orderDetails.realAmount) || 0}}</span></div>
+        <div><span>订单总价：</span><span class="pirc">￥ {{orderDetails && amountConversion(orderDetails.totalAmount) || 0}}</span></div>
+        <div class="fx"><span>优惠券：</span><span class="pirc">{{orderDetails && orderDetails.couponRule ? orderDetails.couponRule : '无'}}</span></div>
+        <div><span>优惠金额：</span><span class="pirc">￥ {{orderDetails && amountConversion(orderDetails.discountAmount) || 0}}</span></div>
+        <div><span>实付金额：</span><span class="pirc red">￥ {{orderDetails && amountConversion(orderDetails.realAmount) || 0}}</span></div>
       </div>
     </div>
     <!-- 申请退款 - start -->
@@ -103,8 +103,8 @@
       <div class="refundDetailsCont">
        <div class="tab">
         <div class="ut"> <p class="ft-wt-600">退款ID</p> <p class="ft-cl-des">{{refundDetailsData.id}}</p> </div>
-        <div class="ut"> <p class="ft-wt-600">支付方式</p> <p class="ft-cl-des">{{refundDetailsData.payWayDesc}}</p> </div>
-        <div class="ut"> <p class="ft-wt-600">退款流水号</p> <p class="ft-cl-des">{{refundDetailsData.refundThirdOrderId}}</p> </div>
+        <div class="ut"> <p class="ft-wt-600">支付方式</p> <p class="ft-cl-des">{{refundDetailsData.payWayDesc ? refundDetailsData.payWayDesc : "--"}}</p> </div>
+        <div class="ut"> <p class="ft-wt-600">退款流水号</p> <p class="ft-cl-des">{{refundDetailsData.refundThirdOrderId ? refundDetailsData.refundThirdOrderId : " -- "}}</p> </div>
         <div class="ut"> <p class="ft-wt-600">退款方式</p> <p class="ft-cl-des">{{refundDetailsData.refundWayDesc}}</p> </div>
         <div class="ut"> <p class="ft-wt-600">订单ID</p> <p class="ft-cl-des">{{refundDetailsData.orderId}}</p> </div>
         <div class="ut"> <p class="ft-wt-600">申请原因</p> <p class="ft-cl-des">{{refundDetailsData.refundReason}}</p> </div>

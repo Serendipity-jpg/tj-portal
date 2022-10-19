@@ -52,7 +52,7 @@
           @change="handleCheckAllChange"
           >全选</el-checkbox>
         </div>
-        <div class="bt bt-grey bt-grey1" @click="delHandle('all')">删除</div>
+        <div class="bt bt-grey1" @click="delHandle('all')">删除</div>
       </div>
       <div class="count ft-14 fx fx-1">
         <div>

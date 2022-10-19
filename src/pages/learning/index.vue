@@ -313,11 +313,13 @@ const getMediasSignatureData = async (sectionId) => {
         if (player.value == null) {
           initPlay(res.data.fileId, res.data.signature)
         }
+      } else if (res.code == 1){
+          ElMessage('该课程章节不支持试看， 请购买后播放')
       } else {
-        ElMessage({
-          message: res.data.msg,
-          type: 'error'
-        });
+      ElMessage({
+        message: res.data.msg,
+        type: 'error'
+      });
       }
     })
 };

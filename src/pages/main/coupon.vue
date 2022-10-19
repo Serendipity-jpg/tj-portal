@@ -131,10 +131,11 @@ const getCouponData = async (item) => {
         font-style: normal;
         font-family: PingFangSC-Semibold;
         font-weight: 600;
-        font-size: 48px;
+        font-size: 42px;
       }
       .desc{
         padding: 0 15px;
+        font-size: 12px;
         text-align: center;
       }
     }
