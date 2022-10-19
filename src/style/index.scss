@@ -94,9 +94,11 @@ a{
   background: var(--color-background3);
   cursor: pointer;
   &:hover{
+    color: #fff;
     background-color: var(--color-hover);
   }
   &:active{
+    color: #fff;
     background-color: var(--color-active);
   }
 }
