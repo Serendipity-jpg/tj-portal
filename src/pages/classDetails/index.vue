@@ -6,7 +6,7 @@
       <div class="container">
         <Breadcrumb :data="baseDetailsData.cateNames && baseDetailsData.cateNames.split('/').at(-1)"></Breadcrumb>
         <div class="topInfo fx">
-          <div class=""><img :src="baseDetailsData.coverUrl" width="380" alt="" /></div>
+          <div class=""><img :src="baseDetailsData.coverUrl" width="380" height="" alt="" /></div>
           <div class="fx-1">
               <div class="title">{{baseDetailsData.name}}</div>
               <div class="item fx">
@@ -274,12 +274,6 @@ const getClassListData = async () => {
         });
       }
     })
-    .catch(() => {
-      ElMessage({
-        message: "课程目录数据请求出错！",
-        type: 'error'
-      });
-    });
 };
 // table切换 当前展示信息 课程介绍、课程目录
 const changeTable = id => {

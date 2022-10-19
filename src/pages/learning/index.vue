@@ -320,12 +320,6 @@ const getMediasSignatureData = async (sectionId) => {
         });
       }
     })
-    .catch(() => {
-      ElMessage({
-        message: "课程目录数据请求出错！",
-        type: 'error'
-      });
-    });
 };
 
 // 点击小节

@@ -42,15 +42,17 @@
           <el-table-column label="操作" align="center" width="120">
             <template #default="scope">
               <div v-if="scope.row.canRefund" class="font-bt1" @click="openRefundDialog('refund', scope.row)">申请退款</div>
-              <div v-if="scope.row.canRead" class="font-bt1" >{{ orderDetails.status != 6 ? '退款中':'退款详情'}}</div>
-              <span v-if="!scope.row.canRefund && !scope.row.canRead"> -- </span>
+              <div v-if="scope.row.canRead && orderDetails.status != 6" class="font" >退款中</div>
+              <div v-if="scope.row.canRead && orderDetails.status == 6" class="font-bt1" @click="openRefundDialog('details', scope.row)"> 退款详情 </div>
+              <div v-if="!scope.row.canRefund && !scope.row.canRead && orderDetails.status == 1" @click="cancelOrderHandle(orderDetails)" class="font-bt1" >取消订单</div>
+              <span v-if="!scope.row.canRefund && !scope.row.canRead && orderDetails.status != 1"> {{scope.row.canRefund}} </span>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="info">
         <div><span>订单总价：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.totalAmount) || 0}}</span></div>
-        <div><span>优惠券：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.couponRule) || '无'}}</span></div>
+        <div><span>优惠券：</span><span class="pirc">{{orderDetails && orderDetails.couponRule ? orderDetails.couponRule : '无'}}</span></div>
         <div><span>优惠金额：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.discountAmount) || 0}}</span></div>
         <div><span>实付金额：</span><span class="pirc red">{{orderDetails && amountConversion(orderDetails.realAmount) || 0}}</span></div>
       </div>
@@ -129,10 +131,11 @@
 /** 数据导入 **/
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { getOrderState, refundsApply, refundsDetails } from "@/api/order.js";
+import { getOrderState, refundsApply, cancelOrder, refundsDetails } from "@/api/order.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 import {amountConversion} from "@/utils/tool.js"
+import { ElMessageBox } from 'element-plus'
 
 // 组件导入
 import BreadCrumb from "./components/BreadCrumb.vue";
@@ -205,6 +208,44 @@ const refundApplyReq = () => {
     });
 }
 
+// 取消订单
+const cancelOrderHandle = async (item) => {
+  console.log(item)
+  ElMessageBox.confirm(
+        `是否确认取消订单：${item.id}`,
+        '取消订单',
+        {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'delete',
+        }
+      )
+        .then(() => {
+          cancelOrderAction(item)
+        })
+        .catch(() => {
+        })
+}
+// 取消订单
+const cancelOrderAction = async (item) => {
+  await cancelOrder({id: item.id})
+    .then((res) => {
+      if (res.code == 200 ){
+        router.go(-1)
+      } else {
+        ElMessage({
+        message: res.msg,
+        type: 'error'
+      });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "订单列表请求失败！",
+        type: 'error'
+      });
+    });
+}
 // 退款详情
 const refundDetailsData = ref()
 const refundDetailsReq = () => {

@@ -20,7 +20,7 @@
             <span class="btCont">
               <span v-if="item.orderStatus == 2 || item.orderStatus == 4 || item.orderStatus == 5 " class="bt">评价课程</span>
               <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey1">查看订单</span>
-              <span v-if="item.orderStatus == 1 " @click="cancelOrderHandle(item)" class="bt bt-grey1">取消订单</span>
+              <span v-if="item.orderStatus == 1 " @click="() => $router.push({path: '/pay/payment',query: {orderId:item.id}})" class="bt">去支付</span>
               <span v-if="item.orderStatus == 3"  @click="delOrderHandle(item)" class="bt bt-grey1">删除订单</span>
             </span>
           </div>
@@ -44,7 +44,7 @@
 /** 数据导入 **/
 import { onMounted, ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
-import { getOrderListes, cancelOrder, delOrder } from "@/api/order.js";
+import { getOrderListes, delOrder } from "@/api/order.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 import {amountConversion} from "@/utils/tool.js"
@@ -155,44 +155,8 @@ function orderStatus(item) {
   }
   return data
 }
-// 取消订单
-const cancelOrderHandle = async (item) => {
-  console.log(3333, item)
-  ElMessageBox.confirm(
-        `是否确认取消订单：${item.id}`,
-        '取消订单',
-        {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'delete',
-        }
-      )
-        .then(() => {
-          cancelOrderAction(item)
-        })
-        .catch(() => {
-        })
-}
-// 取消订单
-const cancelOrderAction = async (item) => {
-  await cancelOrder({id: item.id})
-    .then((res) => {
-      if (res.code == 200 ){
-        item.orderStatus = 3
-      } else {
-        ElMessage({
-        message: res.msg,
-        type: 'error'
-      });
-      }
-    })
-    .catch(() => {
-      ElMessage({
-        message: "订单列表请求失败！",
-        type: 'error'
-      });
-    });
-}
+
+
 // 删除确认
 const delOrderHandle = async (item) => {
   ElMessageBox.confirm(

@@ -47,7 +47,6 @@ export const timeFormat = (time) => {
 }
 
 export const amountConversion = (item) => {
-  console.log(889, item)
   let amount = '0'
   if (item){
     amount = (item / 100).toFixed(2)

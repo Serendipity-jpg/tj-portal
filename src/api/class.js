@@ -118,7 +118,7 @@ request({
 // 兑换码兑换优惠券
 export const exchangeCoupon = (data) =>
 request({
-	url: `/code/exchange`,
+	url: `/coupon/code/exchange`,
 	method: 'post',
 	data
 })	
