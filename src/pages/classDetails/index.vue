@@ -6,7 +6,7 @@
       <div class="container">
         <Breadcrumb :data="baseDetailsData.cateNames && baseDetailsData.cateNames.split('/').at(-1)"></Breadcrumb>
         <div class="topInfo fx">
-          <div class=""><img :src="baseDetailsData.coverUrl" width="380" height="" alt="" /></div>
+          <div class=""><img :src="baseDetailsData.coverUrl" width="380" height="234" alt="" /></div>
           <div class="fx-1">
               <div class="title">{{baseDetailsData.name}}</div>
               <div class="item fx">
