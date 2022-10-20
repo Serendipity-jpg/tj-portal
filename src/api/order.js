@@ -37,6 +37,13 @@ export const setOrder = (params) =>
 		data:params
 	})
 
+// 报名免费课程
+export const enrolledFreeCourse = (id) =>
+	request({
+		url: `${TRADE_API_PREFIX}/orders/freeCourse/${id}`,
+		method: 'post'
+	})
+
 // 订单支付取消
 export const cancelOrder = (id) =>
 	request({

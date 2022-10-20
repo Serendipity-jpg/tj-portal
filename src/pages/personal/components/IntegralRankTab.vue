@@ -1,28 +1,23 @@
 <!-- table切换头部 -->
 <template>
-  <div class="integralRankTab" :class="{fxTab: type}">
+  <div class="integralRankTab">
     <div class="item head fx-sb">
       <span>排名</span> <span class="ct">姓名</span> <span>积分</span>
     </div>
     <div class="item myItem fx-sb">
-      <span>{{ data.rank || '--' }}</span>
+      <span>{{ data.rank }}</span>
       <span class="ct">我</span>
-      <span>{{ data.points || '--'  }}</span>
+      <span>{{ data.points }}</span>
     </div>
-    <div v-if="data.boardList">
-      <div
-        class="item fx-sb"
-        v-for="(item, index) in data.boardList"
-        :key="index"
-      >
-        <img v-if="index <= 2" :src="ranking(index + 1)" alt="" />
-        <span class="lt" v-else>{{ ranking(index + 1) }}</span>
-        <span class="ct">{{ item.student ? item.student.name : "--" }}</span>
-        <span>{{ item.points }}</span>
-      </div>
-    </div>
-    <div class="onData" v-else>
-        暂无数据！
+    <div
+      class="item fx-sb"
+      v-for="(item, index) in data.boardList"
+      :key="index"
+    >
+      <img v-if="index <= 2" :src="ranking(index + 1)" alt="" />
+      <span class="lt" v-else>{{ ranking(index + 1) }}</span>
+      <span class="ct">{{ item.student ? item.student.name : "--" }}</span>
+      <span>{{ item.points }}</span>
     </div>
   </div>
 </template>
@@ -46,19 +41,12 @@ const props = defineProps({
     type: Object,
     default: [],
   },
-  type:{ // 控制表格最后一样是否有线条展示 固定高度的有的 非固定没有 默认 有
-    type: Boolean,
-    default: false
-  }
 });
 </script>
 <style lang="scss" scoped>
 .integralRankTab {
   border-top: solid 1px #eeeeee;
   border-left: solid 1px #eeeeee;
-  border-right: solid 1px #eeeeee;
-  border-bottom: solid 1px #eeeeee;
-  height: calc(100% - 86.7px);
   .item {
     padding: 0px 30px;
     line-height: 40px;
@@ -67,6 +55,7 @@ const props = defineProps({
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-right: solid 1px #eeeeee;
     border-bottom: solid 1px #eeeeee;
     img {
       width: 40px;
@@ -92,9 +81,6 @@ const props = defineProps({
   .item:last-child {
     border-bottom: solid 1px #eeeeee;
   }
-  .item:nth-child(10) {
-    border-bottom: none;
-  }
   .head {
     height: 60px;
     line-height: 60px;
@@ -104,18 +90,6 @@ const props = defineProps({
     line-height: 40px;
     background: #ecf4ff;
     color: var(--color-main);
-  }
-  .onData{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #999;
-    height: calc(100% - 100px);
-  }
-}
-.fxTab{
-  .item:last-child{
-    border-bottom: none;
   }
 }
 </style>

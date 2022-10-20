@@ -14,14 +14,14 @@
         <div class="tabCont">
           <div class="orderList">
             <div class="fx-1 alignLeft" >
-              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.id}})"></OrderCards>
+              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.courseId}})"></OrderCards>
             </div>
             <span>{{amountConversion(item.totalAmount)}}</span><span>{{amountConversion(item.realAmount)}}</span><span>{{orderStatus(item)}}</span>
             <span class="btCont">
               <span class="bt" v-if="isOrderPay(item)">评价课程</span>
               <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey">查看订单</span>
-              <span v-if="item.status == 1 " @click="cancelOrderHandle(item)" class="bt bt-grey">取消订单</span>
-              <span v-if="item.status == 3"  @click="delOrderHandle(item)" class="bt bt-grey">删除订单</span>
+              <span v-if="item.status === 1 " @click="cancelOrderHandle(item)" class="bt bt-grey">取消订单</span>
+              <span v-if="item.status === 3" @click="delOrderHandle(item)" class="bt bt-grey">删除订单</span>
             </span>
           </div>
         </div>
@@ -190,7 +190,7 @@ const cancelOrderAction = async (item) => {
     })
     .catch(() => {
       ElMessage({
-        message: "订单列表请求失败！",
+        message: "取消订单请求失败！",
         type: 'error'
       });
     });
@@ -210,6 +210,10 @@ const delOrderHandle = async (item) => {
           delOrderAction()
         })
         .catch(() => {
+          ElMessage({
+            message: "取消操作！",
+            type: 'info'
+          });
         })
 }
 
@@ -232,7 +236,7 @@ const delOrderAction = async (item) => {
     })
     .catch(() => {
       ElMessage({
-        message: "订单列表请求失败！",
+        message: "删除订单请求失败！",
         type: 'error'
       });
     });

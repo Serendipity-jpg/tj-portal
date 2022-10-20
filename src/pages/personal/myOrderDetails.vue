@@ -139,7 +139,7 @@ const refundOrderDetail = ref({});
 // 打开退款详情弹窗
 const refundDialog = ref(false)
 const openRefundDialog = (val, detail) => {
-  refundOrderDetail.value = detail;
+  refundOrderDetail.value = detail || '';
   val === 'details' ? refundDetailsReq() : refundDialog.value = true
 }
 
@@ -175,7 +175,7 @@ const refundApplyReq = () => {
   // 上面验证通过后申请退款
   refundsApply(params)
     .then((res) => {
-      if (res.code == 200 ){
+      if (res.code === 200 ){
         refundDialog.value = false;
         ElMessage({
           message: "申请成功",

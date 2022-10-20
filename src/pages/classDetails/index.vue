@@ -20,7 +20,7 @@
                 </div>
                 <div class="card bd-non">
                   <div class="tit">评分</div>
-                  <div class="info">{{baseDetailsData.score/10}}</div>
+                  <div class="info">{{baseDetailsData.score}}</div>
                 </div>
               </div>
               <div class="fx">
@@ -63,7 +63,7 @@
         <!-- 课程介绍 -->
         <ClassAbout v-show="actId == 1" :baseDetailsData="baseDetailsData" :baseClassTeacher="baseClassTeacher"></ClassAbout>
         <!-- 课程目录 -->
-        <ClassCatalogue v-show="actId == 2" :data="classListData"></ClassCatalogue>
+        <ClassCatalogue v-show="actId == 2" :data="classListData" :id="detailsId"></ClassCatalogue>
         <!-- 问答模块 -->
         <ClassAsk v-if="isLogin() && actId == 3" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
         <!-- 笔记模块 -->
@@ -86,9 +86,9 @@
 
 /** 数据导入 **/
 import { computed, onMounted, ref } from "vue";
-import { ElMessage } from "element-plus";
+import { ElMessage,ElMessageBox } from "element-plus";
 import { getClassDetails, getClassTeachers, getClassList } from "@/api/classDetails.js";
-import { setOrder, putCarts } from "@/api/order.js";
+import { enrolledFreeCourse, putCarts } from "@/api/order.js";
 
 import { getCourseLearning } from "@/api/class.js";
 import { useRoute, useRouter } from "vue-router";
@@ -127,7 +127,7 @@ const tableBar = computed(() => {
 // 猜你喜欢 - 静态数据
 const LikeData = [
   {
-    sold: 234, 
+    "sold": 234,
     icon: "sit enim sunt", 
     sections: 45,
     coverUrl: "http://img-qn-3.51miz.com/preview/muban/00/00/50/44/M-504460-F3103C10.jpg!/quality/90/unsharp/true/compress/true/fw/640/clip/640x500a0a0",
@@ -190,10 +190,14 @@ onMounted(async () => {
     await getCourseLearningData()
   }
 
+  let sectionMap = {}
+  classListData.value.forEach(c => c.sections.forEach(s => sectionMap[s.id] = s));
   store.setLearingDataes({
     classDetailsData:baseDetailsData.value, // 课程的信息
     teacherData:baseClassTeacherData.value, // 讲师信息
-    planData: planData.value // 学习计划信息
+    planData: planData.value, // 学习计划信息
+    classCatalogs: classListData.value, // 课程目录信息
+    classSectionMap: sectionMap,// 小节id的map映射
   })
 });
 
@@ -202,7 +206,7 @@ onMounted(async () => {
 const getClassDetailsData = async () => {
   await getClassDetails(detailsId.value)
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         baseDetailsData.value = res.data
       } else {
         ElMessage({
@@ -301,9 +305,14 @@ const collectionHandle = () => {
 const isSignUp = ref(false)
 // 立即报名
 const signUpHandle = async () => {
-  await setOrder({ courseIdList:[detailsId.value]})
+  // 校验是否登录
+  if(!validation()){
+    return;
+  }
+  // 尝试报名
+  await enrolledFreeCourse(detailsId.value)
   .then((res) => {
-    if (res.code == 200) {
+    if (res.code === 200) {
       ElMessage({
         message:'报名成功',
         type: 'success'
@@ -355,6 +364,9 @@ const getCourseLearningData = async () => {
 }
 // 立即购买
 const payHandle = () => {
+  if(!validation()){
+    return;
+  }
   store.setOrderClassInfo([baseDetailsData.value])
   router.push({path: '/pay/settlement'})
 }
@@ -372,26 +384,28 @@ const validation = () => {
         }
       )
       .then(() => {
-        router.push('login')
+        router.push({path:'/login'})
       })
+    return false;
   }
-  return false
+  return true;
 }
 
 // 加入购物车
 const addCarts = () => {
-  validation()
+  if(!validation()){
+    return;
+  }
   putCarts({courseId: detailsId.value})
   .then((res) => {
-    const { data } = res
-    if (res.code == 200) {
+    if (res.code === 200) {
      ElMessage({
         message:'已加入购物车',
         type: 'success'
       });
     } else {
       ElMessage({
-        message:res.data.msg,
+        message:res.msg,
         type: 'error'
       });
     }

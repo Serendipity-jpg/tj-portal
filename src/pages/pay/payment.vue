@@ -148,7 +148,7 @@ const isFirstGet = ref(true)
 const getPayStateData = async () => {
   await getPayState({orderId: route.query.orderId})
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         if (res.data.status === 1 && isFirstGet.value){
           isFirstGet.value = false
           orderInfo.value = res.data

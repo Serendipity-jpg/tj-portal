@@ -38,7 +38,7 @@
 <script setup>
 /** 数据导入 **/
 
-import { onMounted, ref, watchEffect } from "vue";
+import { onBeforeMount, onMounted, ref, watchEffect } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, classSeach } from "@/api/class.js";
 // 组件导入
@@ -47,8 +47,8 @@ import SortBar from './components/SortBar.vue'
 import ClassCards from '@/components/ClassCards.vue'
 import { useRoute } from "vue-router";
 import {isLogin, dataCacheStore} from '@/store'
-
-const searchType = ref({subKey: 'categoryIdLv1', title: "课程分类", searchKeys:[]});   
+const dataCache = dataCacheStore();
+const searchType = ref({subKey: 'categoryIdLv1', title: "课程分类", searchKeys:[{id:'all', name: '全部'},  ...dataCache.getCourseClassDataes]});
 const searchCost = ref({subKey: 'free', title: "收付费", searchKeys:[{id:'all', name: '全部'},{id: '1', name: '免费'},{id: '0', name: '付费'}]});    
 const soleBar = ref([{key:'推荐', value:'all'},{key:'最新', value:'publishTime'}, {key:'最热', value:'sold'}])
 const searchParams = ref({  // 搜索参数定义
@@ -68,23 +68,21 @@ const route = useRoute()
 const isShow = ref(true)
 const fullPath = ref(route.fullPath)
 // 课程分类默认状态
-const activeId = ref('all')
+const activeId = ref(route.query.id)
+/*onBeforeMount(() => {
+  let cs = dataCache.getCourseClassDataes;
+  searchType.value.searchKeys = [{id:'all', name: '全部', ...cs}];
+})*/
 // mounted生命周期
 onMounted(() => {
-  // 获取一、二、三级分类信息
-  getClassCategoryData()
   // 搜索
   searchParams.value.keyword = dataCache.getSearchKey
-  if (route.query.type && route.query.type == 'categoryIdLv1'){
-    searchParams.value.categoryIdLv2 = route.query.id
+  if (route.query.type){
+    searchParams.value[route.query.type] = route.query.id
   }
-  searchParams.value.categoryIdLv2 = route.query.type && route.query.type == 'categoryIdLv2' ? route.query.id : undefined
-  searchParams.value.categoryIdLv3 = route.query.type && route.query.type == 'categoryIdLv3' ? route.query.id : undefined
-  activeId.value = route.query.id
+  getClassCategoryData();
   search()
 });
-
-const dataCache = dataCacheStore()
 
 watchEffect(() => {
   if(dataCache.getSearchKey != ''){
@@ -109,7 +107,7 @@ watchEffect(() => {
 const getClassCategoryData = async () => {
   await getClassCategorys()
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         searchType.value.searchKeys = [{id:'all', name: '全部'}, ...res.data]
       } else {
         ElMessage({

@@ -7,11 +7,14 @@ export const dataCacheStore = defineStore('notification', {
     askDetails: '22',
     learingDataes:{ // 学习相关信息存储 
       classDetailsData:{}, //课程详情的信息 - 打开课程详情时写入 
-      teacherData:{}, // 讲师信息 - 打开课程详情时写入 
+      teacherData:{}, // 讲师信息 - 打开课程详情时写入
+      classSectionMap:{},// 小节信息
+      classCatalogs:{}, // 目录信息
       planData:{} // 课程计划信息 
     },
     currentPlayData:{}, // 视频的当前播放数据存储
-    orderClassInfo:{}, //订单的课程信息 
+    orderClassInfo:{}, //订单的课程信息
+    currentCourseInfo:{}, // 当前浏览的课程信息
   }),
   getters: {
     // 获取对应的state的值
@@ -20,9 +23,13 @@ export const dataCacheStore = defineStore('notification', {
     getLearingDataes: state => state.learingDataes,
     getCurrentPlayData: state => state.currentPlayData,
     getOrderClassInfo: state => state.orderClassInfo,
-    getCourseClassDataes: state => state.courseClassDataes
+    getCourseClassDataes: state => state.courseClassDataes,
+    getCurrentCourseInfo: state => state.currentCourseInfo
   },
   actions: {
+    setCurrentCourseInfo(data){
+      this.currentCourseInfo = data;
+    },
     // 设置state对应的值
     setAskDetails(data) {
       this.askDetails = data;

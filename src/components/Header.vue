@@ -1,7 +1,7 @@
 <!-- 页面头部组件 -->
 <template>
   <header class="bg-wt">
-    <div class="container fx pt-rt">
+    <div class="container fx">
       <div class="logo">
         <router-link to="/"> <img src="@/assets/logo.png" alt="" srcset="" /> </router-link>
       </div>
@@ -30,36 +30,38 @@
         </el-input>
       </div>
       <div class="fx-al-ct pt-rt" >
-        <div class="car fx-al-ct font-bt2" v-if="isToken" @click="() => $router.push('/pay/carts')">
+        <div class="car fx-al-ct font-bt2" v-if="userInfo" @click="() => $router.push('/pay/carts')">
           <i class="iconfont">&#xe6f3;</i> 购物车
         </div>
         <!-- 学习中心 - start -->
         <div>
-          <router-link class="marg-lr-40" style="padding:27px 0" to="/personal/main/myClass" v-if="isToken" @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false" >学习中心</router-link>
+          <router-link class="marg-lr-40" style="padding:27px 0" to="/personal/main/myClass" v-if="userInfo" @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false" >学习中心</router-link>
           <div class="learningCont" v-show="learningShow && learnClassInfo"  @mouseover="()=> learningShow = true" @mouseout="() => learningShow = false">
             <div class="count"><em>{{learnClassInfo && learnClassInfo.totalCourseAmount}}</em> 门课程</div>
             <div class="info">
               <div class="fx-sb">
                 <span>正在学习：</span> 
                 <div class="fx">
-                  <span class="bt" @click="() => $router.push({path: '/learning/index', query: {id: learnClassInfo.course.id}})">继续学习</span>
+                  <span class="bt" @click="() => $router.push('/personal/main/myClass')">继续学习</span>
                   <span class="bt bt-grey" @click="() => $router.push('/personal/main/myClass')">全部课程</span>
                 </div>
               </div>
-              <div class="tit">{{learnClassInfo && learnClassInfo.course.name}}</div>
-              <div class="perc fx-sb"> {{learnClassInfo && learnClassInfo.latestSectionName}}  <i>{{learnClassInfo && (learnClassInfo.learnedSections/learnClassInfo.course.sections * 100).toFixed(0)}}%</i></div>
+              <div class="tit">{{learnClassInfo && learnClassInfo.courseName}}</div>
+              <div class="perc fx-sb"> {{learnClassInfo && learnClassInfo.latestSectionName}}  <i>{{learnClassInfo && (Math.round(learnClassInfo.learnedSections/learnClassInfo.sections))}}%</i></div>
             </div>
           </div>
         </div>
         <!-- 登录注册 - start -->
-        <div class="cur-pt" v-if="!isToken">
-          <span class="font-bt2" @click="() => $router.push({path: '/login', query: {md: 'register'}})">注册 </span><span>/</span>
-          <span class="font-bt2" @click="() => $router.push({path: '/login', query: {md: 'pass'}})"> 登录</span></div>
-        <div class="fx-al-ct" v-if="isToken && userInfo">
+        <div class="fx-al-ct" v-if="userInfo">
           <img class="headIcon" :src="userInfo.icon" :onerror="onerrorImg" alt="">
           <div >{{userInfo.name}} </div>
           <!-- <div class="font-bt2 pd-lf-10" @click="() => $router.push('/login')"> 退出 </div> -->
         </div>
+        <div class="cur-pt" v-else>
+          <span class="font-bt2" >注册 </span><span>/</span>
+          <span class="font-bt2" @click="() => $router.push('/login')"> 登录</span>
+        </div>
+
       </div>
     </div>
   </header>
@@ -69,15 +71,15 @@ import defaultImage from '@/assets/icon.jpeg'
 import { onMounted, ref, watchEffect } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import { useUserStore, isLogin, getToken, dataCacheStore } from '@/store'
+import { getUserInfo } from "@/api/user"
 import router from "../router";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import ClassCategory from "./ClassCategory.vue";
-import {getMyLearning}from '@/api/class.js'
+import {getMyLearning, getClassCategorys }from '@/api/class.js'
 
 const store = useUserStore();
 const userInfo = ref()
-const isToken = localStorage.getItem('token') ? true : false
 const input = ref('');
 const route = useRoute()
 const userStore = getToken();
@@ -87,13 +89,19 @@ const isShow = ref(false)  // 分类展示
 const learnClassInfo = ref() // 我真正学习的课程信息-学习中心展示
 const learningShow = ref(false) // 学习中心hover模块展示
 
-onMounted(() => {
+onMounted(async () => {
+  // 尝试获取用户信息
+  const data = await getUserInfo()
+  if (data.code === 200) {
+    // 记录到store 并调转到首页
+    store.setUserInfo(data.data)
+  }
   if(!isLogin()){
    userStore.logout();
   }
   courseClass.value = dataCache.getCourseClassDataes
   // 先从store里拿如何没有就请求分类信息获取
-  if (courseClass.value.length == 0){
+  if (courseClass.value.length === 0){
     getCourseClassHandle()
   }
   userInfo.value = store.getUserInfo
@@ -107,10 +115,9 @@ onMounted(() => {
 })
 // 监听路由 清空搜索框的值
 watchEffect(() => {
-  if (route.path != '/search/index') {
+  if (route.path !== '/search/index') {
     input.value = ''
-  }
-  if (route.path == '/search/index') {
+  }else{
     input.value = dataCache.getSearchKey
   }
 })
@@ -120,7 +127,7 @@ watchEffect(() => {
 const getLearnClassInfoHandle = async() => {
   await getMyLearning()
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         learnClassInfo.value = res.data;
         // dataCache.setMyLearnClassInfo(res.data)
       } else {
@@ -132,7 +139,7 @@ const getLearnClassInfoHandle = async() => {
     })
     .catch(() => {
       ElMessage({
-        message: "分类请求出错！",
+        message: "学习状态查询出错！",
         type: "error",
       });
     });
@@ -199,8 +206,8 @@ header {
   .courseClassList{
     position: absolute;
     z-index: 999;
-    top: 50px;
-    left: 102px;
+    top: 60px;
+    left: 160px;
     .firstItems{
       background-color: #fff;
     }

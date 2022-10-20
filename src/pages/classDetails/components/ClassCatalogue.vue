@@ -10,11 +10,11 @@
             </div>
           </template>
           <div class="item fx-sb" v-for="(it, ind) in item.sections">
-            <div><iconVideo v-if="it.type == 2" class="icon" /> <iconJdks v-if="it.type == 3" class="icon" />
+            <div><iconVideo v-if="it.type === 2" class="icon" /> <iconJdks v-if="it.type === 3" class="icon" />
               {{it.index}}、{{it.name}}
             </div>
             <div class="time">
-              <span v-if="it.trailer" class="trailer-font" @click="toPlayPage(it.id)">试看</span>
+              <span v-if="it.trailer" class="trailer-font" @click="toPlayPage($props.id,item.id, it.id)">试看</span>
               {{(it.mediaDuration/60).toFixed(0)+'.'+it.mediaDuration % 60}}
             </div>
           </div>
@@ -26,20 +26,24 @@
 import { ref } from "vue";
 import iconVideo from '@/assets/ico-video.svg'
 import iconJdks from '@/assets/ico-jdks.svg'
+import { useRoute, useRouter } from 'vue-router'
+const router = useRouter()
 // 引入父级传参
 defineProps({
   data:{
     type: Object,
     default:{}
+  },
+  id:{
+    type: String
   }
 })
 
 const activeNames = ref([0])
 const handleChange = (val) => {
-
 }
-const toPlayPage = (id) => {
-  console.log(id);
+const toPlayPage = (courseId,chapterId, sectionId) => {
+  router.push({path:"/learning/index", query: {"id" : courseId, "sectionId": sectionId}})
 }
 </script>
 <style lang="scss" scoped>

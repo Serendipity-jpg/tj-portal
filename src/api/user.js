@@ -1,13 +1,28 @@
 import request from "@/utils/request.js"
 const USER_API_PREFIX = "/us"
 const AUTH_API_PREFIX = "/as"
-
+const PHONE_LOGIN_TYPE = 2;
+const PW_LOGIN_TYPE = 1;
+// 手机号验证码登录
+export const phoneLogins = (params) => {
+	params.type = PHONE_LOGIN_TYPE;
+	return request({
+		url: `${AUTH_API_PREFIX}/accounts/login`,
+		method: "post",
+		params,
+		withCredentials: true
+	});
+}
 // 账号登录
-export const userLogins = (params) => request({
-	url: `${AUTH_API_PREFIX}/accounts/login`,
-	method: 'post',
-	data:params
-})
+export const userLogins = (data) => {
+	data.type = PW_LOGIN_TYPE;
+	return request({
+		url: `${AUTH_API_PREFIX}/accounts/login`,
+		method: "post",
+		data,
+		withCredentials: true
+	});
+}
 // 发送验证码
 export const verifycode = (params) =>
 request({

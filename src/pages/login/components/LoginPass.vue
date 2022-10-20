@@ -9,7 +9,7 @@
       class="demo-dynamic"
     >
       <el-form-item prop="username" label="">
-        <el-input v-model="fromData.username" placeholder="请输入用户名" />
+        <el-input v-model="fromData.username" placeholder="请输入用户名或手机号" />
       </el-form-item>
       <el-form-item prop="password" label="">
         <el-input type="pass" :show-password="true" v-model="fromData.password" placeholder="请输入密码" />
@@ -17,7 +17,7 @@
       <el-form-item class="marg-b-10">
         <div class="fx-sb">
             <div>
-                <el-checkbox v-model="checked" label="7天免登录" size="large" />
+                <el-checkbox v-model="fromData.rememberMe" label="7天免登录" size="large" />
             </div>
             <div>找回密码</div>
         </div>
@@ -34,7 +34,7 @@
 <script setup>
 // 数据导入
 import { reactive, ref } from "vue";
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { userLogins, getUserInfo } from "@/api/user"
 import { useUserStore } from '@/store'
 import { ElMessage } from "element-plus";
@@ -42,6 +42,7 @@ import { ElMessage } from "element-plus";
 const emit = defineEmits(['goHandle'])
 const store = useUserStore();
 const router = useRouter()
+const route = useRoute()
 
 const formRef = ref();
 const checked = ref(false)
@@ -54,7 +55,7 @@ const fromData = reactive({
 // 效验规则
 const rules = reactive({
   username: [
-    { required: true, message: "请输入正确的用户名", trigger: "blur" },
+    { required: true, message: "请输入正确的用户名或手机号", trigger: "blur" },
   ],
   password: [
     { required: true, message: "请输入正确的用密码", trigger: "blur"},
@@ -65,7 +66,7 @@ const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
-      // 提交登录 
+      // 提交登录
       await userLogins(fromData)
 			.then(async res => {
 				if (res.code === 200) {
@@ -76,17 +77,23 @@ const submitForm = (formEl) => {
           if (data.code === 200) {
               // 记录到store 并调转到首页
               store.setUserInfo(data.data)
+					    // 跳转到首页
               router.push('/main/index')
-          } 
-					// 跳转到首页
+          }
 				} else {
           ElMessage({
-            message: res.msg,
-            type: 'error'
+              message: res.msg,
+              type: 'error'
           });
+					console.log('登录失败')
 				}
 			})
-			.catch(err => {});
+			.catch(err => {
+        ElMessage({
+          message: err,
+          type: 'error'
+        });
+      });
     } else {
       ElMessage({
           message: '登录出错，请重新尝试',

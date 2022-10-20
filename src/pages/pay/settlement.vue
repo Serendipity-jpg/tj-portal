@@ -23,7 +23,7 @@
                       v-for="item in orderInfo.coupons"
                       :key="item.value"
                       :label="item.label"
-                      :value="discountAmount"
+                      :value="item"
                       :disabled="item.disabled"
                     />
                   </el-select>
@@ -31,7 +31,7 @@
         </div>
         <div class="price">
           <div><span>订单总价：</span> ￥ {{amountConversion(orderInfo.totalAmount)}}</div>
-          <div><span>优惠金额：</span> - ￥ {{amountConversion(discountAmount) || 0}}</div>
+          <div><span>优惠金额：</span> - ￥ {{amountConversion(coupon.discountAmount) || 0}}</div>
         </div>
       </div>
       <div class="paid"><span>实付金额：</span><span class="ft-cl-err">{{price}}</span></div>
@@ -58,6 +58,8 @@ onMounted(() => {
 })
 // 优惠金额
 const discountAmount = ref(0)
+// 选中的优惠券
+const coupon = ref({})
 // 实付金额
 const price= computed(() => {
   return ((orderInfo.value.totalAmount - discountAmount.value)/100).toFixed(2)
@@ -72,7 +74,7 @@ const comfirePageInfoHandle = async () => {
   const params = {courseIds}
   await confirmOrderInfo(params)
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         orderInfo.value = res.data
       } else {
         ElMessage({
@@ -91,11 +93,11 @@ const comfirePageInfoHandle = async () => {
 // 下单 
 const orderHandle = async () => {
   const courseIds = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
-  const params = {courseIds}
+  const params = {courseIds, orderId: orderInfo.value.orderId}
   
   await setOrder(params)
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         router.push({path:'/pay/payment',query:{orderId: res.data.orderId}})
       } else {
         ElMessage({
