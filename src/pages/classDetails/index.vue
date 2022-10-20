@@ -56,7 +56,7 @@
           </div>
         </div>
         </div>
-        
+
       </div>
     </div>
     <!-- 主体部分 - start -->
@@ -66,13 +66,13 @@
         <!-- 课程介绍 -->
         <ClassAbout v-show="actId == 1" :baseDetailsData="baseDetailsData" :baseClassTeacher="baseClassTeacher"></ClassAbout>
         <!-- 课程目录 -->
-        <ClassCatalogue v-show="actId == 2" :isSignUp="isSignUp" :courseId="detailsId" :data="classListData"></ClassCatalogue>
+        <ClassCatalogue v-show="actId == 2" :data="classListData" :isSignUp="isSignUp"  :id="detailsId"></ClassCatalogue>
         <!-- 问答模块 -->
         <ClassAsk v-if="isLogin() && isSignUp" v-show="actId == 3" :id="detailsId" :title="baseDetailsData.name"></ClassAsk>
         <!-- 笔记模块 -->
-        <Note  v-if="isLogin() && isSignUp " v-show="actId == 4" :id="detailsId"></Note>
-        <div class="fx-ct ft-cl-des" style="height: 600px;" v-show="actId == 5" :id="detailsId">
-          <Empty ></Empty>
+        <Note  v-if="isLogin() && isSignUp" v-show=" actId == 4" :id="detailsId"></Note>
+        <div class="fx-ct ft-cl-des" style="height: 400px;" v-show="actId == 5" :id="detailsId">
+          暂无数据！
         </div>
       </div>
       <div class="ritCont">
@@ -89,9 +89,9 @@
 
 /** 数据导入 **/
 import { computed, onMounted, ref } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage,ElMessageBox } from "element-plus";
 import { getClassDetails, getClassTeachers, getClassList } from "@/api/classDetails.js";
-import { setOrder, putCarts } from "@/api/order.js";
+import { enrolledFreeCourse, putCarts } from "@/api/order.js";
 
 import { getCourseLearning } from "@/api/class.js";
 import { useRoute, useRouter } from "vue-router";
@@ -206,7 +206,7 @@ onMounted(async () => {
 const getClassDetailsData = async () => {
   await getClassDetails(detailsId.value)
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         baseDetailsData.value = res.data
       } else {
         ElMessage({
@@ -275,6 +275,12 @@ const getClassListData = async () => {
         });
       }
     })
+    .catch(() => {
+      ElMessage({
+        message: "课程目录数据请求出错！",
+        type: 'error'
+      });
+    });
 };
 // table切换 当前展示信息 课程介绍、课程目录
 const changeTable = id => {
@@ -299,9 +305,14 @@ const collectionHandle = () => {
 const isSignUp = ref(false)
 // 立即报名
 const signUpHandle = async () => {
-  await setOrder({ courseIdList:[detailsId.value]})
+  // 校验是否登录
+  if(!validation()){
+    return;
+  }
+  // 尝试报名
+  await enrolledFreeCourse(detailsId.value)
   .then((res) => {
-    if (res.code == 200) {
+    if (res.code === 200) {
       ElMessage({
         message:'报名成功',
         type: 'success'
@@ -335,20 +346,25 @@ const getCourseLearningData = async () => {
     if (res.code == 200) {
       isSignUp.value = true
       planData.value = data
-    } else if (res.code == 1){
-      isSignUp.value = false
     } else {
+      isSignUp.value = false
       ElMessage({
         message:res.data.msg,
         type: 'error'
       });
     }
   })
+  .catch(() => {
+    ElMessage({
+      message: "用户学习信息数据请求出错！",
+      type: 'error'
+    });
+  });
 }
 // 立即购买
 const payHandle = () => {
-  if(!validation()) {
-    return false
+  if(!validation()){
+    return;
   }
   store.setOrderClassInfo([baseDetailsData.value])
   router.push({path: '/pay/settlement'})
@@ -367,29 +383,28 @@ const validation = () => {
         }
       )
       .then(() => {
-        router.push('login')
+        router.push({path:'/login'})
       })
-      return false
+    return false;
   }
-  return true
+  return true;
 }
 
 // 加入购物车
 const addCarts = () => {
-  if(!validation()) {
-    return false
+  if(!validation()){
+    return;
   }
   putCarts({courseId: detailsId.value})
   .then((res) => {
-    const { data } = res
-    if (res.code == 200) {
+    if (res.code === 200) {
      ElMessage({
         message:'已加入购物车',
         type: 'success'
       });
     } else {
       ElMessage({
-        message:res.data.msg,
+        message:res.msg,
         type: 'error'
       });
     }

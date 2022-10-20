@@ -6,16 +6,16 @@
           <template #title>
             <div class="fx-sb">
               <span>{{item.name}}</span>
-              <span class="time">{{Math.trunc(item.mediaDuration/60)+':'+item.mediaDuration % 60}}</span>
+              <span class="time">{{(item.mediaDuration/60).toFixed(0)+'.'+item.mediaDuration % 60}}</span>
             </div>
           </template>
-          <div @click="playHandle(it)" class="item fx-sb" v-for="(it, ind) in item.sections">
-            <div><iconVideo v-if="it.type == 2" class="icon" /> <iconJdks v-if="it.type == 3" class="icon" />
-              {{it.index}}、{{it.name}} <span v-if="it.trailer" class="learn" >试学</span>
+          <div  @click.self="playHandle(it)" class="item fx-sb" v-for="(it, ind) in item.sections">
+            <div><iconVideo v-if="it.type === 2" class="icon" /> <iconJdks v-if="it.type === 3" class="icon" />
+              {{it.index}}、{{it.name}}
             </div>
             <div class="time">
-              <span v-if="it.trailer" class="trailer-font" @click="toPlayPage(it.id)">试看</span>
-              {{Math.trunc(item.mediaDuration/60)+':'+it.mediaDuration % 60}}
+              <span v-if="it.trailer" class="trailer-font" @click.stop="toPlayPage($props.id,item.id, it.id)">试看</span>
+              {{(it.mediaDuration/60).toFixed(0)+'.'+it.mediaDuration % 60}}
             </div>
           </div>
         </el-collapse-item>
@@ -26,31 +26,28 @@
 import { ref } from "vue";
 import iconVideo from '@/assets/ico-video.svg'
 import iconJdks from '@/assets/ico-jdks.svg'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from "element-plus";
-import { useRouter } from "vue-router";
 
 const router = useRouter()
 // 引入父级传参
-const props = defineProps({
-  courseId:{
-    type: String,
-  },
-  isSignUp:{
-    type: Boolean,
-  },
+defineProps({
   data:{
     type: Object,
     default:{}
+  },
+  id:{
+    type: String
   }
 })
 
 const activeNames = ref([0])
 
-const toPlayPage = (id) => {
-  console.log(id);
+const toPlayPage = (courseId,chapterId, sectionId) => {
+  router.push({path:"/learning/index", query: {"id" : courseId, "sectionId": sectionId}})
 }
 const playHandle = (val) => {
-  if(!props.isSignUp && !val.trailer){
+  if(!val.trailer){
     ElMessage('该课程章节不支持试看， 请购买后播放')
     return
   }

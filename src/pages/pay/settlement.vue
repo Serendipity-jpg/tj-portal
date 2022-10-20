@@ -58,6 +58,8 @@ onMounted(() => {
 })
 // 优惠金额
 const discountAmount = ref(0)
+// 选中的优惠券
+const coupon = ref({})
 // 实付金额
 const price= computed(() => {
   return ((orderInfo.value.totalAmount - discountAmount.value)/100).toFixed(2)
@@ -72,7 +74,7 @@ const comfirePageInfoHandle = async () => {
   const params = {courseIds}
   await confirmOrderInfo(params)
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         orderInfo.value = res.data
       } else {
         ElMessage({
@@ -96,10 +98,10 @@ const changeHandle = val => {
 const orderHandle = async () => {
   const courseIds = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
   const couponIds = couponIds.value != null ? [couponIds.value] : undefined
-  const params = {courseIds, couponIds}
+  const params = {courseIds, couponIds, orderId: orderInfo.value.orderId}
   await setOrder(params)
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         router.push({path:'/pay/payment',query:{orderId: res.data.orderId}})
       } else {
         ElMessage({

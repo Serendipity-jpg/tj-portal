@@ -4,11 +4,10 @@
     <!-- 我的购物车-列表 - start -->
     <div class="container bg-wt marg-bt-20">
       <div class="title">我的购物车 <span>共{{carts.length}}门课程</span></div>
-      <div class="tab" v-if="carts.length > 0" >
+      <div class="tab"  v-if="carts.length > 0" >
         <div class="tabHead fx-sb">
           <div>课程名称</div>
           <div class="fx">
-            <div class="cal">课程有效期</div>
             <div class="cal">单价(元)</div>
             <div class="cal">操作</div>
           </div>
@@ -19,15 +18,17 @@
         >
         <div class="tabItem fx-sb" v-for="item in carts" :key="item.id">
           <div class="checkBox fx">
-            <el-checkbox :label="item.id">
+            <el-checkbox :label="item.id" :disabled="item.expired">
             <img :src="item.coverUrl" alt="">
             </el-checkbox>
-            <span class="name">{{item.courseName}}</span>
+            <span class="name" @click="goDetails(item.courseId)" style="cursor: pointer;">
+              {{item.courseName}}{{item.expired ? "(已失效)" : ""}}
+            </span>
           </div>
           <div class="fx" style="align-items: center;">
             <div class="cart-price" >
-              ￥ {{(item.nowPrice / 100).toFixed(2)}}
-              <div class="ft-cl-err cart-price-div" v-if="item.nowPrice < item.price">
+              <div class="cal ft-cl-err" >￥ {{(item.nowPrice / 100).toFixed(2)}}</div>
+              <div class="cal ft-cl-err cart-price-div" v-if="item.nowPrice < item.price">
                 比加入时便宜了 ￥ {{((item.price - item.nowPrice) / 100).toFixed(2)}}
               </div>
             </div>
@@ -69,11 +70,11 @@
 </template>
 <script setup>
 /** 数据导入 **/
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
 import { getCarts, delCarts } from "@/api/order.js";
 import router from "../../router";
-
+import moment from "moment";
 import { amountConversion } from "@/utils/tool.js"
 
 import { dataCacheStore } from "@/store"
@@ -86,6 +87,9 @@ onMounted(() => {
 
 const carts = ref([])
 
+const goDetails = (id) => {
+  router.push({path: '/details', query:{id}})
+}
 // 获取购物车信息
 const getCartsData = async () => {
   await getCarts()
@@ -173,4 +177,5 @@ const goSettlement = () => {
   router.push({path: '/pay/settlement'})
 }
 </script>
-<style lang="scss" src="./index.scss"></style>
+<style lang="scss" src="./index.scss">
+</style>

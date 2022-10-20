@@ -7,13 +7,13 @@ const InitUserInfo = {};
 export const useUserStore = defineStore('user', {
   id:"userInfo",
   state: () => ({
-    token: localStorage.getItem(TOKEN_NAME) , // 使用 || 'main_token' 默认token不走权限
-    userInfo: JSON.parse(localStorage.getItem("userInfo")),
+    token: sessionStorage.getItem(TOKEN_NAME) , // 使用 || 'main_token' 默认token不走权限
+    userInfo: JSON.parse(sessionStorage.getItem("userInfo")),
   }),
   persist: {
     enabled: true,
     strategies: [
-      { storage: localStorage, paths: ["token", "userInfo"] },
+      { storage: sessionStorage, paths: ["token", "userInfo"] },
     ],
   },
   getters: {
@@ -28,16 +28,16 @@ export const useUserStore = defineStore('user', {
     // 记录用户token
     async setToken(token) {
       this.token = token;
-      localStorage.setItem(TOKEN_NAME, token)
+      sessionStorage.setItem(TOKEN_NAME, token)
     },
     // 记录登录时获取的用户信息
     async setUserInfo(userInfo) {
       this.userInfo = userInfo;
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
     },
     async logout() {
-      localStorage.removeItem(TOKEN_NAME);
-      localStorage.removeItem('userInfo');
+      sessionStorage.removeItem(TOKEN_NAME);
+      sessionStorage.removeItem('userInfo');
       this.token = '';
       this.userInfo = InitUserInfo;
     },
@@ -52,5 +52,5 @@ export function getToken() {
   return useUserStore(store);
 }
 export function isLogin(token) {
-  return !!localStorage.getItem(TOKEN_NAME)
+  return !!sessionStorage.getItem(TOKEN_NAME)
 }

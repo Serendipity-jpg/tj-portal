@@ -12,12 +12,12 @@
         <el-input v-model="fromData.cellPhone" placeholder="请输入手机号" />
       </el-form-item>
       <el-form-item prop="password" label="">
-        <el-input type="pass" v-model="fromData.code" placeholder="请输入验证码" />
+        <el-input v-model="fromData.password" placeholder="请输入验证码" />
       </el-form-item>
       <el-form-item class="marg-b-10">
         <div class="fx-sb">
             <div>
-                <el-checkbox v-model="checked1" label="7天免登录" size="large" />
+                <el-checkbox v-model="fromData.rememberMe" label="7天免登录" size="large" />
             </div>
             <div>找回密码</div>
         </div>
@@ -40,7 +40,7 @@ const emit = defineEmits(['goHandle'])
 const formRef = ref();
 const fromData = reactive({
   cellPhone: "13500010003",
-  code: "123",
+  password: "123",
   type: 2
 });
 // 效验规则
@@ -58,9 +58,30 @@ const submitForm = (formEl) => {
       message: '暂不支持手机号登录， 请使用用户名密码登录',
   });
   if (!formEl) return;
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      console.log("submit!");
+      await userLogins(fromData)
+          .then(async res => {
+            if (res.code === 200) {
+              // 用户token写入 pinia
+              store.setToken(res.data);
+              // 获取用户信息
+              const data = await getUserInfo()
+              if (data.code === 200) {
+                // 记录到store 并调转到首页
+                store.setUserInfo(data.data)
+                router.push('/main/index')
+              }
+              // 跳转到首页
+            } else {
+              ElMessage({
+                message: res.msg,
+                type: 'error'
+              });
+              console.log('登录失败')
+            }
+          })
+          .catch(err => {});
     } else {
       console.log("error submit!");
       return false;

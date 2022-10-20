@@ -2,19 +2,19 @@
 <template>
   <div class="classCards fx-sb fx-ct">
     <div class="marg-rt-20">
-      <img :src="data.course.coverUrl" alt="">
+      <img :src="data.courseCoverUrl" alt="">
     </div>
     <div class="info fx-1">
-      <div class="tit ">{{data.course && data.course.name}}</div>
+      <div class="tit ">{{data.coursName}}</div>
       <div><span>有效日期：</span>{{data.expireTime == null ? '永久有效' : data.createTime + '-' + data.expireTime}}</div>
-      <div><span>已学习：</span><em>{{data.learnedSections}}</em> / {{data.course.sections}}</div>
-      <div v-if="type == '1'"><span>正在学习：</span>第{{data.lastestChapterIndex || '--'}}章 第{{data.latestSectionIndex}}节 {{data.course.name}}</div>
+      <div><span>已学习：</span><em>{{data.learnedSections}}</em> / {{data.sections}}</div>
+      <div v-if="type == '1'"><span>正在学习：</span>第{{data.learnedSections}}节 {{data.courseName}}</div>
     </div>
     <div class="btnCont">
-      <div class="btn" v-if="type == '1'" @click="() => $router.push({path: '/learning/index', query: {id: data.course.id}})">
+      <div class="btn" v-if="type == '1'" @click="() => $router.push({path: '/learning/index', query: {id: data.courseId}})">
         <span class="bt bt-round">继续学习</span>
       </div>
-      <div class="btn" v-if="type == '2' && data.status != 3" @click="() => $router.push({path: '/learning/index', query: {id: data.course.id}})">
+      <div class="btn" v-if="type == '2' && data.status != 3" @click="() => $router.push({path: '/learning/index', query: {id: data.courseId}})">
         <span class="bt bt-round" v-if="data.status == 0">马上学习</span>
         <span class="bt bt-round" v-if="data.status == 1">继续学习</span>
         <span class="bt bt-round" v-if="data.status == 2">重新学习</span>

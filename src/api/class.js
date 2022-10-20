@@ -12,27 +12,14 @@ export const getClassCategorys = (params) =>
 		method: 'get',
 		params
 	})
- 
+
 // 获取课程推荐接口
 export const getRecommendClassList = (type) =>
 	request({
 		url: `${SEARCH_API_PREFIX}/recommend/${type}`,
 		method: 'get'
 	})
-// 获取新课推荐接口
-export const getNewClassList = (params) =>
-	request({
-		url: `/courses/TOP5/new`,
-		method: 'get',
-		params
-	})	
-// 获取精品好课接口
-export const getBestClassList = (params) =>
-	request({
-		url: `/courses/TOP5/best`,
-		method: 'get',
-		params
-	})		
+
 // 获取课程列表 - 分类id 查询对应的列表 （倒序 十条）
 export const getClassList = (id) =>
 	request({
@@ -50,7 +37,7 @@ export const getLearningPlan = (id) =>
 // 查询当前用户学习的指定课程信息，返回null则代表没有购买	
 export const getCourseLearning = (courseId) =>
 request({
-	url: `${LEARNING_API_PREFIX}/lessons/course/${courseId}`,
+	url: `${LEARNING_API_PREFIX}/lessons/${courseId}`,
 	method: 'get'
 })	
 // 课程搜索
@@ -63,12 +50,10 @@ export const classSeach = (params) =>
 
 
 // 学习相关接口
-
-export const getLearningClassDetails = (params) =>
+export const getLearningClassDetails = (id) =>
 	request({
-		url: `${LEARNING_API_PREFIX}/lessons/course`,
-		method: 'get',
-		params
+		url: `${COURSE_API_PREFIX}/courses/${id}/catalogs`,
+		method: 'get'
 	})
 
 
@@ -142,29 +127,13 @@ export const getMyLearning = () =>
 request({
 	url: `${LEARNING_API_PREFIX}/lessons/now`,
 	method: 'get',
-})	
-// 将指定课程从课程表移除
-export const delMyLessons = () =>
-request({
-	url: `${LEARNING_API_PREFIX}/lessons/now`,
-	method: 'delete',
 })
-
-
 
 // 查询我的学习计划
 export const getMyPlan = () =>
 request({
 	url: `${LEARNING_API_PREFIX}/lessons/plans`,
 	method: 'get',
-})
-
-// 新增、修改学习计划
-export const changeMyPlan = (data) =>
-request({
-	url: `${LEARNING_API_PREFIX}/lessons/plans`,
-	method: 'post',
-	data
 })
 
 // 报名免费课程
@@ -177,7 +146,7 @@ request({
 // 将指定课程从课程表移除
 export const delMyClass = (courseId) =>
 request({
-	url: `${LEARNING_API_PREFIX}/lessons/course/${courseId}`,
+	url: `${LEARNING_API_PREFIX}/lessons/${courseId}`,
 	method: 'delete',
 })
 
@@ -185,7 +154,7 @@ request({
 export const creatPlans = (courseId) =>
 request({
 	url: `${LEARNING_API_PREFIX}/lessons/plans`,
-	method: 'psot',
+	method: 'post',
 })
 
 // 考试相关
@@ -241,33 +210,33 @@ request({
 // 签到打卡功能，返回本次签到的积分值
 export const pointsSign = (params) =>
 request({
-	url: `/points/sign`,
+	url: `${LEARNING_API_PREFIX}/points/sign`,
 	method: 'post',
 	data:params
 })
 // 获取签到记录
 export const getSignRecords = () =>
 request({
-	url: `/points/sign/records`,
+	url: `${LEARNING_API_PREFIX}/points/sign/records`,
 	method: 'get',
 })
 // 获取签到记录
 export const getTodayPoints = () =>
 request({
-	url: `/points/today`,
+	url: `${LEARNING_API_PREFIX}/points/today`,
 	method: 'get',
 })
 // 查询指定赛季信息
 export const getSeasons = (params) =>
 request({
-	url: `/boards/list`,
+	url: `${LEARNING_API_PREFIX}/boards/list`,
 	method: 'get',
 	params
 })
 // 查询赛季信息列表
 export const getSelectOptions = (params) =>
 request({
-	url: `/boards/seasons/list`,
+	url: `${LEARNING_API_PREFIX}/boards/seasons/list`,
 	method: 'get',
 	params
 })

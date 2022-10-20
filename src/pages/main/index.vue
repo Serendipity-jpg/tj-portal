@@ -87,15 +87,6 @@ import { onMounted, ref } from "vue";
 import { isLogin, dataCacheStore } from "@/store";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, getRecommendClassList, setInterests, getInterests } from "@/api/class.js";
-import ClassCategory from "./components/ClassCategory.vue";
-import {
-  getClassCategorys,
-  getFreeClassList,
-  getNewClassList,
-  getBestClassList,
-  setInterests,
-  getInterests,
-} from "@/api/class.js";
 import ClassCategory from "@/components/ClassCategory.vue";
 import CheckInterest from "./components/CheckInterest.vue";
 import Interest from "./components/Interest.vue";
@@ -119,7 +110,7 @@ const goodClassData = ref([]);
 // 精品新课数据
 const newClassData = ref([]);
 // mounted生命周期
-onMounted(() => {
+onMounted(async () => {
   // 获取三级分类信息
   getClassCategoryData();
   // 获取精品公开课
@@ -138,7 +129,7 @@ onMounted(() => {
 const getClassCategoryData = async () => {
   await getClassCategorys()
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         classCategorys.value = res.data;
         dataCache.setCourseClassDataes(res.data)
       } else {
@@ -162,7 +153,7 @@ const setInterest = (val) => {
 };
 // 精品公开课接口 - 公开课取消
 const getFreeClassListData = async () => {
-  await getFreeClassList()
+  await getRecommendClassList("free")
     .then((res) => {
       if (res.code === 200) {
         freeClassData.value = res.data;
@@ -191,10 +182,7 @@ const getGoodClassListData = async () => {
       }
     })
     .catch(() => {
-      ElMessage({
-        message: "分类请求出错！",
-        type: 'error'
-      });
+      ElMessage("分类请求出错！");
     });
 };
 // 新课推荐
@@ -214,7 +202,6 @@ const getNewClassListData = async () => {
       });
     });
 };
-
 // 保存设置的兴趣变量
 const interest = ref(new Set());
 const intKey = ref(1);
@@ -268,7 +255,7 @@ const saveInterest = async () => {
   }
   await setInterests({ interestedIds: str })
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         ElMessage({
           message: "兴趣保存成功！",
           type: "success",
@@ -283,8 +270,8 @@ const saveInterest = async () => {
         });
       }
     })
-    .catch(() => {});
-}
+    .catch(() => { });
+};
 </script>
 <style lang="scss" src="./index.scss">
 </style>

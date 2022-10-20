@@ -1,42 +1,43 @@
 <!-- 首页-兴趣模块组件 -->
 <template>
-  <div class="Interest">
-    <div class="head fx-sb">
-      <TableSwitchBar :data="[...data]" @changeTable="checkHandle"></TableSwitchBar>
-      <div class="ft-14 font-bt">
-        <span @click="changeHandle">修改兴趣</span>
-      </div>
+<div class="Interest" >
+  <div class="head fx-sb">
+    <TableSwitchBar :data="[...data]" @changeTable="checkHandle"></TableSwitchBar>
+    <div class="ft-14 font-bt">
+      <span @click="changeHandle">修改兴趣</span>
     </div>
-    <div class="classInfo fx" v-if="teacherInfo">
-      <div class="teacherInfo fx-1" :style="{ 'background-image': `url(${teacherInfo.coverUrl})` }">
-        <div class="info fx-sb">
-          <div class="fx-al-ct fx-1 ">
-            <img :src="teacherInfo.icon || '/img-tx/1.jpg'" alt="" srcset="" />
-            讲师：<span>{{teacherInfo.teacher }}</span>
-          </div>
-          <div class="" @click="$router.push({ path: '/details', query: { id: teacherInfo.id } })">
-            <span class="bt">立即报名</span>
-          </div>
+  </div>
+  <div class="classInfo fx" v-if="teacherInfo">
+    <div class="teacherInfo fx-1" :style="{'background-image': `url(${teacherInfo.coverUrl})`}">
+      <div class="info fx-sb">
+        <div class="fx-al-ct fx-1 ">
+          <img :src="teacherInfo.icon || '/img-tx/1.jpg'" alt="" srcset="">
+          讲师：<span>
+          {{teacherInfo.teacher}}
+        </span>
         </div>
-      </div>
-      <div class="classList fx-1 bg-wt">
-        <div class="box">
-          <div class="fx-sb item" v-for="(item, index) in classList" :key="index"
-               @mouseover="teacherInfo = item"
-            @click="$router.push({ path: '/details', query: { id: item.id } })">
-            <span class="title">{{ item.name }}</span>
-            <span class="desc">共{{ item.sections }}节 <i>.</i> {{ item.sold }}人正在学习
-            </span>
-          </div>
+        <div class="" @click="$router.push({path:'/details',query:{id:teacherInfo.id}})">
+          <span class="bt">立即报名</span>
         </div>
       </div>
     </div>
-    <div class="classInfo " v-else>
-      <div class="nodata bg-wt fx-ct">
-        <span>该兴趣分类下无课程</span>
+    <div class="classList fx-1 bg-wt">
+      <div class="box">
+        <div class="fx-sb item" v-for="(item, index) in classList" :key="index"
+             @mouseover="teacherInfo = item"
+             @click="$router.push({path:'/details',query:({id: item.id})})">
+          <span class="title">{{item.name}}</span>
+          <span class="desc">共{{item.sections}}节 <i>.</i> {{item.sold}}人正在学习 </span>
+        </div>
       </div>
     </div>
   </div>
+  <div class="classInfo " v-else>
+    <div class="nodata bg-wt fx-ct">
+      <span>该兴趣分类下无课程</span>
+    </div>
+  </div>
+</div>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
@@ -70,8 +71,8 @@ onMounted(() => {
 const checkHandle = (id) => {
   actId.value = id;
   getClassListData(id);
-}
-const emit = defineEmits(['setInterest']);
+};
+
 // 打开修改兴趣弹窗
 const changeHandle = () => {
   emit("setInterest", true);
@@ -80,7 +81,7 @@ const changeHandle = () => {
 const getClassListData = async (id) => {
   await getClassList(id)
     .then((res) => {
-      if (res.code === 200) {
+      if (res.code == 200) {
         classList.value = res.data;
         teacherInfo.value = res.data[0];
       } else {

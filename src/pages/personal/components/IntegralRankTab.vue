@@ -1,6 +1,6 @@
 <!-- table切换头部 -->
 <template>
-  <div class="integralRankTab" :class="{fxTab: type}">
+  <div class="integralRankTab">
     <div class="item head fx-sb">
       <span>排名</span> <span class="ct">姓名</span> <span>积分</span>
     </div>

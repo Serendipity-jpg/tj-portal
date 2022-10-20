@@ -14,7 +14,7 @@
         <div class="tabCont">
           <div class="orderList">
             <div class="fx-1 alignLeft" >
-              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.id}})"></OrderCards>
+              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.courseId}})"></OrderCards>
             </div>
             <span>{{amountConversion(item.totalAmount)}}</span><span>{{amountConversion(item.realAmount)}}</span><span>{{orderStatus(item)}}</span>
             <span class="btCont">
@@ -191,7 +191,7 @@ const cancelOrderAction = async (item) => {
     })
     .catch(() => {
       ElMessage({
-        message: "订单列表请求失败！",
+        message: "取消订单请求失败！",
         type: 'error'
       });
     });
@@ -211,6 +211,10 @@ const delOrderHandle = async (item) => {
           delOrderAction()
         })
         .catch(() => {
+          ElMessage({
+            message: "取消操作！",
+            type: 'info'
+          });
         })
 }
 
@@ -233,7 +237,7 @@ const delOrderAction = async (item) => {
     })
     .catch(() => {
       ElMessage({
-        message: "订单列表请求失败！",
+        message: "删除订单请求失败！",
         type: 'error'
       });
     });

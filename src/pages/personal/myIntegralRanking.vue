@@ -7,13 +7,13 @@
       <div class="listCont fx-sb">
         <div class="listRt">
           <div class="tit">本赛季榜</div>
-          <IntegralRankTab :data="currentSeasonsData" type></IntegralRankTab>
+          <IntegralRankTab :data="currentSeasonsData"></IntegralRankTab>
         </div>
         <div class="listRt">
           <div class="tit fx-sb">
             <span>历史榜</span>
             <div>
-              <el-select v-model="season" @change="selectHandle"  type class="m-2" placeholder="Select">
+              <el-select v-model="season" @change="selectHandle" class="m-2" placeholder="Select">
                 <el-option
                   v-for="item in seasonOptions"
                   :key="item.id"
@@ -80,14 +80,14 @@ const seasonsData = ref([])
 const getSeasonsData = (season) => {
   getSeasons({season})
     .then((res) => {
-      if (res.code && res.code == 200 ){
+      if (res.code == 200 ){
         if (season == 0 ){
           currentSeasonsData.value = res.data
         } else {
           seasonsData.value = res.data
         }
+        
       } else {
-        if (res.code == 1) return ;
         ElMessage({
           message: res.msg,
           type: 'error'

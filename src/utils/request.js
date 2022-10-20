@@ -1,7 +1,8 @@
 import axios from 'axios';
 import proxy from '../config/proxy';
-import { ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import  router  from '../router';
+import {ref} from "vue";
 
 const env = import.meta.env.MODE || 'development';
 const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
@@ -12,20 +13,17 @@ const CODE = {
 };
 // 登录异常弹窗处理
 let isLogin = true
+// 刷新标记
+let refreshing = ref(false)
 
 const instance = axios.create({
   baseURL:  host, // 'http://172.17.2.134/api-test',
   timeout: 1000,
-  withCredentials: true,
+  withCredentials: false,
 });
 
 instance.interceptors.request.use((config) => {
-  let data = config.data;
-  config.data = JSON.stringify({
-    admin: false, //追加统一的参数 区分前后台用
-    ...data 
-  })
-  const TOKEN = localStorage.getItem('token'); 
+  const TOKEN = sessionStorage.getItem('token');
   config.headers = {
     "Content-Type": "application/json",
     "authorization": TOKEN
@@ -34,39 +32,88 @@ instance.interceptors.request.use((config) => {
 });
 
 instance.defaults.timeout = 5000;
-
-instance.interceptors.response.use(
-  (response) => {
-    if (response.status === 200 && response.data.code == 401 && isLogin){
-      isLogin = false
-      localStorage.removeItem('token')
-      ElMessageBox.confirm(
-        '您的账号登录超时或在其他机器登录，请重新登录或更换账号登录！',
-        '登录超时',
-        {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '继续浏览',
-          type: 'warning',
-        }
-      )
-      .then(() => {
+async function refreshToken(err){
+  // 尝试刷新token
+  let resp = await axios.get(host + "/as/accounts/refresh", {withCredentials: true});
+  if (resp.status === 200 && resp.data.code === 200) {
+    sessionStorage.setItem("token", resp.data.data)
+    refreshing.value = false;
+    return instance(err.config);
+  }
+  sessionStorage.removeItem("token");
+  refreshing.value = false;
+  ElMessageBox.alert(
+    '您的账号登录超时或在其他机器登录，请重新登录或更换账号登录！',
+    '登录超时',
+    {
+      confirmButtonText: '重新登录',
+      callback: () => {
         router.push('/login')
-      })
-      .catch(() => {
-        router.go(0)
-      })
-      return false 
+      },
     }
-    if (response.status === 200) {
-      const { data } = response;
-      if (data.code === CODE.REQUEST_SUCCESS) {
-        return data;
-      }
-    } 
+  )
+  return false;
+}
+function alertLoginMessage() {
+  isLogin = false;
+  sessionStorage.removeItem('userInfo');
+  sessionStorage.removeItem("token");
+  ElMessageBox.confirm(
+    '您的账号登录超时或在其他机器登录，请重新登录或更换账号登录！',
+    '登录超时',
+    {
+      confirmButtonText: '重新登录',
+      cancelButtonText: '继续浏览',
+      type: 'warning',
+    }
+    )
+    .then(() => {
+      router.push('/login')
+    })
+    .catch(() => {
+      router.go(0)
+    })
+}
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+instance.interceptors.response.use(
+  async (response) => {
+    // 1.获取业务状态码
+    let code = response.data.code;
+    // 2.业务状态码为200，直接返回
+    if (code === CODE.REQUEST_SUCCESS) {
+      return response.data;
+    }
+
+    // 3.业务状态码为401，代表未登录
+    if (code === 401 && isLogin) {
+      isLogin = false;
+      alertLoginMessage();
+    }
+
     return response.data;
+/*    // 4.业务状态码为其它，返回异常
+    ElMessage({
+      message: response.data.msg,
+      type: 'error'
+    });
+    throw new Error(response.data.msg);*/
   },
-  (err) => {
-    const { config } = err;
+   async (err) => {
+    if(err.response.status === 401 && isLogin){
+      if(refreshing.value){
+        while(refreshing.value){
+          await sleep(20);
+          console.log(refreshing.value)
+        }
+        return instance(err.config)
+      }
+      refreshing.value = true;
+      // 登录异常或超时，刷新token
+      return refreshToken(err);
+    }
+    refreshing = false;
+    return Promise.reject(err);
+    /*const { config } = err;
 
     if (!config || !config.retry) return Promise.reject(err);
 
@@ -84,7 +131,7 @@ instance.interceptors.response.use(
       }, config.retryDelay || 1);
     });
 
-    return backoff.then(() => instance(config));
+    return backoff.then(() => instance(config));*/
   },
 );
 
