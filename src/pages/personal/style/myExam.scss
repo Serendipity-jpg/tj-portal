@@ -1,7 +1,9 @@
 
 // 我的考试 - 列表
 .myExamWrapper{
-
+    .el-table, .el-table thead{
+        color: var(--color-font1);
+    }
 }
 // 我的考试 - 详情
 .myExamDetails{
@@ -75,6 +77,11 @@
             margin-bottom: 10px;
             li{
                 list-style-type:upper-alpha;
+                span{
+                    p,  div, li {
+                        display: inline-block;
+                    }
+                }
             }
         }
         .analysis{
@@ -88,6 +95,9 @@
             }
             .rt{
                 color: #26BA9B;
+            }
+            .fx:last-child{
+                margin-bottom: 0;
             }
         }
     }

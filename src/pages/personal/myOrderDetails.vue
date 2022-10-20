@@ -36,7 +36,6 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="120">
             <template #default="scope">
-              <!-- TODO 需求确认后端给的状态 什么时候展示 -->
               <div v-if="scope.row.canRefund" class="font-bt1" @click="openRefundDialog('refund', scope.row)">申请退款</div>
               <span v-else-if="!scope.row.refundStatus || scope.row.refundStatus === 3"> -- </span>
               <div v-else class="font-bt1" @click="openRefundDialog('details', scope.row)">退款详情</div>
@@ -45,10 +44,10 @@
         </el-table>
       </div>
       <div class="info">
-        <div><span>订单总价：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.totalAmount) || 0}}</span></div>
-        <div><span>优惠券：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.couponRule) || '无'}}</span></div>
-        <div><span>优惠金额：</span><span class="pirc">{{orderDetails && amountConversion(orderDetails.discountAmount) || 0}}</span></div>
-        <div><span>实付金额：</span><span class="pirc red">{{orderDetails && amountConversion(orderDetails.realAmount) || 0}}</span></div>
+        <div><span>订单总价：</span><span class="pirc">￥ {{orderDetails && amountConversion(orderDetails.totalAmount) || 0}}</span></div>
+        <div class="fx"><span>优惠券：</span><span class="pirc">{{orderDetails && orderDetails.couponRule ? orderDetails.couponRule : '无'}}</span></div>
+        <div><span>优惠金额：</span><span class="pirc">￥ {{orderDetails && amountConversion(orderDetails.discountAmount) || 0}}</span></div>
+        <div><span>实付金额：</span><span class="pirc red">￥ {{orderDetails && amountConversion(orderDetails.realAmount) || 0}}</span></div>
       </div>
     </div>
     <!-- 申请退款 - start -->
@@ -97,7 +96,7 @@
       <div class="refundDetailsCont">
        <div class="tab">
         <div class="ut"> <p class="ft-wt-600">退款ID</p> <p class="ft-cl-des">{{refundDetailsData.id}}</p> </div>
-        <div class="ut"> <p class="ft-wt-600">支付方式</p> <p class="ft-cl-des">{{refundDetailsData.payChannel}}</p> </div>
+        <div class="ut"> <p class="ft-wt-600">支付方式</p> <p class="ft-cl-des">{{refundDetailsData.payChannel || "--"}}</p> </div>
         <div class="ut"> <p class="ft-wt-600">退款流水号</p> <p class="ft-cl-des">{{refundDetailsData.refundOrderNo}}</p> </div>
         <div class="ut"> <p class="ft-wt-600">退款方式</p> <p class="ft-cl-des">{{refundDetailsData.refundChannel}}</p> </div>
         <div class="ut"> <p class="ft-wt-600">订单ID</p> <p class="ft-cl-des">{{refundDetailsData.orderId}}</p> </div>
@@ -110,8 +109,9 @@
             </div>
         </div>    
         <div class="row">
-          <p class="ft-wt-600">审批意见</p> 
-          <p class="ft-cl-des">{{refundDetailsData.approveOpinion || '暂无！'}}</p>
+          <p class="ft-wt-600">处理结果：</p>
+          <p class="ft-cl-des" v-if="refundDetailsData.remark != null">审批结果：{{refundDetailsData.remark ? '同意' : '拒绝退款'}}</p>
+          <p class="ft-cl-des">审批意见：{{refundDetailsData.approvalOpinion || '暂无！'}}</p>
         </div>
        </div>
       </div>    
@@ -128,10 +128,12 @@ import { getOrderDetails, refundsApply, refundsDetails } from "@/api/order.js";
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 import {amountConversion} from "@/utils/tool.js"
+import { ElMessageBox } from 'element-plus'
 
 // 组件导入
 import BreadCrumb from "./components/BreadCrumb.vue";
 import CardsTitle from './components/CardsTitle.vue'
+import router from "../../router";
 
 const route = useRoute()
 const store = dataCacheStore()
@@ -158,12 +160,14 @@ const refundApplyReq = () => {
   if (refundReason.value === ''){
     ElMessage({
         message: '请选择退款原因',
+        type: "error",
     });
      return false
   } 
   if(questionDesc.value === ""){
     ElMessage({
         message: '请输入退款问题描述',
+        type: "error",
     });
     return false
   }
@@ -176,11 +180,11 @@ const refundApplyReq = () => {
   refundsApply(params)
     .then((res) => {
       if (res.code == 200 ){
-        refundDialog.value = false;
         ElMessage({
-          message: "申请成功",
+          message: "退款成功",
           type: 'success'
         });
+        router.push('/personal/main/myOrder')
       } else {
         ElMessage({
           message: res.msg,
@@ -195,7 +199,6 @@ const refundApplyReq = () => {
       });
     });
 }
-
 // 退款详情
 const refundDetailsData = ref()
 const refundDetailsReq = () => {

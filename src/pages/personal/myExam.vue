@@ -1,9 +1,11 @@
 <!-- 我的考试 -->
 <template>
-  <div class="myExam">
+  <div class="myExamWrapper">
     <div class="personalCards" v-if="myExamData != null">
       <CardsTitle class="marg-bt-20" title="我的考试" />
-      <div v-if="count == 0" class="nodata">暂无数据</div>
+      <div v-if="count == 0" class="nodata">
+        <Empty ></Empty>
+      </div>
       <ExamTable v-if="count > 0" :data="myExamData"></ExamTable>
       <div class="pageination" v-if="count > 0">
         <el-pagination
@@ -28,6 +30,7 @@ import { getExamList } from "@/api/class.js";
 // 组件导入
 import CardsTitle from './components/CardsTitle.vue'
 import ExamTable from './components/ExamTable.vue'
+import Empty from "@/components/Empty.vue";
 
 // mounted生命周期
 onMounted(async () => {

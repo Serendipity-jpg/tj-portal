@@ -1,7 +1,8 @@
  // 转换 A、B、C、D
-export const upperAlpha = (num) => {
+export const upperAlpha = (num, type) => {
   let str = ''
-  switch(num){
+  let n = type && type == 0 ? num : num - 1
+  switch(n){
     case 0 :
       str = 'A';
       break
@@ -20,13 +21,14 @@ export const upperAlpha = (num) => {
   }
   return str
 }
+// 时间转换 h:m:s
 export const timeFormat = (time) => {
     //  秒
     let second = parseInt(time)
     //  分
-    let minute = 0
+    let minute = '00'
     //  小时
-    let hour = 0
+    let hour = '00'
 
     if (second > 60) {
         //  获取分钟，除以60取整数，得到整数分钟
@@ -45,7 +47,7 @@ export const timeFormat = (time) => {
 }
 
 export const amountConversion = (item) => {
-  let amount = 0
+  let amount = '0'
   if (item){
     amount = (item / 100).toFixed(2)
   } 

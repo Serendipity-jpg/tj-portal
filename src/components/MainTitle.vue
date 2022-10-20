@@ -2,9 +2,8 @@
 <template>
   <div class="mainTitle fx">
     <div class="marg-rt-10">{{ title }}</div>
-    <div  @click="() => this.$router.push(moreUrl)" class="more ft-cl-des ft-14 ">
-      更多
-      <img src="@/assets/icon_more.png" alt="" />
+    <div  @click="() => $router.push(moreUrl)" class="more ft-cl-des ft-14 font-bt1">
+      更多 <i class="iconfont zhy-btn_more" style="font-size: 24px;"></i>
     </div>
   </div>
 </template>
@@ -28,7 +27,6 @@ defineProps({
 </script>
 <style lang="scss" scoped>
 .mainTitle {
-  font-family: YouSheBiaoTiHei;
   font-size: 23px;
   color: #19232b;
 

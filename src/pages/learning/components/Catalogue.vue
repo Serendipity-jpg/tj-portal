@@ -2,18 +2,20 @@
 <template>
   <div class="catalogueWrapper">
     <el-collapse accordion v-model="actIndex" @change="openItem">
-      <el-collapse-item :name="item.id" v-for="item in data" :key="item.id" >
+      <el-collapse-item :name="item.id" v-for="item in data" :key="item.id">
         <template #title>
           <div class="title"><span class="ft-wt-600">{{item.name}}</span></div>
         </template>
-        <div :class="{subTitle:true, 'fx-sb':true, playAct: playId == it.id}"  v-for="it in item.sections" :key="it.id" >
-          <i  @click="play(it, it.type == 2 ? 1 :it.type)" :class="startIcon(it)"></i>
+        <div :class="{subTitle:true, 'fx-sb':true, playAct: playId == it.id}" v-for="it in item.sections" :key="it.id">
+          <i @click="play(it, it.type == 2 ? 1 :it.type)" :class="startIcon(it)"></i>
           <div class="subTit fx-1">
             <span @click="play(it, it.type == 2 ? 1 : it.type == 2 ? 1 :it.type)" class="marg-rt-10">{{it.name}}</span>
-            <span v-if="it.type == 2" @click="play(it, it.type == 2 ? 2 :it.type)" class="chapter">练习</span>
+            <span v-if="it.type == 2 && it.subjectNum != 0" @click="play(it, it.type == 2 ? 2 :it.type)"
+              class="chapter">练习</span>
           </div>
-          <div> 
-            <span @click="play(it, it.type == 2 ? 1 :it.type)" v-if="it.mediaDuration != 0">{{(it.mediaDuration/60).toFixed(0)}} 分钟</span>
+          <div>
+            <span @click="play(it, it.type == 2 ? 1 :it.type)"
+              v-if="it.mediaDuration != 0">{{Math.trunc(it.mediaDuration/60)}}  {{}}分钟</span>
           </div>
         </div>
       </el-collapse-item>
@@ -21,30 +23,32 @@
   </div>
 </template>
 <script setup>
-import { ref, watchEffect, inject } from 'vue'
+import { ref, watchEffect } from 'vue'
+import { dataCacheStore } from "@/store"
+
+const store = dataCacheStore()
+const currentPlayData = ref(store.getCurrentPlayData)
 
 // 引入父级传参
 const props = defineProps({
-  data:{
+  data: {
     type: Array,
-    default:[]
+    default: []
   },
-  statusList:{
+  statusList: {
     type: Array,
-    default:[]
+    default: []
   },
-  actIndex:{
+  actIndex: {
     type: String,
     default: ''
-  }, 
-  playId:{
+  },
+  playId: {
     type: String,
     default: ''
-  }, 
+  },
 })
 
-
-const currentPlayData = inject('currentPlayData')
 
 // 默认打开项
 const playId = ref(props.playId)
@@ -56,16 +60,15 @@ watchEffect(() => {
 // 根据播放状态调整icon
 const startIcon = (item) => {
   let data = 'iconfont zhy-a-ico-sp-sei2x'
-
-  if(item.type == '2'){
-    if(item.finished != undefined && item.finished == false){  // 未播放完成
+  if (item.type == 2) {
+    if (item.finished != undefined && item.finished == false) {  // 未播放完成
       data = 'iconfont zhy-a-ico-502x1'
-    } else if(item.finished != undefined && item.finished == true){ // 播放完成
+    } else if (item.finished && item.finished == true) { // 播放完成
       data = 'iconfont zhy-a-ico-wc2x'
-    } {
+    } else {
       data = 'iconfont zhy-a-ico-sp-sei2x' // 未播放过
     }
-  } else if(item.type == '3'){
+  } else if (item.type == '3') {
     data = 'iconfont zhy-a-ico-jdks2x'
   }
   return data
@@ -82,40 +85,65 @@ const activeKey = ref('all')
 // 点击小节 type == 1 是点击视频 2 点击练习
 const play = (item, tp) => {
   playId.value = item.id
-  emit('playHadle', {item, tp})
+  item.finished == undefined ? item.finished = false : null
+  emit('playHadle', { item, tp })
 }
 </script>
 <style lang="scss" scoped>
-.catalogueWrapper{
+.catalogueWrapper {
   padding: 0 10px;
-  ::deep(.el-collapse-item__header){
-      background: transparent;
+
+  ::deep(.el-collapse-item__header) {
+    background: transparent;
   }
-  .title{
+
+  .title {
     font-size: 16px;
     height: 40px;
     line-height: 40px;
     width: 280px;
     overflow: hidden;
-    span{
+
+    span {
       display: inline-block;
       height: 40px;
     }
   }
-  .subTitle{
+
+  .subTitle {
+    position: relative;
+
+    ::before {
+      position: relative;
+      z-index: 2;
+    }
+
+    ::after {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 21px;
+      border-left: 1px dashed #667280;
+      height: calc(100% - 2px);
+    }
+
     line-height: 20px;
-    i{
+
+    i {
       position: relative;
       top: 1px;
       margin-right: 4px;
     }
+
     cursor: pointer;
-    margin: 20px 0;
+    margin: 5px 0 20px 0;
     color: #A0A9B2;
-    .subTit{
+
+    .subTit {
       width: 230px;
       line-height: 20px;
-      .chapter{
+
+      .chapter {
         display: inline-block;
         width: 32px;
         text-align: center;
@@ -127,19 +155,39 @@ const play = (item, tp) => {
         color: #1B2127;
       }
     }
-    &:hover{
+
+    &:hover {
       color: #fff;
-      .chapter{
+
+      .chapter {
         background: #ffffff !important;
         color: #1B2127 !important;
       }
     }
 
   }
-   .playAct{
-    color: #2080F7;
-    .chapter{
-      background: #2080F7 !important;
+
+  :deep(.el-collapse-item__content) {
+    padding-bottom: 5px;
+  }
+
+  .subTitle:last-child {
+    margin-bottom: 0;
+
+    ::after {
+      display: none;
+    }
+  }
+
+  .playAct {
+    ::after {
+      border-color: var(--color-main);
+    }
+
+    color: var(--color-main);
+
+    .chapter {
+      background: var(--color-main) !important;
       color: #FFFFFF !important;
     }
   }

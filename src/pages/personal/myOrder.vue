@@ -19,9 +19,10 @@
             <span>{{amountConversion(item.totalAmount)}}</span><span>{{amountConversion(item.realAmount)}}</span><span>{{orderStatus(item)}}</span>
             <span class="btCont">
               <span class="bt" v-if="isOrderPay(item)">评价课程</span>
-              <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey">查看订单</span>
-              <span v-if="item.status == 1 " @click="cancelOrderHandle(item)" class="bt bt-grey">取消订单</span>
-              <span v-if="item.status == 3"  @click="delOrderHandle(item)" class="bt bt-grey">删除订单</span>
+              <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey1">查看订单</span>
+              <!--<span v-if="item.status == 1 " @click="cancelOrderHandle(item)" class="bt bt-grey">取消订单</span>-->
+              <span v-if="item.status == 1 " @click="() => $router.push({path: '/pay/payment',query: {orderId:item.id}})" class="bt">去支付</span>
+              <span v-if="item.status == 3"  @click="delOrderHandle(item)" class="bt bt-grey1">删除订单</span>
             </span>
           </div>
         </div>

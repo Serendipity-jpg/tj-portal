@@ -15,7 +15,7 @@
         />
         <div class="fx-sb fx-al-ct">
           <div>
-            <el-checkbox v-model="anonymity" label="是否匿名" size="large" />
+            <el-checkbox v-model="anonymity" label="匿名" size="large" />
           </div>
           <div class="subCont">
             <span
@@ -33,8 +33,6 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { useUserStore } from "@/store";
-import { postAnswers } from "@/api/classDetails.js";
-import { ElMessage } from "element-plus";
 
 const props = defineProps({
   name: String,
@@ -67,6 +65,7 @@ const answerHandle = async () => {
   params.anonymity = anonymity.value
   emit('commentHandle', params);
   description.value = '';
+  anonymity.value = ''
 };
 </script>
 <style lang="scss">

@@ -22,7 +22,7 @@
                 <div class="fx-1">
                   <el-input v-model="description" rows="11" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请发表高见" />
                   <div class="fx-sb fx-al-ct">
-                    <div><el-checkbox v-model="anonymity" label="是否匿名" size="large" /></div>
+                    <div><el-checkbox v-model="anonymity" label="匿名提问" size="large" /></div>
                     <div class="subCont">
                       <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="answerHandle('first')">回答</span>
                       </div>
@@ -65,12 +65,11 @@
                           <div class="ft-cl-des">{{it.createTime}}</div>
                           <div>
                             <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'targe')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                            <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                            <span :class="{'cur-pt':true, activeLiked: it.liked}" @click="likedHandle(it)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
                           </div>
                         </div>
                       </div>
                       <!-- 插入回复框的位置 -->
-                      <!-- <ReplayForm v-if="isReplay == it.id"></ReplayForm> -->
                       <component :is="openReplyFormId == it.id ? ReplayForm : null" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"  @commentHandle="commentHandle"></component>
                     <!-- 回复列表 -->
                     </div>
@@ -79,14 +78,12 @@
                 </div>
                 <div></div>
                 <p @click="clickLoad" v-if="!noMore" class="fx-ct ft-14 ft-cl-des">点击查看更多</p>
-                <!-- <p v-infinite-scroll="load" style="overflow: auto" :infinite-scroll-disabled="disabled"
-                 class="fx-ct ft-14 ft-cl-des" v-if="loading">Loading...</p> -->
                 <p class="fx-ct ft-14 ft-cl-des" v-if="noMore">没有更多了</p>
               </div>
             </div>
           </div>
           <!-- 相关问题 写死 -->
-          <RelatedQuestions :id="askInfo.id" :title="askInfo.title"></RelatedQuestions>
+          <RelatedQuestions :id="route.query.detailsId" :title="route.query.name"></RelatedQuestions>
       </div>
     </div>
     <el-dialog v-model="dialogTableVisible" :title="`全部回复(${replyCont})`" width="80%" top="5vh" >
@@ -102,7 +99,7 @@
               <div class="ft-cl-des">{{it.createTime}}</div>
               <div>
                 <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'target')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                <span :class="{'cur-pt':true, activeLiked: it.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
               </div>
             </div>
           </div>
@@ -161,6 +158,7 @@ const getQuestionsDetailsData = async () => {
 } 
 // 获取全部回答
 const questParams = reactive({
+  admin:false,
   id: route.query.id,
   pageNo: 1,
   pageSize: 10
@@ -173,15 +171,20 @@ const noMore = computed(() => questionData.value.length >= count.value)
 const clickLoad = () => {
   loading.value = false
   questParams.pageNo++
-  getAllQuestionsData()
+  getAllQuestionsData('more')
 }
 // 获取回答列表
-
-const getAllQuestionsData = async () => {
+const getAllQuestionsData = async (val) => {
   await getAllQuestions(questParams)
     .then((res) => {
       if (res.code == 200) {
-        questionData.value = questionData.value.concat(res.data.list)
+        if (val == 'more') {
+          questionData.value = questionData.value.concat(res.data.list)
+        } else if(questParams.pageNo == 1){
+          questionData.value = res.data.list
+        } else {
+          questionData.value = questionData.value.splice(0, (questParams.pageNo - 1) * questParams.pageSize).concat(res.data.list)
+        }
         count.value = Number(res.data.total)
         loading.value = false
       } else {
@@ -193,7 +196,7 @@ const getAllQuestionsData = async () => {
     })
     .catch(() => {
       ElMessage({
-        message: "课程问题数据请求出错！",
+        message: "数据请求出错！",
         type: 'error'
       });
     });
@@ -213,7 +216,7 @@ const isReplay = ref();
 const openReply = (item) => {
   // 获取回答的答复的列表
   if (item.id != isReplay.value) {
-    getReplyData(item.id)
+    getReplyData(item.id, 'one')
     replayHandle(item, 'answer')
   }
 }
@@ -254,11 +257,14 @@ const load = () => {
 const getReplyData = async (id, st) => {
     replyLoding.value = true
     replyParams.id = id
+    replyParams.admin = false
     await getReply(replyParams)
     .then((res) => {
       if (res.code == 200) {
        replyLoding.value = false
+       console.log(899, st)
        replyData.value = st == 'one' ? res.data.list : replyData.value.concat(res.data.list)
+
        replyCont.value = Number(res.data.total)
        isReplay.value = id
       } else {
@@ -290,18 +296,25 @@ const params = reactive({
 function commentHandle (val){
   params.content = val.content
   params.anonymity = val.anonymity
-  answerHandle()
+  answerHandle() // 评论
 }
 // 提交回复
 const answerHandle = async (type) => {
   params.questionId = askInfo.value.id
-  params.targetUserId = ''
+  params.targetUserId = type ? askInfo.value.user.id : answerInfo.value.replier.id
   if(params.content == ''){
     params.content = description.value
     params.anonymity = anonymity.value
   }
   params.answerId = answerInfo.value.id
   params.targetReplyId = targetInfo.value.id
+  if (params.content == '') {
+    ElMessage({
+          message:'请输入您的内容！',
+          type: 'success'
+        });
+    return 
+  }
  await postAnswers(params)
     .then((res) => {
       if (res.code == 200) {
@@ -309,15 +322,20 @@ const answerHandle = async (type) => {
           message:'回复成功！',
           type: 'success'
         });
-        description.value = ''
+        
+        // 第一层的回答
         if (type == 'first'){
           getAllQuestionsData()
         } else if(dialogTableVisible) {
           getReplyData(isReplay.value, 'one')
         } else {
           getReplyData(isReplay.value, 'one')
-          // replayHandle(item, 'answer')
         }
+        params.content = ''
+        description.value = ''
+        params.anonymity = ''
+        anonymity.value = ''
+        isSend.value = false
       } else {
         ElMessage({
           message:res.data.msg,

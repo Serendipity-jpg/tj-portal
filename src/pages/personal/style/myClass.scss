@@ -1,5 +1,18 @@
 // 我的课程样式
 .myClassWrapper{
+   .personalCards {
+    em{
+      font-style: normal;
+      color: var(--color-main);
+     }
+     .item{
+      border-bottom: solid 2px #eeeeee;
+      padding-bottom: 20px;
+     }
+     .item:last-child{
+      border: none;  
+    }
+   }
     .dialogCont{
         line-height: 40px;
         padding: 0 10px;

@@ -3,7 +3,7 @@
   <div class="questionWrapper marg-bt-20">
     <div class="askCont" >
       <div class="askLists" v-for="item in askListsDataes">
-        <div class="userInfo fx">
+        <div class="userInfo fx ">
           <img :src="item.user.icon" :onerror="onerrorImg(item.user)" alt="" srcset="">
           {{item.user.name}}
         </div>
@@ -14,16 +14,19 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-10" @click="() => $router.push({path:'/askDetails/index', query:{id:item.id}})">回答</span>
+            <span class="marg-rt-10" @click="() => $router.push({path:'/askDetails/index', query:{id:item.id}})">回答 {{item.answerAmount}}</span>
           </div>
         </div>
       </div>
+      <div class="noData" v-if="askListsDataes && askListsDataes.length <= 0">
+        <Empty :type="true"></Empty>
+      </div>
     </div>
     <div class="questCont">
-      <el-input class="title" v-model.number="quest.title" maxlength="64" @input="ruleshandle"  show-word-limit placeholder="请输入"/>
-      <el-input v-model="quest.description" rows="4" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
+      <el-input class="title" v-model.number="quest.title" maxlength="64" @input="ruleshandle" show-word-limit placeholder="请输入"/>
+      <el-input v-model="quest.description" rows="4" resize="none" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
       <div class="fx-sb fx-al-ct" style="margin-top: 4px;">
-        <div><el-checkbox v-model="quest.anonymity" label="私密" size="large" /></div>
+        <div><el-checkbox v-model="quest.anonymity" label="匿名提问" size="large" /></div>
         <div class="subCont">
           <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="submitForm()">提问</span>
         </div>
@@ -38,6 +41,7 @@ import { postQuestions, getAskList, getMyAskList, putLiked } from "@/api/classDe
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
+import Empty from '@/components/Empty.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -64,15 +68,16 @@ onMounted(() => {
 
 // 问答列表参数
 const params = ref({
+  admin:false,
   courseId: route.query.id,
   isAsc:true,
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 1000,
   sectionId: currentPlayData.sectionId,
   sortBy: ''
 });
 //
-const isSend = ref(true)
+const isSend = ref(false)
 // 提问数据
 const quest = reactive({
   sectionId: currentPlayData.sectionId, // 小节Id
@@ -171,6 +176,13 @@ const handleCurrentChange = (val) => {
 }
 // 提交问题
 const submitForm = async () => {
+if (!isSend.value){
+  ElMessage({
+    message:'请输入标题和描述',
+    type:'error'
+  })
+  return 
+}  
 await postQuestions(quest)
     .then((res) => {
       if (res.code == 200) {
@@ -190,6 +202,14 @@ await postQuestions(quest)
         type: 'error'
       });
     });
+}
+// 输入文字的input
+const ruleshandle = (val) => {
+  if (quest.title != '' &&  quest.description != ''){
+    isSend.value = true
+  } else {
+    isSend.value = false
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -254,6 +274,9 @@ await postQuestions(quest)
         }
       }
     }
+    .noData{
+      height: calc(100vh - 488px);
+    }
   }
   .questCont{
     position: absolute;
@@ -273,7 +296,24 @@ await postQuestions(quest)
         line-height: 28px;
       }
     }
+    input::-webkit-input-placeholder{
+      color:#000000;
+    }
+    :deep(.el-input__inner){
+      color: #fff;
+    }
+    :deep(.el-textarea__inner){
+      color: #fff;
+    }
+    :deep(.el-input__count){
+      color: #7A838A;
+    }
   }
   
 }
+</style>
+<style>
+  input::-webkit-input-placeholder{
+    color:#fff;
+  }
 </style>

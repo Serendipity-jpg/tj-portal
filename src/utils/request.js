@@ -20,6 +20,11 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
+  let data = config.data;
+  config.data = JSON.stringify({
+    admin: false, //追加统一的参数 区分前后台用
+    ...data 
+  })
   const TOKEN = localStorage.getItem('token'); 
   config.headers = {
     "Content-Type": "application/json",
@@ -44,12 +49,12 @@ instance.interceptors.response.use(
           type: 'warning',
         }
       )
-        .then(() => {
-          router.push('/login')
-        })
-        .catch(() => {
-          router.go(0)
-        })
+      .then(() => {
+        router.push('/login')
+      })
+      .catch(() => {
+        router.go(0)
+      })
       return false 
     }
     if (response.status === 200) {

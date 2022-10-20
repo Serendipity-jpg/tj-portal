@@ -2,7 +2,7 @@
 <template>
 <div class="search fx">
   <div class="tit">{{data.title}}:</div>
-  <div :class="{active: activeId == item.id, checkBox:true, 'font-bt1': true}" @click="activeHandle(item.id)" v-for="(item, index) in data.searchKeys" :key="index">{{item.name}}</div>
+  <div :class="{active: activeId == item.id, checkBox:true, 'font-bt2': true}" @click="activeHandle(item.id)" v-for="(item, index) in data.searchKeys" :key="index">{{item.name}}</div>
 </div>
 </template>
 <script setup>

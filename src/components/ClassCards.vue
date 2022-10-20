@@ -2,7 +2,8 @@
 <template>
   <div class="classCards" @click="goDetails(data.id)">
     <div class="image">
-        <span class="label">录播</span>
+       <!-- 由于暂时不做直播 所以录播先去掉 -->
+        <!-- <span class="label">录播</span> -->
         <img :src="data.coverUrl" alt="" />
     </div>
     <div class="pd-10">
@@ -47,6 +48,7 @@ const goDetails = id => {
 </script>
 <style lang="scss" scoped>
 .classCards{
+    position: relative;
     width: 23%;
     background: #FFFFFF;
     border: 1px solid #EEEEEE;
@@ -56,6 +58,8 @@ const goDetails = id => {
     cursor: pointer;
     &:hover{
       box-shadow: 0 4px 6px 2px rgba(108,112,118,0.17);
+      
+      top: -3px;
     }
     .title{
         line-height: 22px;

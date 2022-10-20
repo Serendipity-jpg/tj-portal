@@ -6,41 +6,49 @@
       <span class="line"></span>
       <span class="fx-1 cur-pt" @click="activeHandle(2)" :class="{act: actIndex == 2}">全部笔记</span>
     </div>
-    <div class="noteCont" >
+    <div class="noteCont" v-if="noteListsDataes.length > 0">
       <div class="noteLists" v-for="item in noteListsDataes">
       <div class="userInfo fx-sb">
-        <div class=" fx">
+        <div class="fx ft-cl-wt">
           <img :src="item.author && item.author.icon" alt="" srcset="">
           {{item.author && item.author.name}}
         </div>
-        <div>{{item.noteMoment}}</div>
+        <div>
+          <i class="iconfont zhy-a-icon-sp22x"></i>
+          {{item.noteMoment == 0 ? '00:00' :Math.trunc(item.noteMoment/60)+':'+ item.noteMoment % 60}}
+        </div>
       </div>
-        
-        <div class="note">
-          <div class="tit ft-14">{{item.content}}</div>
-          <div class="font-bt2" @click="goDetails(item)" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
+      <div class="note">
+        <div class="tit ft-14">{{item.content}}</div>
+        <div class="font-bt2" @click="goDetails(item)" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
+      </div>
+      <div class="time fx-sb">
+        <div class="tm">{{item.createTime}}</div>
+        <div class="actBut">
+          <span class="marg-rt-10" @click="editNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+            <i class="iconfont zhy-a-icon-xiugai22x"></i> 编辑
+          </span>
+          <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:false && item.isGathered}">
+            <i class="iconfont zhy-a-ico-caiji2x"></i> {{item.isGathered ? '已采集' : '采集'}}
+          </span>
+          <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+            <i class="iconfont zhy-a-icon-delete22x" style="font-size: 23px;top: 3px;"></i> 删除
+          </span>
+          <!-- <span class="" @click="putLikedHandle(item)" >
+            <i v-show="!item.liked" class="iconfont zhy-a-icon-zan2x"></i> 
+            <i v-show="item.liked" class="iconfont zhy-a-btn_zan_sel2x"></i>
+          </span> -->
         </div>
-        <div class="time fx-sb">
-          <div>{{item.createTime}}</div>
-          <div class="actBut">
-            <span class="marg-rt-10" @click="editNoteHandle(item)">
-              编辑
-            </span>
-            <span class="marg-rt-10" @click="delNoteHandle(item)" >
-              删除
-            </span>
-            <span class="" @click="putLikedHandle(item)" >
-              <i v-show="!item.liked" class="iconfont zhy-a-icon-zan2x"></i> 
-              <i v-show="item.liked" class="iconfont zhy-a-btn_zan_sel2x"></i>
-            </span>
-          </div>
-        </div>
+      </div>
       </div>
     </div>
+    <div class="noData" v-else>
+      <Empty :type="true"></Empty>
+    </div>
     <div class="questCont">
-      <el-input v-model="noteParams.content" rows="4" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
+      <el-input v-model="noteParams.content" rows="4" resize="none" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
       <div class="fx-sb fx-al-ct" style="margin-top: 12px;">
-        <div></div>
+        <div><el-checkbox v-model="noteParams.isPrivate" label="私密" size="large" /></div>
         <div class="subCont">
           <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="submitForm()">保存</span>
         </div>
@@ -49,15 +57,14 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, reactive } from 'vue'
-import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes } from "@/api/notes.js"
+import { onMounted, ref, reactive, watchEffect } from 'vue'
+import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes, notesGathers, unNotesGathers } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
-import {useRoute} from "vue-router"
 import { useUserStore, dataCacheStore } from '@/store'
+import Empty from '@/components/Empty.vue'
 
 const currentPlayData = dataCacheStore().getCurrentPlayData
 
-const route = useRoute()
 const store = useUserStore();
 
 const userInfo = ref(null)
@@ -66,8 +73,12 @@ const props = defineProps({
   id:{
     type: String,
     default: ''
+  },
+  currentTime:{
+    default: 0
   }
 })
+
 // 笔记数据
 const noteParams = reactive({
   isPrivate:false, // 是否是隐私笔记，默认false  新增的全部都是正常的
@@ -100,9 +111,10 @@ const noteListsDataes = ref({})
 const total = ref(0)
 // 问答列表参数
 const params = ref({
-  isAsc:true,
+  admin:false,
+  isAsc:false,
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 1000,
   sectionId: currentPlayData.sectionId,
   courseId: currentPlayData.courseId,
   sortBy: ''
@@ -113,7 +125,8 @@ const getAskListsDataes = async () => {
   await questFun(params.value)
     .then((res) => {
       if (res.code == 200) {
-        if(res.data.list.length > 0){
+        if(res.data.list.length > 0){ 
+          console.log(2434,res.data)
           if (actIndex.value == 2){
             noteListsDataes.value = res.data.list
           } else {
@@ -122,6 +135,8 @@ const getAskListsDataes = async () => {
               return n
             })
           }
+        } else {
+          noteListsDataes.value = []
         }
         total.value =  Number(res.data.total)
       } else {
@@ -140,6 +155,54 @@ const ruleshandle = (item) =>{
     isSend.value = false
   }
 }
+// 采集
+const gathersHandle = async item => {
+  item.isGathered ? unNotesGathersData(item) : notesGathersData(item) 
+}
+// 采集笔记
+const notesGathersData = async item => {
+await notesGathers(item.id)
+    .then((res) => {
+      if (res.code == 200) {
+        ElMessage({
+          message:'笔记采集成功！',
+          type: 'success'
+        });
+        // 采集笔记成功
+        getAskListsDataes()
+        item.isGathered = !item.isGathered
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+} 
+// 取消采集笔记
+const unNotesGathersData = async item => {
+  ElMessage({ message:'该笔记已采集过了'});
+  return
+await unNotesGathers(item.id)
+    .then((res) => {
+      if (res.code == 200) {
+        // 取消采集笔记成功！
+        getAskListsDataes()
+        item.isGathered = !item.isGathered
+      } else {
+        ElMessage({
+          message:res.data.msg,
+          type: 'error'
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        message: "采集笔记请求出错！",
+        type: 'error'
+      });
+    });
+} 
 // 删除
 const delNoteHandle = async (item) => {
 await delNote(item.id)
@@ -147,7 +210,7 @@ await delNote(item.id)
       if (res.code == 200) {
         ElMessage({
           message: '笔记删除成功',
-          type: 'error'
+          type: 'success'
         });
         getAskListsDataes()
       } else {
@@ -168,8 +231,6 @@ const subType = ref('add')
 const editParams = ref({})
 // 点赞或者取消 
 const putLikedHandle = async (item) => {
-ElMessage({message: '该功能暂未实现！'})
-return 
 await likeed(item.id, !item.liked)
     .then((res) => {
       if (res.code == 200) {
@@ -188,13 +249,19 @@ await likeed(item.id, !item.liked)
       });
     });
 }
+watchEffect(() => {
+  noteParams.noteMoment = props.currentTime
+})
+
 // 新增/编辑-笔记
 const submitForm = async () => {
   const query = subType.value == 'add' ? addNotes : updateNotes
   let params = noteParams
   if(subType.value == 'edit'){
-  editParams.value.content = noteParams.content
-  params = editParams.value
+    editParams.value.content = noteParams.content
+    params = editParams.value
+  } else {
+    params.noteMoment = props.currentTime
   }
   await query(params)
     .then((res) => {
@@ -232,7 +299,7 @@ const editNoteHandle = async (item) => {
 <style lang="scss" scoped>
 .learnNoteWrapper{
   .tabCheck{
-    margin: 10px auto;
+    margin: 10px auto 20px auto;
     display:flex;
     justify-content: center;
     width: 204px;
@@ -255,6 +322,8 @@ const editNoteHandle = async (item) => {
     color: #FFF;
   }
     .noteCont{
+      height: calc(100vh - 378px);
+      overflow-y: scroll;
     .noteLists{
       line-height: 40px;
       font-size: 14px;
@@ -268,20 +337,29 @@ const editNoteHandle = async (item) => {
           border-radius: 26px;
           margin-right: 10px;
         }
+        i{
+          position: relative;
+          top: 2px;
+          font-size: 18px;
+        }
       }
       .note{
         color: #A0A9B2;
+        margin-top: 0px;
         .tit{
           line-height: 24px;
-          margin-top: 6px;
+          margin-top: 0px;
         }
       }
       .time{
         color: var(--color-font3);
-        padding-bottom:10px;
+        padding-bottom:16px;
         margin-bottom: 19px;
         border-bottom: 1px solid #000000;
         line-height: 20px;
+        .tm{
+          color:var(--color-ft2)
+        }
         .actBut{
           color: #A0A9B2;
           cursor: pointer;
@@ -302,6 +380,9 @@ const editNoteHandle = async (item) => {
       }
     }
   }
+  .noData{
+      height: calc(100vh - 488px);
+    }
   .questCont{
     position: absolute;
     width: 100%;
@@ -320,6 +401,12 @@ const editNoteHandle = async (item) => {
         line-height: 28px;
       }
     }
+    :deep(.el-textarea__inner){
+      color: #fff;
+    }
   }
+  .activeLiked, .activeLiked .iconfont{
+        color: var(--color-main) !important;
+      }
 }
 </style>

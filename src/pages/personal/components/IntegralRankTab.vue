@@ -12,7 +12,7 @@
     <div v-if="data.boardList">
       <div
         class="item fx-sb"
-        v-for="(item, index) in data.boardList"
+        v-for="(item, index) in data.boardList.slice(0, 10)"
         :key="index"
       >
         <img v-if="index <= 2" :src="ranking(index + 1)" alt="" />
@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="onData" v-else>
-        暂无数据！
+      <Empty ></Empty>
     </div>
   </div>
 </template>
@@ -30,6 +30,7 @@
 import rank1 from "@/assets/icon_rank1.png";
 import rank2 from "@/assets/icon_rank2.png";
 import rank3 from "@/assets/icon_rank3.png";
+import Empty from "@/components/Empty.vue";
 
 // 前三名图片展示
 const ranks = [rank1, rank2, rank3];

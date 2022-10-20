@@ -6,6 +6,10 @@
     ),
   ),
 );
+
+.el-collapse-item__content{
+  font-size: 14px;
+}
 // Elmessage 
 .el-button{
   background: #2080F7 !important;
@@ -155,4 +159,43 @@
 }
 .myOrderDetailsWrapper .el-dialog__headerbtn{
   right: 8px;
+}
+
+.el-textarea__inner:focus{
+  box-shadow: 0 0 0 1px var(--color-font1) inset;
+}
+.el-cascader .el-input.is-focus .el-input__wrapper {
+  box-shadow: 0 0 0 1px var(--color-font1,var(--color-font1)) inset;
+}
+
+.el-pagination.is-background .el-pager li:not(.is-disabled).is-active{
+  background-color: var(--color-main);
+}
+
+.el-table, .el-table thead{
+  color: var(--color-font1);
+ }
+
+ .el-checkbox__input.is-checked .el-checkbox__inner{
+  background-color: var(--color-main);
+  border-color:var(--color-main);
+ }
+ .el-checkbox__input.is-checked+.el-checkbox__label {
+  color: var(--color-main);
+}
+.el-select-dropdown__item.selected{
+  font-size: 14px;
+  font-weight: 400;
+  color: #19232B;
+  :hover{
+    color: var(--color-main);
+  }
+}
+.el-select-dropdown__item.hover{
+  color:var(--color-main);
+  // background-color: #fff;
+}
+.el-select-dropdown__item:hover{
+  // background-color: var(--color-hover);
+  color: var(--color-main);
 }

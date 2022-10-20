@@ -29,14 +29,14 @@
                 </div>
               </el-form-item>
               <el-form-item label="问题标题:" prop="title" >
-                <el-input v-model.number="ruleForm.title" maxlength="64" @input="ruleshandle"  show-word-limit placeholder="请输入"/>
+                <el-input v-model="ruleForm.title" maxlength="64" @input="ruleshandle"  show-word-limit placeholder="请输入"/>
               </el-form-item>
               <el-form-item label="问题描述:" prop="description">
                 <el-input v-model="ruleForm.description" rows="11" type="textarea" @input="ruleshandle" maxlength="500" show-word-limit placeholder="请输入" />
               </el-form-item>
               <el-form-item>
                 <div class="fx-sb fx-al-ct">
-                  <div><el-checkbox v-model="ruleForm.anonymity" label="是否匿名" size="large" /></div>
+                  <div><el-checkbox v-model="ruleForm.anonymity" label="匿名提问" size="large" /></div>
                   <div class="subCont">
                     <span class="bt ft-14" :class="{'bt-dis':!isSend}" @click="submitForm(ruleFormRef)">发布</span>
                     </div>
@@ -172,6 +172,7 @@ const ruleshandle = () => {
 
 // 寻找提问章节
 const handleChange = (val) => {
+  type.value == 'edit' ? ruleForm.id = route.query.queryId : null
   ruleForm.chapterId = val[0]
   ruleForm.sectionId = val[1]
   ruleshandle()
@@ -182,7 +183,8 @@ const submitForm = (formEl) => {
   formEl.validate(async (valid) => {
     if (valid) {
     //  根据不同模式执行新增或编辑提问
-     const subFunc = type == 'edit' ? putQuestions : postQuestions;
+     const subFunc = type.value == 'edit' ? putQuestions : postQuestions;
+
      await subFunc(ruleForm).then((res) => {
         if (res.code == 200) {
           router.push({path: '/result/success', query: '查看我的问题'})
@@ -195,7 +197,7 @@ const submitForm = (formEl) => {
       })
       .catch(() => {
         ElMessage({
-          message: type == 'edit' ? '问题修改出错！':'问题发布出错！',
+          message: type.value == 'edit' ? '问题修改出错！':'问题发布出错！',
           type: 'error'
         });
       });

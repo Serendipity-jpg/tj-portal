@@ -30,14 +30,14 @@
           </div>
           <div  class="td fx-1">
             <div class="marg-bt-10 ft-wt-600 ft-cl-1">总 分 数</div>
-            <div>{{$route.query.objectiveScore + $route.query.subjectiveScore || 0}} / {{total}}</div>
+            <div>{{$route.query.objectiveScore || 0}} / {{total}}</div>
           </div>
         </div>
       </div>
      </div>
      <div class="answerCardTitle" v-if="myExamDetails">答题卡</div>
      <div class="answerCards">
-      <span v-for="(item, index) in myExamDetails" :class="{right:item.correct,wrong:!item.correct && item.answer != ''}">{{index}}</span>
+      <span v-for="(item, index) in myExamDetails" :class="{right:item.correct,wrong:!item.correct && item.answer != ''}">{{index + 1}}</span>
      </div>
      <div class="examCont" >
         <div class="item" v-for="(item, index) in myExamDetails">
@@ -46,21 +46,21 @@
             <img v-if="item.correct" src="@/assets/icon_right.png" alt="">
             <img v-else src="@/assets/icon_wrong.png" alt="">
           </div>
-          <div class="quest">
-            {{index+1}}. {{item.question.name}}
+          <div class="quest fx">
+            {{index+1}}. <span v-html="item.question.name"></span>
           </div>
         </div>
         <div class="answer">
-          <li v-for="it in item.question.options">{{it}}</li>
+          <li v-for="it in item.question.options"><span v-html="it"></span></li>
         </div>
         <div class="analysis">
           <div class="fx marg-bt-20">
-            <div class="col ft-wt-600">你的答案：{{answerChange(item.subjectType, item.answer)}}</div> 
-            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.subjectType, item.question.analysis)}}</div>
+            <div class="col ft-wt-600">你的答案：{{answerChange(item.question.subjectType, item.answer)}}</div> 
+            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.question.subjectType, item.question.answers)}}</div>
             <div class="col">难易程度：{{defficultyChange(item.question.difficulty)}}</div>
             <div>得分：{{item.score}}</div>
           </div>
-          <div v-if="item.question.analysis">答案解析：{{item.question.analysis}}</div>
+          <div class="fx" v-if="item.question.analysis">答案解析：<span v-html="item.question.analysis"></span></div>
         </div>
         </div>
      </div>
@@ -92,7 +92,7 @@ onMounted(async () => {
 /** 方法定义 **/
 
 // 查询我的考试记录
-const total = ref(100)
+const total = ref(0)
 // 查询我的详情
 const myExamDetails = ref()
 const getExamDetailsData = async () => {
@@ -101,7 +101,7 @@ const getExamDetailsData = async () => {
       if (res.code == 200 && res.data != null){
         myExamDetails.value = res.data
         res.data.forEach(el => {
-          total.value += el.score
+          total.value += el.question.score
         });
       }
     })
@@ -117,13 +117,12 @@ const answerChange = (type, val) => {
   let data = ''
   switch (type){
     case 1 : {
-      data = upperAlpha(val)
+      data = isNaN(Number(val)) ? val : upperAlpha(Number(val))
       break
     }
     case 2 || 3: {
-      const arr = val.split(',')
-      arr.map(n => upperAlpha(val))
-      data = arr.toString()
+      const arr = typeof val == 'string' ? val.split(',') : val
+      data = arr.map(n => isNaN(Number(n)) ? n : upperAlpha(Number(n))).join(',')
       break
     }
     case 4 : {

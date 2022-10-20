@@ -17,24 +17,24 @@
     </div>
     <div class="settiementInfo">
       <div class="coupon fx">
-        <div >
-          优惠券： <el-select v-if="orderInfo.coupons && orderInfo.coupons.length > 0" v-model="couponIds" placeholder="Select">
+        <div v-if="orderInfo.coupons && orderInfo.coupons.length > 0" >
+          优惠券： <el-select @change="changeHandle" v-model="couponIds" placeholder="请选择优惠券">
                     <el-option
                       v-for="item in orderInfo.coupons"
                       :key="item.value"
-                      :label="item.label"
-                      :value="discountAmount"
+                      :label="item.rule"
+                      :value="item.id"
                       :disabled="item.disabled"
                     />
                   </el-select>
-                  <span v-else class="noData"> 暂无可用优惠券</span>
         </div>
+        <div v-else class="noData"> 优惠券： 暂无可用优惠券</div>
         <div class="price">
-          <div><span>订单总价：</span> ￥ {{amountConversion(orderInfo.totalAmount)}}</div>
-          <div><span>优惠金额：</span> - ￥ {{amountConversion(discountAmount) || 0}}</div>
+          <div class="fx-sb"><span>订单总价：</span> <span>￥ {{amountConversion(orderInfo.totalAmount)}}</span></div>
+          <div class="fx-sb"><span>优惠金额：</span>  <span>￥ {{amountConversion(discountAmount) || 0}}</span></div>
         </div>
       </div>
-      <div class="paid"><span>实付金额：</span><span class="ft-cl-err">{{price}}</span></div>
+      <div class="paid"><span>实付金额：</span><span class="ft-cl-err"> ￥ {{price}}</span></div>
       <div @click="orderHandle"><span class="bt bt-red">去结算</span></div>
     </div>
   </div>
@@ -88,11 +88,15 @@ const comfirePageInfoHandle = async () => {
       });
     });
 } 
-// 下单 
+const changeHandle = val => {
+  const value = orderInfo.value.coupons.filter(n => n.id == val)
+  discountAmount.value = value[0].discountAmount
+}
+// 下单
 const orderHandle = async () => {
   const courseIds = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
-  const params = {courseIds}
-  
+  const couponIds = couponIds.value != null ? [couponIds.value] : undefined
+  const params = {courseIds, couponIds}
   await setOrder(params)
     .then((res) => {
       if (res.code == 200) {

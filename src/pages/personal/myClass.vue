@@ -10,7 +10,7 @@
       <!-- 学习计划 -->
       <div class="personalCards" v-if="planData && typeof(planData) != 'string'" >
         <CardsTitle title="学习计划" > 
-          <div class="ft-wt-400"><span class="marg-rt-20">本周计划：{{weekFinishedAmount || 0}} / {{weekPlanAmount || 0}}</span> <span>积分奖励：{{totalPoints || 0}}</span></div>
+          <div class="ft-wt-400"><span class="marg-rt-20">本周计划：<em>{{weekFinishedAmount || 0}}</em> / {{weekPlanAmount || 0}}</span> <span>积分奖励：<em>{{totalPoints || 0}}</em></span></div>
         </CardsTitle>
         <PlanTable  :data="planData"></PlanTable>
       </div>
@@ -32,7 +32,7 @@
         width="30%"
       >
         <div class="dialogCont">
-          <div class="fx marg-bt-20"><span>每周学习节数:</span> <el-input v-model="number" min="1" type="number"></el-input></div>
+          <div class="fx marg-bt-20"><span>每周学习节数:</span> <el-input @input="planDayHandle" v-model="number" min="1" type="number"></el-input></div>
           <div class="fx"><span>预计学完时间:</span> <div class="lastTime">{{lastTime}}</div> </div>
         </div>
         <template #footer>
@@ -80,6 +80,7 @@ const getLearningData = async () => {
     .then((res) => {
       if (res.code == 200 && res.data != null){
         learningData.value = res.data
+        store.setMyLearnClassInfo(res.data)
       }
     })
     .catch(() => {
@@ -125,8 +126,15 @@ const number = ref(1)
 const lastTime = computed(() => {
   // 学完的时间按周 每周学n节 m = n/总节数 不足一周按一周算 从今天开始往后延 m*7天 
   const num =  Math.ceil(days.value / number.value) * 7
-  return moment().add(num, 'days').format("YYYY-MM-DD")
+  return number.value ? moment().add(num, 'days').format("YYYY-MM-DD") : ''
 })
+// 处理计划天数不能小于1
+const planDayHandle = val => {
+
+  val != '' && val < 1 ? number.value = 1 : 
+  val != '' && val > 50 ? number.value = 50 : null
+
+}
 
 const dialogVisible = ref(false)
 const title = ref('创建计划')
@@ -149,7 +157,6 @@ const planHandle = (val) => {
 }
 // 创建、修改计划
 const createPlan = async () => {
-  console.log(currentData.value)
   const params = {
     freq: number.value,
     courseId: currentData.value ? currentData.value.course.id : ''
@@ -159,7 +166,7 @@ const createPlan = async () => {
       if (res.code == 200 ){
         getPlanData()
         ElMessage({
-          message: `${title}成功`,
+          message: `${title.value}成功`,
           type: 'success'
         });
         dialogVisible.value = false

@@ -1,7 +1,7 @@
 <!-- 排序 -->
 <template>
   <div class="sortBar">
-    <span :class="{active: activeKey == item.value, checkBox:true}" v-for="(item, index) in data" :key="index" @click="activeHandle(item.value)">{{item.key}}</span>
+    <span :class="{active: activeKey == item.value, checkBox:true}" class="font-bt3" v-for="(item, index) in data" :key="index" @click="activeHandle(item.value)">{{item.key}}</span>
   </div>
 </template>
 <script setup>
@@ -33,7 +33,7 @@ const activeHandle = (value) => {
     padding: 4px 14px;
     font-size: 14px;
     margin-right: 20px;
-    color: var(--color-font1);
+    // color: var(--color-font1);
     border-radius: 20px;
   }
   .active{

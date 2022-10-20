@@ -42,6 +42,9 @@
                     .bt:first-child{
                         margin-bottom: 15px;
                     }
+                    .bt:last-child{
+                        margin-bottom: 0px;
+                    }
                 }
             }
             border-left: 1px solid #EEEEEE;
@@ -124,6 +127,10 @@
         flex-direction: column;
         align-items: flex-end;
         padding-top: 40px;
+        .fx{
+            align-items: top;
+            line-height: 22px;
+        }
         .pirc{
             display: inline-block;
             width: 120px;

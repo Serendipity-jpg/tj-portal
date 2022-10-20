@@ -7,11 +7,20 @@
     <div class="marg-bt-20">{{baseDetailsData.usePeople}}</div>
     <div class="title">授课老师</div>
     <div class="classTeacher">
+      <div class="navigat">
+        <div class="prev"><span class="iconfont zhy-a-shouqi2x"></span></div>
+        <div class="next"><span class="iconfont zhy-a-shouqi2x"></span></div>  
+      </div>
       <swiper
-          :modules="[ Pagination ]"
+          :centeredSlides="true"
+          :pagination="{
+            clickable: true,
+          }"
+          :navigation="{nextEl: '.next', prevEl: '.prev',}"
+          :modules="[ Navigation]"
           :space-between="20"
-          
-        >
+          :controller="{ control: secondSwiper }"
+          >
           <swiper-slide
             class="swiper-slide"
             v-for="(item, i) in baseClassTeacher"
@@ -39,11 +48,12 @@
   </div>
 </template>
 <script setup>
+import { ref } from 'vue';
 // 讲师信息轮播插件
 import { Swiper, SwiperSlide } from "swiper/vue";
-import {  Pagination } from 'swiper';
-import 'swiper/css/navigation';
-
+import {  Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
 // 引入父级传参
 defineProps({
   baseDetailsData:{
@@ -55,6 +65,7 @@ defineProps({
     default:{}
   }
 })
+const secondSwiper = ref(null);
 </script>
 <style lang="scss" scoped>
 .classAbout{
@@ -69,15 +80,14 @@ defineProps({
     }
     .classTeacher{
         position: relative;
-        width: calc(80vw - 425px);
+        // width: calc(80vw - 425px);
+        margin-bottom: 30px;
         left: 50%;
         transform: translate(-50%);
+        width: 795px;
         max-width: 1015px;
         min-width: 795px; 
         margin-top: 20px;
-        :deep(.swiper-button-next, .swiper-button-prev){
-            top: 0;
-        }
         .teacherInfo{
             height: 255px;
             overflow: hidden;
@@ -107,5 +117,38 @@ defineProps({
             }
         }
     }
+    .navigat{
+      position: absolute;
+      top: -40px;
+      right: 0;
+      .next, .prev{
+        position: relative;
+        display: inline-block;
+        width: 21px;
+        height: 21px;
+        border-radius: 21px;
+        margin-left: 17px;
+        box-shadow: 0px 0px 10px rgba($color: #d3d3d3, $alpha: 1.0);
+        cursor: pointer;
+        color: var(--color-main);
+        span{
+          position: relative;
+          display: inline-block;
+          left: 1px;
+          top: -5px;
+          width: 20px;
+          height: 20px;
+          font-size: 12px;
+          text-align: center;
+        }
+      }
+      .prev{
+        transform: rotate(180deg);
+      }
+      .swiper-button-disabled{
+        color:#e1eaf6;
+      }
+    }
 }
+
 </style>

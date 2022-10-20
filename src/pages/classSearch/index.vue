@@ -38,7 +38,7 @@
 <script setup>
 /** 数据导入 **/
 
-import { onMounted, ref, watchEffect } from "vue";
+import { onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { ElMessage } from "element-plus";
 import { getClassCategorys, classSeach } from "@/api/class.js";
 // 组件导入
@@ -69,6 +69,7 @@ const isShow = ref(true)
 const fullPath = ref(route.fullPath)
 // 课程分类默认状态
 const activeId = ref('all')
+const dataCache = dataCacheStore()
 // mounted生命周期
 onMounted(() => {
   // 获取一、二、三级分类信息
@@ -84,7 +85,12 @@ onMounted(() => {
   search()
 });
 
-const dataCache = dataCacheStore()
+// 组件卸载的时候触发 - 清空搜索结果
+onUnmounted(() => {
+  dataCache.setSearchKey('')
+})
+
+
 
 watchEffect(() => {
   if(dataCache.getSearchKey != ''){
@@ -130,6 +136,7 @@ const clearSearchKey = () => {
   searchParams.value.keyword = ""
   isShow.value = false
   dataCache.setSearchKey('')
+  initPage()
   search()
 }
 
@@ -148,12 +155,19 @@ async function searchKey(item){
   if (item.key == 'categoryIdLv1') {
     searchParams.value[item.key] = item.value != 'all' ? item.value : undefined;
   }
+  initPage()
   search()
 }
 // 排序操作
 const sortHandle = (item) => {
   searchParams.value.sortBy = item != 'all' ? item : undefined;
+  initPage()
   search()
+}
+// 初始化分页页码
+const initPage = () => {
+  page.value = 1
+  searchParams.value.pageNo = page.value
 }
 // 分页操作
 const pagesHandle = (item) => {
@@ -188,6 +202,7 @@ async function search (){
 watchEffect(() => {
   if (searchParams.value.keyword != dataCache.getSearchKey){
     searchParams.value.keyword = dataCache.getSearchKey
+    initPage()
     search()
   }
 })

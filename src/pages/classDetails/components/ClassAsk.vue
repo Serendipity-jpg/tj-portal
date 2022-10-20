@@ -3,8 +3,8 @@
   <div class="classAsk bg-wt marg-bt-20">
     <div class="tabLab fx-sb">
       <div class="lable">
-        <span @click="askCheck('all')" :class="{act:askType == 'all'}" class="marg-rt-20">全部问答</span> 
-        <span @click="askCheck('my')" :class="{act:askType == 'my'}">我的问答</span>
+        <span @click="askCheck('all')" :class="{act:askType == 'all','bt-grey2': askType == 'my'}" class="marg-rt-20 ">全部问答</span> 
+        <span @click="askCheck('my')" :class="{act:askType == 'my','bt-grey2': askType == 'all'}">我的问答</span>
       </div> 
       <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: $props.id, title: $props.title}})" class="bt bt-round ft-14">提问</span></div>
     </div>
@@ -83,6 +83,7 @@ onMounted(() => {
 })
 // 问答列表参数
 const params = ref({
+  admin:false,
   courseId: route.query.id,
   isAsc:true,
   pageNo: 1,
@@ -165,7 +166,7 @@ await delQuestions(id)
 // 去往详情页面
 const goDetails = (item) => {
   dataCache.setAskDetails(item)
-  router.push({path: '/askDetails', query:{id:item.id}})
+  router.push({path: '/askDetails', query:{id:item.id, detailsId: props.id, name: props.title}})
 }
 // 小节数据
 const chapterData = ref([])
@@ -212,6 +213,11 @@ const handleCurrentChange = (val) => {
       display: flex;
       align-items: center;
        span{
+        display: inline-block;
+        padding: 5px 20px;
+        border-radius: 20px;
+        font-size: 16px;
+        text-align: center;
         cursor: pointer;
       }
     }

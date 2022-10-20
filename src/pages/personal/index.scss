@@ -8,7 +8,7 @@
 // 个人中心架构页面 样式
 .personalWrapper{
     .personal{
-        padding: 30px 0;
+        padding: 30px 0 ;
         display: flex;
         justify-content: space-between;
     }
@@ -33,6 +33,7 @@
 }
 .nodata{
     width: 100%;
+    height: calc(100vh - 450px);
     text-align: center;
     line-height: 100px;
     color:var(--color-font2)

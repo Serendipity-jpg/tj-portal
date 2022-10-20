@@ -28,11 +28,11 @@ defineProps({
 <style lang="scss" scoped>
 .relatedQuestions {
   width: 344px;
-  height: 444px;
+  height: fit-content;
   background: #FFFFFF;
   border-radius: 8px;
   padding:30px;
-  line-height: 22px;
+  line-height: 24px;
   margin-top: 30px;
   font-size: 14px;
   .but{
@@ -41,7 +41,7 @@ defineProps({
     margin-bottom: 30px;
   }
   p{
-    margin: 10px 0;
+    margin: 20px 0;
   }
   .tit{
     font-weight: 600;

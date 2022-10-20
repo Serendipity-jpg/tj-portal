@@ -14,7 +14,7 @@
       </el-table-column>
       <el-table-column prop="address" align="center" label="课程进度" width="100" >
         <template #default="scope">
-          <div>{{scope.row.learnedSections}}/{{scope.row.learnedSections}}</div>
+          <div>{{scope.row.learnedSections}}/{{scope.row.sections}}</div>
         </template>
       </el-table-column>
       <el-table-column prop="address" align="center" label="学习时间" width="180" >

@@ -2,13 +2,13 @@
 <template>
  <div class="couponCards fx" v-for="(item, index) in data" :key="index">
     <div class="price ft-cl-wt">
-        <div>￥ <em>1000</em></div>
+        <div>￥ <em>{{item.discountAmount / 100}}</em></div>
         <div class="desc">{{item.couponRule}}</div>
     </div>
     <div class="info">
         <div class="tit">{{item.name}}</div>
         <div><em>适用平台：</em>{{item.rangeType == 1 ? '全平台' : '特定'}}</div>
-        <div class="time"><em>有效日期：</em>{{moment(item.termEndTime).format('YYYY-MM-DD')}}</div>
+        <div class="time"><em>有效日期：</em>{{moment(item.termEndTime).format('YYYY-MM-DD hh:mm:ss')}}</div>
     </div>
     <div class="butCont fx-ct" v-if="type == 1"><span @click="() => {$router.push({path: '/search/index'})}" class="bt">去使用</span></div>
 </div>

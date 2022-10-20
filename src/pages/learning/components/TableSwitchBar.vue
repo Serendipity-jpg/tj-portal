@@ -1,7 +1,7 @@
 <!-- table切换头部 -->
 <template>
   <div class="tableSwitchBar">
-    <span :class="{title:true,'font-bt4':actId != item.id, act:actId == item.id}"  @click="checkHandle(item.id)" v-for="(item, index) in data" :key="index">
+    <span :class="{title:true, act:actId == item.id}" @click="checkHandle(item.id)" v-for="(item, index) in data" :key="index">
       {{item.name}}
     </span>
   </div>
@@ -40,15 +40,14 @@ const checkHandle = (id) => {
       cursor: pointer;
     }
     .act{
-      font-weight: 600;
       position: relative;
       &::before{
         position: absolute;
         left: 50%;
         transform: translate(-50%);
         content: '';
-        width: 33px;
-        height: 4px;
+        width: 24px;
+        height: 3px;
         border-radius: 4px;
         bottom: -8px;
         background: var(--color-main);

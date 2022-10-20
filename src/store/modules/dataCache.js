@@ -12,6 +12,7 @@ export const dataCacheStore = defineStore('notification', {
     },
     currentPlayData:{}, // 视频的当前播放数据存储
     orderClassInfo:{}, //订单的课程信息 
+    myLearnClassInfo:{}, // 当前学习课程的信息
   }),
   getters: {
     // 获取对应的state的值
@@ -20,7 +21,8 @@ export const dataCacheStore = defineStore('notification', {
     getLearingDataes: state => state.learingDataes,
     getCurrentPlayData: state => state.currentPlayData,
     getOrderClassInfo: state => state.orderClassInfo,
-    getCourseClassDataes: state => state.courseClassDataes
+    getCourseClassDataes: state => state.courseClassDataes,
+    getMyLearnClassInfo: state => state.myLearnClassInfo
   },
   actions: {
     // 设置state对应的值
@@ -41,7 +43,10 @@ export const dataCacheStore = defineStore('notification', {
     },
     setCourseClassDataes(data){
       this.courseClassDataes = data;
-    }
+    },
+    setMyLearnClassInfo(data){
+      this.myLearnClassInfo = data;
+    },
   },
   persist: {
     enabled: true,

@@ -27,7 +27,7 @@ export default defineConfig((mode) => {
       host: '0.0.0.0',
       proxy: {
         '/img-tx': {
-          target: 'http://172.17.2.134',
+          target:  'https://tjxt-dev.itheima.net/', // 'http://172.17.2.134',
           changeOrigin: true,
           // rewrite: (path) => {
           //   return path.replace(/^\/img-tx/, '')

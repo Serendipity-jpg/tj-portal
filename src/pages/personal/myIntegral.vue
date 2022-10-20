@@ -75,6 +75,7 @@ const getSeasonsData = () => {
   getSeasons({season:0})
     .then((res) => {
       if (res.code == 200 ){
+        console.log(3333, res.data)
         seasonsData.value = res.data
       } else {
         ElMessage({
