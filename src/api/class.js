@@ -151,24 +151,25 @@ request({
 })
 
 // 创建学习计划
-export const creatPlans = (courseId) =>
+export const creatPlans = (params) =>
 request({
 	url: `${LEARNING_API_PREFIX}/lessons/plans`,
 	method: 'post',
+	data: params
 })
 
 // 考试相关
 // 分页查询我的考试记录
 export const getExamList = (params) =>
 request({
-	url: `${EXAM_API_PREFIX}/exam-records/me`,
+	url: `${EXAM_API_PREFIX}/exams/page`,
 	method: 'get',
 	params
 })
 // 查询我的考试记录详情
 export const getExamDetails = (id) =>
 request({
-	url: `${EXAM_API_PREFIX}/exam-records/${id}/details`,
+	url: `${EXAM_API_PREFIX}/exams/${id}`,
 	method: 'get',
 })
 // 提交考试答案，考试或测试提交时需要保存答案信息
@@ -210,14 +211,14 @@ request({
 // 签到打卡功能，返回本次签到的积分值
 export const pointsSign = (params) =>
 request({
-	url: `${LEARNING_API_PREFIX}/points/sign`,
+	url: `${LEARNING_API_PREFIX}/sign-records`,
 	method: 'post',
 	data:params
 })
 // 获取签到记录
 export const getSignRecords = () =>
 request({
-	url: `${LEARNING_API_PREFIX}/points/sign/records`,
+	url: `${LEARNING_API_PREFIX}/sign-records`,
 	method: 'get',
 })
 // 获取签到记录
@@ -229,7 +230,7 @@ request({
 // 查询指定赛季信息
 export const getSeasons = (params) =>
 request({
-	url: `${LEARNING_API_PREFIX}/boards/list`,
+	url: `${LEARNING_API_PREFIX}/boards`,
 	method: 'get',
 	params
 })

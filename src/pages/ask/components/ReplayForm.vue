@@ -55,7 +55,6 @@ const params = reactive({
   questionId: props.askInfoId, // 当前问题的ID
   targetReplyId: "",
   targetUserId: "",
-  answerId: "",
   content: "",
   anonymity: "",
 });

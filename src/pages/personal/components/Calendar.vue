@@ -74,7 +74,7 @@ const getSignRecordsHandel = async () => {
   await getSignRecords()
     .then((res) => {
       if (res.code == 200 ){
-        signData.value = res.data.signRecords
+        signData.value = res.data
         // 日历数据处理
         getMounthDay(currentDay)
       } else {

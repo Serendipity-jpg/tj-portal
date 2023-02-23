@@ -12,12 +12,12 @@
     <div v-if="data.boardList">
       <div
         class="item fx-sb"
-        v-for="(item, index) in data.boardList.slice(0, 10)"
+        v-for="(item, index) in data.boardList"
         :key="index"
       >
         <img v-if="index <= 2" :src="ranking(index + 1)" alt="" />
         <span class="lt" v-else>{{ ranking(index + 1) }}</span>
-        <span class="ct">{{ item.student ? item.student.name : "--" }}</span>
+        <span class="ct">{{ item.name || "--" }}</span>
         <span>{{ item.points }}</span>
       </div>
     </div>

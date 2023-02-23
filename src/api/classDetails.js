@@ -37,17 +37,11 @@ export const getClassChapter = (id) =>
 // 获取问答列表-全部
 export const getAskList = (params) =>
 	request({
-		url: `${LEARNING_API_PREFIX}/questions`,
+		url: `${LEARNING_API_PREFIX}/questions/page`,
 		method: 'get',
 		params,
 	})	
-// 获取问答列表
-export const getMyAskList = (params) =>
-	request({
-		url: `${LEARNING_API_PREFIX}/questions/me`,
-		method: 'get',
-		params,
-	})	
+
 // 新增提问
 export const postQuestions = (params) =>
 	request({
@@ -77,21 +71,15 @@ export const delQuestions = (id) =>
 // 回复
 export const postAnswers = params =>
 	request({
-		url: `${LEARNING_API_PREFIX}/answers`,
+		url: `${LEARNING_API_PREFIX}/replies`,
 		method: 'post',
 		data:params
 	})			
-// 根据问题的Id获取问题的
-export const getAllQuestions = params =>
-	request({
-		url: `${LEARNING_API_PREFIX}/questions/${params.id}/answers`,
-		method: 'get',
-		params
-	})
-// 根据答案id分页查询回复列表
+
+// 分页查询回复、回答列表
 export const getReply = params =>
 request({
-	url: `${LEARNING_API_PREFIX}/answers/${params.id}/replies`,
+	url: `${LEARNING_API_PREFIX}/replies/page`,
 	method: 'get',
 	params
 })
@@ -99,7 +87,7 @@ request({
 // 点赞接口
 export const putLiked = params =>
 request({
-	url: `${LEARNING_API_PREFIX}/answers/${params.id}/liked/${params.liked}`,
-	method: 'put',
-	params
+	url: `/rs/likes`,
+	method: 'post',
+	data: params
 })

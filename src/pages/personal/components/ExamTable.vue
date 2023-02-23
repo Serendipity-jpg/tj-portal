@@ -18,9 +18,9 @@
           <span>{{scope.row.type == 0 ? '练习' : '考试'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="subjectiveScore" align="center" label="分数" width="60" >
+      <el-table-column prop="score" align="center" label="分数" width="60" >
         <template #default="scope">
-          <span>{{scope.row.objectiveScore ? scope.row.objectiveScore : '0'}}</span>
+          <span>{{scope.row.score || 0}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="100">

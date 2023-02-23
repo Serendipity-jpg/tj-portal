@@ -50,4 +50,12 @@ export const updateUserInfo = (params) =>
 		url: `/students`,
 		method: 'put',
 		data:params
-	})		
+	})
+// 账号退出登录
+export const userLogout = () => {
+	return request({
+		url: `${AUTH_API_PREFIX}/accounts/logout`,
+		method: "post",
+		withCredentials: true
+	});
+}

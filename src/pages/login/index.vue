@@ -1,7 +1,9 @@
 <!-- 登录页面 -->
 <template>
   <div class="loginWrapper fx-fd-col fx-sb">
-    <Header></Header>
+    <video autoplay loop muted="" preload class="loginVideo">
+      <source src="@/assets/login.mp4" type="video/mp4">
+    </video>
     <div class="fx-1 fx-al-ct">
       <div class="login">
         <div class="title" v-show="act != 'register'">

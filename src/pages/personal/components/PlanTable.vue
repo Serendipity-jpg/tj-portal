@@ -9,7 +9,7 @@
       </el-table-column>
       <el-table-column center label="本周进度" align="center" width="100" >
          <template #default="scope">
-          <div>{{scope.row.learnedSectionsWeek}}/{{scope.row.weekFreq}}</div>
+          <div>{{scope.row.weekLearnedSections}}/{{scope.row.weekFreq}}</div>
         </template>
       </el-table-column>
       <el-table-column prop="address" align="center" label="课程进度" width="100" >

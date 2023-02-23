@@ -4,13 +4,15 @@
     <router-link class="fx-sb font-bt2" :class="{'active': activeClass(item)}" v-for="item in personalRoute" :to="item.path">
       {{item.meta.title}}<i class="iconfont" v-html="item.meta.icon"></i>
     </router-link>
-    <a  class="fx-sb font-bt2" href="#/login" >退出<i class="iconfont">&#xe60c;</i></a>
+    <a  class="fx-sb font-bt2" @click="logout">退出<i class="iconfont">&#xe60c;</i></a>
   </div>
 </template>
 <script setup>
 import { onMounted, ref, watchEffect, computed } from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-
+import {userLogout} from "@/api/user"
+import { useUserStore } from '@/store'
+const store = useUserStore();
 const route = useRoute()
 const router = useRouter()
 // 使用路由
@@ -33,6 +35,16 @@ onMounted(() => {
 watchEffect(() => {
   currentPath.value = route.path.split('/').at(-1);
 })
+
+// 退出登录
+const logout = () => {
+  userLogout().then(res => {
+    if (res.code === 200) {
+      store.logout();
+      location.href = "/"
+    }
+  }).catch(err => console.log(err))
+}
 
 </script>
 <style lang="scss" scoped>

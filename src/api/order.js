@@ -48,15 +48,13 @@ export const enrolledFreeCourse = (id) =>
 export const cancelOrder = (id) =>
 	request({
 		url: `${TRADE_API_PREFIX}/orders/${id}/cancel`,
-		method: 'put',
-		params
+		method: 'put'
 	})
 // 删除订单
 export const delOrder = (id) =>
 	request({
 		url: `${TRADE_API_PREFIX}/orders/${id}`,
-		method: 'delete',
-		params
+		method: 'delete'
 	})
 
 

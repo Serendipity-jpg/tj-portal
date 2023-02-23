@@ -9,12 +9,12 @@
               <span class="time">{{(item.mediaDuration/60).toFixed(0)+'.'+item.mediaDuration % 60}}</span>
             </div>
           </template>
-          <div  @click.self="playHandle(it)" class="item fx-sb" v-for="(it, ind) in item.sections">
+          <div  @click="playHandle($props.id, it)" class="item fx-sb" v-for="(it, ind) in item.sections">
             <div><iconVideo v-if="it.type === 2" class="icon" /> <iconJdks v-if="it.type === 3" class="icon" />
               {{it.index}}、{{it.name}}
             </div>
             <div class="time">
-              <span v-if="it.trailer" class="trailer-font" @click.stop="toPlayPage($props.id,item.id, it.id)">试看</span>
+              <span v-if="it.trailer" class="trailer-font">试看</span>
               {{(it.mediaDuration/60).toFixed(0)+'.'+it.mediaDuration % 60}}
             </div>
           </div>
@@ -31,13 +31,17 @@ import { ElMessage } from "element-plus";
 
 const router = useRouter()
 // 引入父级传参
-defineProps({
+const props = defineProps({
   data:{
     type: Object,
     default:{}
   },
   id:{
     type: String
+  },
+  isSignUp:{
+    type: Boolean,
+    default: false
   }
 })
 
@@ -46,12 +50,12 @@ const activeNames = ref([0])
 const toPlayPage = (courseId,chapterId, sectionId) => {
   router.push({path:"/learning/index", query: {"id" : courseId, "sectionId": sectionId}})
 }
-const playHandle = (val) => {
-  if(!val.trailer){
+const playHandle = (courseId, val) => {
+  if(!val.trailer && !props.isSignUp){
     ElMessage('该课程章节不支持试看， 请购买后播放')
     return
   }
-  router.push({path: '/learning/index', query: {id: props.courseId, sectionsId: val.id}})
+  router.push({path: '/learning/index', query: {id: courseId, sectionId: val.id}})
 }
 </script>
 <style lang="scss" scoped>

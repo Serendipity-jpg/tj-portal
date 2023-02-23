@@ -14,15 +14,15 @@
         <div class="tabCont">
           <div class="orderList">
             <div class="fx-1 alignLeft" >
-              <OrderCards :data="it" v-for="it in item.details" @click="() => $router.push({path: '/details/index', query:{id: it.courseId}})"></OrderCards>
+              <OrderCards :data="it" v-for="it in item.details"></OrderCards>
             </div>
             <span>{{amountConversion(item.totalAmount)}}</span><span>{{amountConversion(item.realAmount)}}</span><span>{{orderStatus(item)}}</span>
             <span class="btCont">
               <span class="bt" v-if="isOrderPay(item)">评价课程</span>
               <span @click="() => $router.push({path: 'myOrderDetails',query: {id:item.id}})" class="bt bt-grey1">查看订单</span>
-              <!--<span v-if="item.status == 1 " @click="cancelOrderHandle(item)" class="bt bt-grey">取消订单</span>-->
+              <span v-if="item.status == 1 " @click="cancelOrderHandle(item)" class="bt bt-grey">取消订单</span>
               <span v-if="item.status == 1 " @click="() => $router.push({path: '/pay/payment',query: {orderId:item.id}})" class="bt">去支付</span>
-              <span v-if="item.status == 3"  @click="delOrderHandle(item)" class="bt bt-grey1">删除订单</span>
+              <span v-if="item.status == 3 || item.status == 5"  @click="delOrderHandle(item)" class="bt bt-grey1">删除订单</span>
             </span>
           </div>
         </div>
@@ -153,7 +153,8 @@ function orderStatus(item) {
       break
     }
     case 6: {
-      data = '已退款'
+      let i = item.details.findIndex(d => d.refundStatus === 5);
+      data = i !== -1 ? '已退款' : "退款中"
       break
     }
   }
@@ -162,7 +163,7 @@ function orderStatus(item) {
 // 取消订单
 const cancelOrderHandle = async (item) => {
   ElMessageBox.confirm(
-        `是否确认取消课程《 ${item.name} 》`,
+        `是否确认取消该订单吗？`,
         '取消订单',
         {
           confirmButtonText: '确认',
@@ -178,10 +179,10 @@ const cancelOrderHandle = async (item) => {
 }
 // 取消订单
 const cancelOrderAction = async (item) => {
-  await cancelOrder({id: item.id})
+  await cancelOrder(item.id)
     .then((res) => {
       if (res.code === 200 ){
-        item.orderStatus = 3
+        item.status = 3
       } else {
         ElMessage({
         message: res.msg,
@@ -208,7 +209,7 @@ const delOrderHandle = async (item) => {
         }
       )
         .then(() => {
-          delOrderAction()
+          delOrderAction(item)
         })
         .catch(() => {
           ElMessage({
@@ -220,7 +221,7 @@ const delOrderHandle = async (item) => {
 
 // 删除订单
 const delOrderAction = async (item) => {
-  await delOrder({id: item.id})
+  await delOrder(item.id)
     .then((res) => {
       if (res.code === 200 ){
         getOrderListesData()

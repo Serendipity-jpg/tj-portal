@@ -6,7 +6,11 @@
           <div class="fx-1 marg-rt-20">
             <!-- 问题主体- start -->
             <div class="askCont bg-wt marg-bt-20">
-              <div class="userInfo"> <img :src="askInfo.user.icon" alt=""> {{askInfo.user.name}}</div>
+              <div class="userInfo">
+                <img v-if="askInfo.userIcon" :src="askInfo.userIcon" alt="">
+                <img v-else src="/src/assets/anonymity.png" alt="">
+                {{askInfo.userName || '匿名'}}
+              </div>
               <div class="askInfo">
                 <div class="ft-20 ft-wt-600">{{askInfo.title}}</div>
                 <div class="ft-cl-des marg-bt-10">{{askInfo.createTime}}</div>
@@ -37,43 +41,47 @@
               <div class="answerItems">
                 <div class="items" v-for="item in questionData" :key="item.id">
                   <div class="fx-al-ct">
-                    <img class="img" :src="item.replier.icon" alt="">
-                    <span class="ft-cl-des">{{item.replier.name}}</span>
+                    <img class="img" v-if="item.userIcon" :src="item.userIcon" alt="">
+                    <img class="img" v-else src="/src/assets/anonymity.png" alt="">
+                    <span class="ft-cl-des">{{item.userName || '匿名'}}</span>
                   </div>
                   <div class="cont">
                     <div class="marg-bt-10">{{item.content}}</div>
                     <div class="fx-sb">
                       <div class="ft-cl-des">{{item.createTime}}</div>
                       <div>
-                        <span class="marg-rt-10 cur-pt" @click="openReply(item)"> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{item.replyTimes}} </span> 
-                        <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes}}</span>
+                        <span class="marg-rt-10 cur-pt" @click="openReply(item)"> <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论({{item.replyTimes}}) </span>
+                        <span :class="{'cur-pt':true, activeLiked: item.liked}" @click="likedHandle(item)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞( {{item.likedTimes}})</span>
                       </div>
                     </div>
                   </div>
                   <!-- 插入回复框的位置 -->
-                  <component :is="openReplyFormId == item.id ? ReplayForm : null" :key="item.id" :name="item.replier.name" :askInfoId="askInfo.id" @commentHandle="commentHandle"></component>
+                  <component :is="openReplyFormId == item.id ? ReplayForm : null" :key="item.id" :name="item.userName || '匿名'" :askInfoId="askInfo.id" @commentHandle="commentHandle"></component>
                   <!-- 回复列表 -->
                   <div class="replyCont" v-show="replyData && isReplay == item.id">
                     <div class="items" v-for="it in replyData" :key="it.id">
                       <div class="fx-al-ct">
-                        <img class="img" :src="it.replier.icon" alt="">
-                        <span class="ft-cl-des"> {{it.replier.name}} 回复 {{it.targetUserName}} </span>
+                        <img class="img" v-if="it.userIcon" :src="it.userIcon" alt="">
+                        <img class="img" v-else src="/src/assets/anonymity.png" alt="">
+                        <span class="ft-cl-des"> {{it.userName || '匿名'}} 回复 {{it.targetUserName || "匿名用户"}} </span>
                       </div>
                       <div class="cont">
                         <div class="marg-bt-10">{{it.content}}</div>
                         <div class="fx-sb">
                           <div class="ft-cl-des">{{it.createTime}}</div>
                           <div>
-                            <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'targe')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 评论{{it.replyTimes}} </span> 
-                            <span :class="{'cur-pt':true, activeLiked: it.liked}" @click="likedHandle(it)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{it.likedTimes}}</span>
+                            <span class="marg-rt-10 cur-pt" @click="replayHandle(it, 'targe')" > <i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 回复</span>
+                            <span :class="{'cur-pt':true, activeLiked: it.liked}" @click="likedHandle(it)"> <i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 ({{it.likedTimes}})</span>
                           </div>
                         </div>
                       </div>
                       <!-- 插入回复框的位置 -->
-                      <component :is="openReplyFormId == it.id ? ReplayForm : null" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id"  @commentHandle="commentHandle"></component>
+                      <component :is="openReplyFormId == it.id ? ReplayForm : null" :name="it.userName || '匿名'" :id = "it.userId" :askInfoId="askInfo.id"  @commentHandle="commentHandle"></component>
                     <!-- 回复列表 -->
                     </div>
-                    <div @click="() => {dialogTableVisible = true}" class="fx-ct ft-14 ft-cl-des cur-pt" v-if="replyCont > 5">点击查看全部{{replyCont}}条回复</div>
+                    <div @click="() => {dialogTableVisible = true}" class="fx-ct ft-14 ft-cl-des cur-pt" v-if="replyCont > 5">
+                      点击查看全部{{replyCont}}条回复
+                    </div>
                   </div>
                 </div>
                 <div></div>
@@ -90,8 +98,9 @@
       <div class="dialogReplyCont" v-infinite-scroll="load" style="overflow: auto" :infinite-scroll-disabled="disabled">
         <div class="items" v-for="it in replyData" :key="`ss${it.id}`">
           <div class="fx-al-ct">
-            <img class="img" :src="it.replier.icon" alt="">
-            <span class="ft-cl-des"> {{it.replier.name}} 回复 {{it.targetUserName}} </span>
+            <img class="img" v-if="it.userIcon" :src="item.userIcon" alt="">
+            <img class="img" v-else src="/src/assets/anonymity.png" alt="">
+            <span class="ft-cl-des"> {{it.userName || '匿名'}} 回复 {{it.targetUserName || "匿名用户"}} </span>
           </div>
           <div class="cont">
             <div class="marg-bt-10">{{it.content}}</div>
@@ -104,7 +113,7 @@
             </div>
           </div>
           <!-- 插入回复框的位置 -->
-          <component :is="openReplyFormId == it.id ? ReplayForm : null" :key="it.id" :name="it.replier.name" :id = "it.replier.id" :askInfoId="askInfo.id" @commentHandle="commentHandle"></component>
+          <component :is="openReplyFormId == it.id ? ReplayForm : null" :key="it.id" :name="it.userName || '匿名'" :id = "it.userId" :askInfoId="askInfo.id" @commentHandle="commentHandle"></component>
         <!-- 回复列表 -->
         </div>
          <p class="fx-ct ft-14 ft-cl-des" v-if="replayloading">Loading...</p>
@@ -118,7 +127,7 @@
 import { onMounted, reactive, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute } from "vue-router";
-import { getQuestionsDetails, postAnswers, getAllQuestions, getReply, putLiked } from "@/api/classDetails.js";
+import { getQuestionsDetails, postAnswers, getReply, putLiked } from "@/api/classDetails.js";
 import RelatedQuestions from './components/RelatedQuestions.vue'
 import ReplayForm from './components/ReplayForm.vue'
 import { useUserStore } from '@/store'
@@ -158,8 +167,7 @@ const getQuestionsDetailsData = async () => {
 } 
 // 获取全部回答
 const questParams = reactive({
-  admin:false,
-  id: route.query.id,
+  questionId: route.query.id,
   pageNo: 1,
   pageSize: 10
 })
@@ -175,7 +183,7 @@ const clickLoad = () => {
 }
 // 获取回答列表
 const getAllQuestionsData = async (val) => {
-  await getAllQuestions(questParams)
+  await getReply(questParams)
     .then((res) => {
       if (res.code == 200) {
         if (val == 'more') {
@@ -229,17 +237,17 @@ const answerInfo = ref({id:''})
 const targetInfo = ref({id:''}) 
 const replayHandle = (item, type) => {
   openReplyFormId.value = item.id
+  targetInfo.value = item ;
   if (type == 'answer' ) {
     answerInfo.value = item
-    targetInfo.value = {id:''}
   };
-  if (type == 'target') targetInfo.value = item ;
 }
 
 // 回复数据请求参数
 const replyParams = reactive({
   pageNo:1,
-  pageSize:10,
+  pageSize:5,
+  answerId: ''
 })
 const replyData = ref([]);
 const replyCont = ref();
@@ -256,13 +264,11 @@ const load = () => {
 // 获取回复数据
 const getReplyData = async (id, st) => {
     replyLoding.value = true
-    replyParams.id = id
-    replyParams.admin = false
+    replyParams.answerId = id
     await getReply(replyParams)
     .then((res) => {
       if (res.code == 200) {
        replyLoding.value = false
-       console.log(899, st)
        replyData.value = st == 'one' ? res.data.list : replyData.value.concat(res.data.list)
 
        replyCont.value = Number(res.data.total)
@@ -284,7 +290,6 @@ const getReplyData = async (id, st) => {
 
 // 提交回复数据
 const params = reactive({
-  answerId:'', 
   questionId: '', // askInfo.value.id, // 当前问题的ID
   targetReplyId:'',
   targetUserId: '',
@@ -301,7 +306,7 @@ function commentHandle (val){
 // 提交回复
 const answerHandle = async (type) => {
   params.questionId = askInfo.value.id
-  params.targetUserId = type ? askInfo.value.user.id : answerInfo.value.replier.id
+  params.targetUserId = targetInfo.value.userId || askInfo.value.userId
   if(params.content == ''){
     params.content = description.value
     params.anonymity = anonymity.value
@@ -352,7 +357,7 @@ const answerHandle = async (type) => {
 }
 // 点赞
 const likedHandle = async (item) => {
-await putLiked({id:item.id, liked:!item.liked})
+await putLiked({bizId:item.id, liked:!item.liked, bizType: "QA"})
     .then((res) => {
       if (res.code == 200) {
         item.liked = !item.liked

@@ -36,7 +36,7 @@
                 </div>
               </div>
               <div class="about">
-                {{it.intro}}
+                {{it.introduce}}
               </div>
             </div>
           </div>

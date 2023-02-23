@@ -15,34 +15,34 @@
       <div class="questions" v-for="(item, index) in subjectList" :key="index">
         <div class="title fx" v-html="` <p>${index+1}. ${subjectTypeWt(item.subjectType)}</p>${item.name}`"></div>
         <!-- 不同的题型展示不同的题 1：单选题，2：多选题，3：不定向选择题，4：判断题，5：主观题 -->
-        <div v-if="item.subjectType == 1">
+        <div v-if="item.type == 1">
           <el-radio-group v-model="item.answers" class="ml-4">
             <el-radio :label="ind+1" v-for="(it, ind) in item.options" :key="it" size="large">
               <div class="fx"><span>{{upperAlpha(ind)}}</span><span v-html="it"></span></div>
             </el-radio>
           </el-radio-group>
         </div>
-        <div v-if="item.subjectType == 2">
+        <div v-if="item.type == 2">
           <el-checkbox-group v-model="item.answers">
             <el-checkbox v-for="(it, ind) in item.options" :label="ind+1" :key="it">
               <div class="fx"><span>{{upperAlpha(ind)}}</span><span v-html="it"></span></div>
             </el-checkbox>
           </el-checkbox-group>
         </div>
-        <div v-if="item.subjectType == 3">
+        <div v-if="item.type == 3">
           <el-checkbox-group v-model="item.answers">
             <el-checkbox v-for="(it, ind) in item.options" :label="ind+1" :key="it">
               <div class="fx"> <span>{{upperAlpha(ind)}}</span><span v-html="it"></span></div>
             </el-checkbox>
           </el-checkbox-group>
         </div>
-        <div v-if="item.subjectType == 4">
+        <div v-if="item.type == 4">
           <el-radio-group v-model="item.answers" class="ml-4">
             <el-radio :label="true" size="large">A. 正确</el-radio>
             <el-radio :label="false" size="large">B. 错误</el-radio>
           </el-radio-group>
         </div>
-        <div v-if="item.subjectType == 5">
+        <div v-if="item.type == 5">
           <el-input type="textarea" class="textArea" rows="5" maxlength="200" v-model="item.answers"
             placeholder="请输入正确答案" show-word-limit></el-input>
         </div>
@@ -65,9 +65,8 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  examId: {
-    type: String,
-    default: '',
+  examInfo: {
+    type: Object
   },
 })
 
@@ -118,17 +117,28 @@ const upperAlpha = (num) => {
     case 3:
       str = 'D.';
       break
+    case 4:
+      str = 'E.';
+      break
+    case 5:
+      str = 'F.';
+      break
+    case 6:
+      str = 'G.';
+      break
   }
   return str
 }
 
 // 根据小节或测试id获取练习题
 const subjectList = ref([])
+const examId = ref('')
 const getSubjectList = async () => {
-  await getSubject(currentPlayData.value.sectionId)
+  await getSubject(props.examInfo)
     .then((res) => {
-      if (res.code == 200) {
-        subjectList.value = res.data
+      if (res.code === 200) {
+        examId.value = res.data.id;
+        subjectList.value = res.data.questions
       } else {
         ElMessage({
           message: res.msg,
@@ -174,12 +184,11 @@ const submit = () => {
 // 提交了
 const postSubjectHandle = async () => {
   const param = params.value.map(el => {
-    const data = { questionId: el.id, answer: el.answers.toString(), questionType: el.subjectType }
-    return data
+    return { questionId: el.id, answer: el.answers.sort((i1, i2) => parseInt(i1)-parseInt(i2)).toString(), questionType: el.type }
   });
-  await postSubject({ examDetails: param, id: props.examId })
+  await postSubject({ examDetails: param, id: examId.value })
     .then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         subjectList.value = res.data
         isSubmit.value = true
         ElMessage({

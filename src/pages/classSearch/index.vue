@@ -69,7 +69,6 @@ const isShow = ref(true)
 const fullPath = ref(route.fullPath)
 // 课程分类默认状态
 const activeId = ref('all')
-const dataCache = dataCacheStore()
 // mounted生命周期
 onMounted(() => {
   // 搜索

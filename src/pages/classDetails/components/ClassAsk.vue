@@ -3,8 +3,8 @@
   <div class="classAsk bg-wt marg-bt-20">
     <div class="tabLab fx-sb">
       <div class="lable">
-        <span @click="askCheck('all')" :class="{act:askType == 'all','bt-grey2': askType == 'my'}" class="marg-rt-20 ">全部问答</span> 
-        <span @click="askCheck('my')" :class="{act:askType == 'my','bt-grey2': askType == 'all'}">我的问答</span>
+        <span @click="askCheck(false)" :class="{act:!params.onlyMine,'bt-grey2': params.onlyMine}" class="marg-rt-20 ">全部问答</span>
+        <span @click="askCheck(true)" :class="{act:params.onlyMine,'bt-grey2': !params.onlyMine}">我的问答</span>
       </div> 
       <div class="ask"><span @click="() => $router.push({path: '/ask', query: {id: $props.id, title: $props.title}})" class="bt bt-round ft-14">提问</span></div>
     </div>
@@ -12,21 +12,24 @@
     <div class="askCont">
       <div class="askLists" v-for="item in askListsDataes">
         <div class="userInfo fx">
-          <img :src="item.user.icon" alt="" srcset="">
-          {{item.user.name}}
+          <img v-if="item.userIcon" :src="item.userIcon" alt="" srcset="">
+          <img v-else src="/src/assets/anonymity.png" alt="" srcset="">
+          {{item.userName || "匿名用户"}}
         </div>
         <div class="ask">
           <div class="ft-16">{{item.title}}</div>
-          <div class="font-bt2" @click="goDetails(item)" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
+          <div class="font-bt2" @click="goDetails(item)" v-if="item.latestReplyContent">
+            最新【{{item.latestReplyUser}}】的回答
+          </div>
         </div>
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="font-bt2 marg-rt-20" @click="() => $router.push({path:'/ask', query:{id:$props.id,queryId:item.id,type:'edit',title:item.title}})" v-if="userInfo.id == item.user.id">
+            <span class="font-bt2 marg-rt-20" @click="() => $router.push({path:'/ask', query:{id:$props.id,queryId:item.id,type:'edit',title:item.title}})" v-if="userInfo.id == item.userId">
               <i class="iconfont zhy-a-icon_kaoshi2x"></i> 编辑</span>
-            <span class="font-bt2 marg-rt-20" @click="delQuestionsHandle(item.id)" v-if="userInfo.id == item.user.id">
+            <span class="font-bt2 marg-rt-20" @click="delQuestionsHandle(item.id)" v-if="userInfo.id == item.userId">
               <i class="iconfont zhy-a-btn_delete_nor2x"></i> 删除 </span>
-            <span class="font-bt2" @click="goDetails(item)"><i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 回答 {{item.answerAmount}}</span>
+            <span class="font-bt2" @click="goDetails(item)"><i class="iconfont zhy-a-btn_pinglun_nor2x"></i> 回答 {{item.answerTimes}}</span>
           </div>
         </div>
       </div>
@@ -47,7 +50,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue"
-import { getClassChapter, getAskList, getMyAskList, delQuestions } from "@/api/classDetails.js"
+import { getClassChapter, getAskList, delQuestions } from "@/api/classDetails.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
@@ -83,23 +86,22 @@ onMounted(() => {
 })
 // 问答列表参数
 const params = ref({
-  admin:false,
   courseId: route.query.id,
   isAsc:true,
   pageNo: 1,
   pageSize: 10,
   sectionId: '',
-  sortBy: ''
+  sortBy: '',
+  onlyMine: false
 });
 // 列表数据
 const askListsDataes =  ref([])
 const total = ref(0)
 // 切换全部问答及我的问答
-const askType = ref('all')
-const askCheck = type => {
+const askCheck = onlyMine => {
   params.value.pageNo = 1
   params.value.pageSize = 10
-  askType.value = type
+  params.value.onlyMine=onlyMine
   getAskListsDataes()
 }
 const checkCahpter = (id) => {
@@ -110,19 +112,10 @@ const checkCahpter = (id) => {
 }
 // 获取问答列表
 const getAskListsDataes = async () => {
-  const questFun = askType.value == 'all' ? getAskList : getMyAskList
-  params.value.sectionId == 'all' ? params.value.sectionId = '' : null
-  await questFun(params.value)
+  await getAskList(params.value)
     .then((res) => {
-      if (res.code == 200) {
-        if (askType.value == 'all'){
-          askListsDataes.value = res.data.list
-        } else {
-          askListsDataes.value = res.data.list.map(n => {
-            n.user = {...userInfo.value}
-            return n
-          })
-        }
+      if (res.code === 200) {
+        askListsDataes.value = res.data.list
         total.value = Number(res.data.total)
       } else {
         ElMessage({
@@ -176,7 +169,7 @@ const getClassChapterData = async (id) => {
   await getClassChapter(id)
     .then((res) => {
       if (res.code == 200) {
-        chapterData.value = [{id:'all', index: '全部'},...res.data]
+        chapterData.value = [{id:'', index: '全部'},...res.data]
       } else {
         ElMessage({
           message:res.data.msg,

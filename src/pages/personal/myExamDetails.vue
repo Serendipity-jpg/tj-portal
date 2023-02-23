@@ -30,7 +30,7 @@
           </div>
           <div  class="td fx-1">
             <div class="marg-bt-10 ft-wt-600 ft-cl-1">总 分 数</div>
-            <div>{{$route.query.objectiveScore || 0}} / {{total}}</div>
+            <div>{{$route.query.score || 0}} / {{total}}</div>
           </div>
         </div>
       </div>
@@ -55,8 +55,8 @@
         </div>
         <div class="analysis">
           <div class="fx marg-bt-20">
-            <div class="col ft-wt-600">你的答案：{{answerChange(item.question.subjectType, item.answer)}}</div> 
-            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.question.subjectType, item.question.answers)}}</div>
+            <div class="col ft-wt-600">你的答案：{{answerChange(item.question.type, item.answer)}}</div>
+            <div class="col rt ft-wt-600">正确答案：{{answerChange(item.question.type, item.question.answer)}}</div>
             <div class="col">难易程度：{{defficultyChange(item.question.difficulty)}}</div>
             <div>得分：{{item.score}}</div>
           </div>
@@ -115,7 +115,7 @@ const getExamDetailsData = async () => {
 // 问题类型，1：单选题，2：多选题，3：不定向选择题，4：判断题，5：主观题
 const answerChange = (type, val) => {
   let data = ''
-  switch (type){
+  switch (parseInt(type)){
     case 1 : {
       data = isNaN(Number(val)) ? val : upperAlpha(Number(val))
       break
@@ -126,7 +126,7 @@ const answerChange = (type, val) => {
       break
     }
     case 4 : {
-      data = val == 1 ? '正确' : '错误'
+      data = val  ? '正确' : '错误'
       break
     }
     case 5 : {

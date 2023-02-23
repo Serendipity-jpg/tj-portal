@@ -2,7 +2,9 @@
 <template>
   <div class="chapterItems fx-sb">
       <div class="items fx-wp fx-1" :class="{'open':!isOpen}">
-        <div class="item" @click='getAskHandle(item.id)' v-for="item in data" :key="item.id" :class="{act: item.id == actChapterId}">
+        <div class="item" @click='getAskHandle(item.id)'
+             v-for="item in data" :key="item.id"
+             :class="{act: item.id === actChapterId}">
           {{item.index}}
         </div>
       </div>
@@ -25,7 +27,7 @@ const props = defineProps({
   }
 });
 
-let actChapterId = ref('all')
+let actChapterId = ref('')
 
 const getAskHandle = id => {
     actChapterId.value = id

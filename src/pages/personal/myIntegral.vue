@@ -11,8 +11,8 @@
         <div class="list">
           <div class="tit">获取积分</div>
           <div class="tab">
-            <div class="item fx-sb" v-for="item in access" :key="item.title">
-              <span>{{item.desc}}</span>
+            <div class="item fx-sb" v-for="item in access" :key="item.type">
+              <span>{{item.type}}</span>
               <span>{{item.points}}/{{item.maxPoints}}</span>
             </div>
           </div>
@@ -48,11 +48,11 @@ const store = dataCacheStore()
 const value = ref(new Date())
 
 const access = ref([
-  {value: 1, 'desc': '课程学习', points:0, maxPoints: 50},
-  {value: 2, 'desc': '每日签到', points:0, maxPoints: 2},
-  {value: 3, 'desc': '课程问答', points:0, maxPoints: 20},
-  {value: 4, 'desc': '课程笔记', points:0, maxPoints: 20},
-  {value: 5, 'desc': '课程评价', points:0, maxPoints: 999},
+  {value: 1, 'type': '课程学习', points:0, maxPoints: 50},
+  {value: 2, 'type': '每日签到', points:0, maxPoints: 2},
+  {value: 3, 'type': '课程问答', points:0, maxPoints: 20},
+  {value: 4, 'type': '课程笔记', points:0, maxPoints: 20},
+  {value: 5, 'type': '课程评价', points:0, maxPoints: 999},
 ])
 
 // 课程目录
@@ -72,7 +72,7 @@ onMounted(async () => {
 // 积分榜信息查询
 const seasonsData = ref([])
 const getSeasonsData = () => {
-  getSeasons({season:0})
+  getSeasons({season:0, pageNo: 1, pageSize: 10})
     .then((res) => {
       if (res.code == 200 ){
         console.log(3333, res.data)
@@ -92,19 +92,19 @@ const getSeasonsData = () => {
     });
 }
 // 用户本日积分情况查询失败
-const tadyPointsData = ref()
+const toadyPointsData = ref()
 const getSignRecordsHandle = async () => {
   await getTodayPoints()
     .then((res) => {
       if (res.code == 200 ){
         access.value.map(n => {
           res.data.forEach( val => {
-            if (val.type.value == n.value){
+            if (val.type == n.type){
               n.points = val.points
             }
-          }) 
+          })
         })
-        tadyPointsData.value = res.data
+        toadyPointsData.value = res.data
       } else {
         ElMessage({
           message: res.msg,

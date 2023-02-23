@@ -25,7 +25,7 @@ export const dataCacheStore = defineStore('notification', {
     getCurrentPlayData: state => state.currentPlayData,
     getOrderClassInfo: state => state.orderClassInfo,
     getCourseClassDataes: state => state.courseClassDataes,
-    getCurrentCourseInfo: state => state.currentCourseInfo
+    getCurrentCourseInfo: state => state.currentCourseInfo,
     getMyLearnClassInfo: state => state.myLearnClassInfo
   },
   actions: {

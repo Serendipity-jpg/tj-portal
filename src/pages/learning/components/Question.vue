@@ -4,8 +4,8 @@
     <div class="askCont" >
       <div class="askLists" v-for="item in askListsDataes">
         <div class="userInfo fx ">
-          <img :src="item.user.icon" :onerror="onerrorImg(item.user)" alt="" srcset="">
-          {{item.user.name}}
+          <img :src="item.userIcon" :onerror="onerrorImg(item)" alt="" srcset="">
+          {{item.userName  || "匿名"}}
         </div>
         <div class="ask">
           <div class="tit ft-14">{{item.title}}</div>
@@ -14,7 +14,7 @@
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
-            <span class="marg-rt-10" @click="() => $router.push({path:'/askDetails/index', query:{id:item.id}})">回答 {{item.answerAmount}}</span>
+            <span class="marg-rt-10" @click="() => $router.push({path:'/askDetails/index', query:{id:item.id}})">回答 {{item.answerTimes}}</span>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
 <script setup>
 import defaultImage from '@/assets/icon.jpeg'
 import { ref, onMounted, reactive } from "vue"
-import { postQuestions, getAskList, getMyAskList, putLiked } from "@/api/classDetails.js"
+import { postQuestions, getAskList, putLiked } from "@/api/classDetails.js"
 import { useUserStore, dataCacheStore, isLogin } from '@/store'
 import { useRoute, useRouter } from "vue-router";
 import {ElMessage} from "element-plus"
@@ -52,7 +52,7 @@ const currentPlayData = dataCacheStore().getCurrentPlayData
 
 // 默认头像
 const onerrorImg = (tag) => {
-  tag.icon = defaultImage;
+  tag.userIcon = defaultImage;
 }
 
 // 用户信息
@@ -68,13 +68,12 @@ onMounted(() => {
 
 // 问答列表参数
 const params = ref({
-  admin:false,
-  courseId: route.query.id,
   isAsc:true,
   pageNo: 1,
   pageSize: 1000,
   sectionId: currentPlayData.sectionId,
-  sortBy: ''
+  sortBy: '',
+  onlyMine: false
 });
 //
 const isSend = ref(false)
@@ -91,40 +90,28 @@ const quest = reactive({
 const askListsDataes =  ref([])
 const total = ref(0)
 // 切换全部问答及我的问答
-const askType = ref('all')
 const askCheck = type => {
   params.value.pageNo = 1
   params.value.pageSize = 10
-  askType.value = type
+  params.value.onlyMine = type
   getAskListsDataes()
 }
 const checkCahpter = (id) => {
   params.value.pageNo = 1
   params.value.pageSize = 10
   params.value.sectionId = id
+  params.value.onlyMine = false
   getAskListsDataes()
 }
 // 获取问答列表
 const getAskListsDataes = async () => {
-  const questFun = askType.value == 'all' ? getAskList : getMyAskList
-  params.value.sectionId == 'all' ? params.value.sectionId = '' : null
-  await questFun(params.value)
+  await getAskList(params.value)
     .then((res) => {
       if (res.code == 200) {
-        if (askType.value == 'all'){
-          askListsDataes.value = res.data.list
-        } else {
-          askListsDataes.value = res.data.list.map(n => {
-            n.user = {...userInfo.value}
-            return n
-          })
-        }
+        askListsDataes.value = res.data.list
         total.value = Number(res.data.total)
       } else {
-        ElMessage({
-          message:res.data.msg,
-          type: 'error'
-        });
+        console.log(res.msg)
       }
     })
     .catch(() => {
@@ -137,15 +124,13 @@ const getAskListsDataes = async () => {
 // 点赞或者取消
 const putLikedHandle = async (item) => {
 const liked = item.liked == undefined ? false : item.liked
-await putLiked({id:item.id, liked:!item.liked})
+await putLiked({bizType: "QA", bizId:item.id, liked:!item.liked})
     .then((res) => {
       if (res.code == 200) {
         item.liked = !item.liked
+        item.liked ? item.likedTimes++ : item.likedTimes--
       } else {
-        ElMessage({
-          message:res.data.msg,
-          type: 'error'
-        });
+        console.log(res.msg)
       }
     })
     .catch(() => {

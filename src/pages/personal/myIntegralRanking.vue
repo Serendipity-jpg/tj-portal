@@ -65,9 +65,7 @@ onMounted(async () => {
  // 下拉参数获取 - 赛季列表
   getHistorySeasonsData()
  // 当前赛季 
- getSeasonsData(0)
- // 第一赛季
- getSeasonsData(1)
+ await getSeasonsData(0)
 });
 
 /** 方法定义 **/
@@ -78,11 +76,12 @@ const currentSeasonsData = ref([])
 const seasonsData = ref([])
 
 const getSeasonsData = (season) => {
-  getSeasons({season})
+  getSeasons({season, pageNo: 1, pageSize: 10})
     .then((res) => {
       if (res.code == 200 ){
         if (season == 0 ){
           currentSeasonsData.value = res.data
+          seasonsData.value = res.data;
         } else {
           seasonsData.value = res.data
         }
@@ -102,12 +101,13 @@ const getSeasonsData = (season) => {
     });
 }
 // 历史下拉信息查询
-const season = ref(1)
+const season = ref(0)
 const seasonOptions = ref([])
 const getHistorySeasonsData = () => {
   getSelectOptions()
     .then((res) => {
       if (res.code == 200 ){
+        res.data[res.data.length - 1].id = 0;
         seasonOptions.value = res.data
       } else {
         ElMessage({

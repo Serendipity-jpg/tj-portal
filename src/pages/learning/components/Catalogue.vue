@@ -1,7 +1,7 @@
 <!-- 学习目录 -->
 <template>
   <div class="catalogueWrapper">
-    <el-collapse accordion v-model="actIndex" @change="openItem">
+    <el-collapse accordion v-model="actIndex">
       <el-collapse-item :name="item.id" v-for="item in data" :key="item.id">
         <template #title>
           <div class="title"><span class="ft-wt-600">{{item.name}}</span></div>
@@ -22,8 +22,9 @@
   </div>
 </template>
 <script setup>
-import { ref, watchEffect, inject } from 'vue'
+import { onMounted, ref, watchEffect, inject } from 'vue'
 import { dataCacheStore } from "@/store"
+import { ElMessage, ElMessageBox } from "element-plus";
 const store = dataCacheStore()
 // 引入父级传参
 const props = defineProps({
@@ -51,7 +52,13 @@ const currentPlayData = inject('currentPlayData')
 const playId = ref(props.playId)
 const finished = ref(props.finished)
 const actIndex = ref("")
-
+onMounted(async () => {
+  for (let c in props.data) {
+    c.sections.forEach(s => {
+      if(s.id == props.playId){actIndex.value = c.id}
+    })
+  }
+})
 watchEffect(() => {
   playId.value = currentPlayData.sectionId || props.playId
   if(props.finished){
@@ -62,7 +69,7 @@ watchEffect(() => {
 const isPlay = (chapterId, section) => {
   let b = playId.value === section.id;
   if(b){
-    actIndex.value = chapterId;
+    openItem(chapterId);
   }
   return {playAct: b}
 }
@@ -101,7 +108,6 @@ const play = (item, tp) => {
 const next = () => {
   let findNext = false;
   let item;
-  console.log(props.data)
   let cs = props.data;
   a:for (let i = 0; i < cs.length; i++) {
     let ss = cs[i].sections;
@@ -115,7 +121,8 @@ const next = () => {
         }
     }
   }
-  if(!item){
+  if(!item || item.type === 3){
+    emit('playHadle', {item, tp: 0})
     return
   }
   playId.value = item.id

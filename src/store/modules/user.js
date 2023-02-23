@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { TOKEN_NAME } from '@/config/global';
 import  store  from '@/store';
+import {tryRefreshToken} from "@/utils/refreshToken";
 
 const InitUserInfo = {};
 
@@ -47,10 +48,15 @@ export const useUserStore = defineStore('user', {
   },
   
 });
-
+async function refresh(){
+  return await tryRefreshToken();
+}
 export function getToken() {
   return useUserStore(store);
 }
 export function isLogin(token) {
-  return !!sessionStorage.getItem(TOKEN_NAME)
+  if(!!sessionStorage.getItem(TOKEN_NAME)){
+    return true;
+  }
+  return refresh()
 }

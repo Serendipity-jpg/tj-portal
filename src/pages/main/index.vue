@@ -32,7 +32,7 @@
     </div>
     <!-- 广告位 -->
     <div class="globalTopBanner" style="display: block;">
-      <img src="@/assets/adv.png" />
+      <img src="/src/assets/adv.png" />
     </div>
     <!-- 精品好课 -- start -->
     <div class="pd-tp-30">
@@ -95,7 +95,6 @@ import Swiper from "./components/Swiper.vue";
 import banner1 from "@/assets/banner1.jpg";
 import banner2 from "@/assets/banner2.jpg";
 import banner3 from "@/assets/banner3.jpg";
-
 const dataCache = dataCacheStore();
 // 分类数据
 const classCategorys = ref([]);
@@ -118,7 +117,7 @@ onMounted(async () => {
   getGoodClassListData();
   getNewClassListData();
   // 获取兴趣列表 （二级分类）
-  if (isLogin()) {
+  if (await isLogin()) {
     getInterestData();
   }
 });
@@ -215,10 +214,7 @@ const getInterestData = async () => {
         }
         interest.value = new Set(res.data);
       } else {
-        ElMessage({
-          message: res.data.msg,
-          type: "error",
-        });
+        console.log(res.msg)
         interestDialog.value(true);
       }
     })

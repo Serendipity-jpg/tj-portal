@@ -3,6 +3,7 @@ import proxy from '../config/proxy';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import  router  from '../router';
 import {ref} from "vue";
+import {tryRefreshToken} from './refreshToken'
 
 const env = import.meta.env.MODE || 'development';
 const host = env === 'mock' ? 'https://mock.boxuegu.com/mock/3359' : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
@@ -14,7 +15,7 @@ const CODE = {
 // 登录异常弹窗处理
 let isLogin = true
 // 刷新标记
-let refreshing = ref(false)
+// let refreshing = ref(false)
 
 const instance = axios.create({
   baseURL:  host, // 'http://172.17.2.134/api-test',
@@ -34,14 +35,12 @@ instance.interceptors.request.use((config) => {
 instance.defaults.timeout = 5000;
 async function refreshToken(err){
   // 尝试刷新token
-  let resp = await axios.get(host + "/as/accounts/refresh", {withCredentials: true});
-  if (resp.status === 200 && resp.data.code === 200) {
-    sessionStorage.setItem("token", resp.data.data)
-    refreshing.value = false;
+  let success = await tryRefreshToken();
+  if(success){
+    // refreshing.value = false;
     return instance(err.config);
   }
-  sessionStorage.removeItem("token");
-  refreshing.value = false;
+  // refreshing.value = false;
   ElMessageBox.alert(
     '您的账号登录超时或在其他机器登录，请重新登录或更换账号登录！',
     '登录超时',
@@ -74,7 +73,7 @@ function alertLoginMessage() {
       router.go(0)
     })
 }
-const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+// const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 instance.interceptors.response.use(
   async (response) => {
     // 1.获取业务状态码
@@ -100,38 +99,11 @@ instance.interceptors.response.use(
   },
    async (err) => {
     if(err.response.status === 401 && isLogin){
-      if(refreshing.value){
-        while(refreshing.value){
-          await sleep(20);
-          console.log(refreshing.value)
-        }
-        return instance(err.config)
-      }
-      refreshing.value = true;
       // 登录异常或超时，刷新token
       return refreshToken(err);
     }
-    refreshing = false;
+    // refreshing = false;
     return Promise.reject(err);
-    /*const { config } = err;
-
-    if (!config || !config.retry) return Promise.reject(err);
-
-    config.retryCount = config.retryCount || 0;
-
-    if (config.retryCount >= config.retry) {
-      return Promise.reject(err);
-    }
-
-    config.retryCount += 1;
-
-    const backoff = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(null);
-      }, config.retryDelay || 1);
-    });
-
-    return backoff.then(() => instance(config));*/
   },
 );
 

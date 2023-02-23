@@ -2,13 +2,17 @@
 <template>
   <div class="classCards fx-sb fx-ct">
     <div class="marg-rt-20">
-      <img :src="data.courseCoverUrl" alt="">
+      <img :src="data.courseCoverUrl" alt="" @click="$router.push({path: '/details/index', query: {id: data.courseId}})">
     </div>
     <div class="info fx-1">
-      <div class="tit ">{{data.coursName}}</div>
-      <div><span>有效日期：</span>{{data.expireTime == null ? '永久有效' : data.createTime + '-' + data.expireTime}}</div>
+      <div class="tit ">{{data.courseName}}</div>
+      <div>
+        <span>有效日期：</span>
+        {{data.expireTime == null ? '永久有效' :
+          new Date(data.createTime).toLocaleDateString() + ' - ' + new Date(data.expireTime).toLocaleDateString()}}
+      </div>
       <div><span>已学习：</span><em>{{data.learnedSections}}</em> / {{data.sections}}</div>
-      <div v-if="type == '1'"><span>正在学习：</span>第{{data.learnedSections}}节 {{data.courseName}}</div>
+      <div v-if="type == '1'"><span>正在学习：</span>第{{data.latestSectionIndex}}节 {{data.latestSectionName}}</div>
     </div>
     <div class="btnCont">
       <div class="btn" v-if="type == '1'" @click="() => $router.push({path: '/learning/index', query: {id: data.courseId}})">

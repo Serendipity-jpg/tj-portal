@@ -190,7 +190,7 @@ onMounted(async () => {
   // 获取课程目录
   await getClassListData()
   // 获取本课程的学习情况 
-  if(isLogin()){
+  if(await isLogin()){
     await getCourseLearningData()
   }
 
@@ -343,15 +343,12 @@ const getCourseLearningData = async () => {
   await getCourseLearning(detailsId.value)
   .then((res) => {
     const { data } = res
-    if (res.code == 200) {
+    if (res.code === 200 && data) {
       isSignUp.value = true
       planData.value = data
     } else {
       isSignUp.value = false
-      ElMessage({
-        message:res.data.msg,
-        type: 'error'
-      });
+      console.log(res.msg);
     }
   })
   .catch(() => {
@@ -372,7 +369,7 @@ const payHandle = () => {
 // TODO 没有效验 松松那边没弄好 
 // 未登录处理购买、加入购物车点击问题
 const validation = () => {
-  if (!isLogin()) {
+  if ( !isLogin()) {
     ElMessageBox.confirm(
         `您还没有登录 请先去登录`,
         '确认登录',

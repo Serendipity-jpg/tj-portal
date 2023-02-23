@@ -12,7 +12,7 @@
         <div class="video" v-show="pageType == 1">
           <video id="videoRef" ref="videoRef"></video>
         </div>
-        <Practise v-if="pageType == 2" @playHadle="playHadle" :examId="examId"
+        <Practise v-if="pageType == 2" @playHadle="playHadle" :examInfo="examInfo"
                   :key="currentPlayData.sectionId"></Practise>
       </div>
     </div>
@@ -64,7 +64,6 @@
 import { onMounted, ref, onUnmounted, provide, h } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { getMediasSignature, addPlayLog, getLearningClassDetails } from "@/api/class.js";
-import { startExamination } from '@/api/subject.js';
 import { useRoute } from "vue-router";
 import { dataCacheStore } from "@/store"
 // 组件导入
@@ -263,11 +262,19 @@ const initPlay = (fileID, psign) => {
 
 // 目录、问答、笔记滚动
 const load = () => {}
+const t = (n) => {
+  return n < 10 ? '0'+n : n;
+}
+const now = () => {
+  let d = new Date();
+  return d.getFullYear() + "-" + t(d.getMonth() + 1) + "-" +t(d.getDate()) +
+      " " + t(d.getHours()) + ":" + t(d.getMinutes())+":" + t(d.getSeconds());
+}
 
 // 播放新的小节的时候提交相关记录
 const addPlayLogHandle = () => {
   let {lessonId, sectionId, moment, duration} = currentPlayData;
-  addPlayLog({lessonId, sectionId, moment, duration, sectionType: 1, commitTime: new Date().toLocaleString().replaceAll("/", "-")})
+  addPlayLog({lessonId, sectionId, moment, duration, sectionType: 1, commitTime: now()})
       .then((res) => {
         if (res.code === 200) {
           console.log("记录成功:", res)
@@ -298,6 +305,11 @@ const getMediasSignatureData = async (sectionId) => {
 // 点击小节
 const playHadle = async (val) => {
   const {item, tp} = val
+  if(tp == 0){
+    finished.value = false;
+    ElMessage.success("本章学习完毕，做做练习吧")
+    return
+  }
   // 小节名称
   currentPlayData.sectionName = item.name
   // 练习返回
@@ -352,33 +364,14 @@ const playHadle = async (val) => {
 }
 
 // 考试开始时提交
-const examId = ref('')
-const startExaminationHandle = async (item) => {
-  const param = {
+const examInfo = ref({})
+const startExaminationHandle = (item) => {
+  examInfo.value = {
     sectionId: item.id, // 小节id
-    type: item.type == 2 ? 0 : 1,  // 类型，0-练习，1-考试  item.type对应章节的类型，2-视频（小节），3-考试
-    chapterId: currentPlayData.chapterId,
+    type: item.type - 1,  // 类型，1-练习，2-考试  item.type对应章节的类型，2-视频（小节），3-考试
     courseId: currentPlayData.courseId,
   }
-  await startExamination(param)
-    .then((res) => {
-      if (res.code == 200) {
-        examId.value = res.data
-        player.value.pause()
-        pageType.value = 2;
-      } else {
-        ElMessage({
-          message: res.msg || res.data.msg,
-          type: 'error'
-        });
-      }
-    })
-    .catch(() => {
-      ElMessage({
-        message: "考题列表获取失败！",
-        type: 'error'
-      });
-    });
+  pageType.value = 2;
 }
 
 // 答题出错的时候

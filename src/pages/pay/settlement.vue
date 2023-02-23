@@ -12,7 +12,7 @@
           <img :src="item.coverUrl" alt=""> 
           <span>{{item.name || item.courseName}}</span>
         </div>
-        <div class="cal ft-cl-err" >￥ {{(item.nowPrice / 100).toFixed(2)}}</div>
+        <div class="cal ft-cl-err" >￥ {{((item.nowPrice || item.price) / 100).toFixed(2)}}</div>
       </div>
     </div>
     <div class="settiementInfo">
@@ -97,8 +97,8 @@ const changeHandle = val => {
 // 下单
 const orderHandle = async () => {
   const courseIds = orderClass.value.map(n => n.courseId ? n.courseId : n.id)
-  const couponIds = couponIds.value != null ? [couponIds.value] : undefined
-  const params = {courseIds, couponIds, orderId: orderInfo.value.orderId}
+  const cIds = couponIds.value != null ? couponIds.value : undefined
+  const params = {courseIds, couponIds:cIds, orderId: orderInfo.value.orderId}
   await setOrder(params)
     .then((res) => {
       if (res.code === 200) {
