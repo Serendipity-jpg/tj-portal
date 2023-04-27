@@ -6,22 +6,26 @@
     </div>
     <div class="couponItems container bg-wt">
        <div class="mainCouponCards fx" v-for="(item, index) in couponData" :key="index">
-          <div class="price ft-cl-wt" v-if="item.type == 4 || item.type == 1 || item.type == 3">
-            <div>￥ <em>{{item.discountAmount / 100}}</em></div>
-            <div class="desc">{{item.couponRule}}</div>
+          <div class="price ft-cl-wt" v-if="item.discountType == 4 || item.discountType == 1 || item.discountType == 3">
+            <div>￥ <em>{{item.discountValue / 100}}</em></div>
+            <div class="desc">{{item.rule}}</div>
           </div>
-          <div class="price ft-cl-wt" v-if="item.type == 2 || item.type == 5">
-            <div><em>{{item.discountRate / 10}}</em> 折</div>
-            <div class="desc">{{item.couponRule}}</div>
+          <div class="price ft-cl-wt" v-if="item.discountType == 2 || item.discountType == 5">
+            <div><em>{{item.discountValue / 10}}</em> 折</div>
+            <div class="desc">{{item.rule}}</div>
           </div>
           <div class="info">
             <div class="tit">{{item.name}}</div>
-            <div><em>适用平台：</em>{{item.rangeType == 1 ? '全平台' : '指定课程分类'}}</div>
-            <div><em>有效日期：</em> {{item.termValidity ? `${item.termValidity}天` : moment(item.termEndTime).format('YYYY-MM-DD hh:mm:ss')}}</div>
+            <div><em>适用平台：</em>{{item.specific ? '指定课程' : '全部课程'}}</div>
+            <div><em>有效日期：</em> {{item.termDays ? `${item.termDays}天` : moment(item.termEndTime).format('YYYY-MM-DD hh:mm:ss')}}</div>
           </div>
-          <div class="butCont fx-ct" v-if="isLogin() && item.recieveStatus == 1"><span @click="getCouponData(item)" class="bt">立即领取</span></div>
-          <div class="butCont fx-ct" v-if="isLogin() && item.recieveStatus == 2"><span  @click="() => $router.push('/search/index')" class="bt">去使用</span></div>
-          <div class="butCont fx-ct" v-if="isLogin() && item.recieveStatus == 3"><span class="bt bt-grey">已领完</span></div>
+          <div class="butCont fx-ct" v-if="item.received">
+            <span  @click="() => $router.push('/search/index')" class="bt">去使用</span>
+          </div>
+          <div class="butCont fx-ct" v-else>
+            <span v-if="item.available" @click="getCouponData(item)" class="bt">立即领取</span>
+            <span v-else class="bt bt-grey">已领完</span>
+          </div>
        </div>
     </div>
   </div>
@@ -32,7 +36,7 @@
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import moment from 'moment';
-import { getCollectableCoupon, getCoupon } from "@/api/class.js";
+import { getCollectableCoupon, getCoupon,formatRule } from "@/api/class.js";
 import { isLogin } from '@/store'
 // 组件导入
 import Breadcrumb from "@/components/Breadcrumb.vue";
@@ -50,6 +54,7 @@ const getCollectableCouponData = async () => {
   await getCollectableCoupon()
   .then((res) => {
       if (res.code == 200) {
+        res.data.forEach(d => d.rule = formatRule(d));
         couponData.value = res.data;
       } else {
         ElMessage({
@@ -69,7 +74,7 @@ const getCollectableCouponData = async () => {
 // 优惠券领取
 const getCouponData = async (item) => {
   const id = item.id
-  await getCoupon({couponConfigId:id})
+  await getCoupon({id:id})
   .then((res) => {
       if (res.code == 200) {
         // 领取成功之后重新刷新列表

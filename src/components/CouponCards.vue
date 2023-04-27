@@ -1,14 +1,18 @@
 <!-- 优惠券卡片 -->
 <template>
  <div class="couponCards fx" v-for="(item, index) in data" :key="index">
-    <div class="price ft-cl-wt">
-        <div>￥ <em>{{item.discountAmount / 100}}</em></div>
-        <div class="desc">{{item.couponRule}}</div>
-    </div>
+   <div class="price ft-cl-wt" v-if="item.discountType == 4 || item.discountType == 1 || item.discountType == 3">
+     <div>￥ <em>{{item.discountValue / 100}}</em></div>
+     <div class="desc">{{item.rule}}</div>
+   </div>
+   <div class="price ft-cl-wt" v-if="item.discountType == 2 || item.discountType == 5">
+     <div><em>{{item.discountValue / 10}}</em> 折</div>
+     <div class="desc">{{item.rule}}</div>
+   </div>
     <div class="info">
         <div class="tit">{{item.name}}</div>
-        <div><em>适用平台：</em>{{item.rangeType == 1 ? '全平台' : '特定'}}</div>
-        <div class="time"><em>有效日期：</em>{{moment(item.termEndTime).format('YYYY-MM-DD hh:mm:ss')}}</div>
+        <div><em>适用平台：</em>{{item.specific  ? '限定分类' : '全部课程'}}</div>
+      <div><em>有效日期：</em> {{item.termDays ? `${item.termDays}天` : moment(item.termEndTime).format('YYYY-MM-DD hh:mm:ss')}}</div>
     </div>
     <div class="butCont fx-ct" v-if="type == 1"><span @click="() => {$router.push({path: '/search/index'})}" class="bt">去使用</span></div>
 </div>
@@ -48,7 +52,7 @@ const props = defineProps({
     justify-content: center;
     align-items: center;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
     em{
       font-style: normal;
       font-family: PingFangSC-Semibold;

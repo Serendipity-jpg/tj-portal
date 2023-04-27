@@ -152,7 +152,10 @@ const getLearningClassDetailsData = async () => {
       .then((res) => {
         if (res.code === 200) {
           // 将小节映射为id->小节的map
-          res.data.chapters.forEach(c => c.sections.forEach(s => sectionMap.value[s.id] = s));
+          res.data.chapters.forEach(c => c.sections.forEach(s => {
+            sectionMap.value[s.id] = s
+            s.hasTest=!!s.subjectNum;
+          }));
           // 找到要播放的小节：优先是路径中指定的小节，如果没有则是最近学习的小节，如果还没有则是第一个小节
           let sId = route.query.sectionId || res.data.latestSectionId;
           let s = sectionMap.value[sId] || res.data.chapters[0].sections[0];
@@ -342,7 +345,9 @@ const playHadle = async (val) => {
       player.value.play()
     }
   } else if (tp == '2' || tp == '3') {
-    // 打开练习题 开始考试 
+    // 暂停视频
+    player.value.pause()
+    // 打开练习题 开始考试
     if (item.type != 2 ){
         ElMessageBox.confirm(
         `温馨提示：考试只能考一次，如果中途退出或未提交结果，将不会允许再次考试，确认考试请点击 继续考试`,

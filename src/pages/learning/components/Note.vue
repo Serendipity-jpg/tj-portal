@@ -10,8 +10,8 @@
       <div class="noteLists" v-for="item in noteListsDataes">
       <div class="userInfo fx-sb">
         <div class="fx ft-cl-wt">
-          <img :src="item.author && item.author.icon" alt="" srcset="">
-          {{item.author && item.author.name}}
+          <img :src="item.authorIcon" alt="" srcset="">
+          {{item.authorName}}
         </div>
         <div>
           <i class="iconfont zhy-a-icon-sp22x"></i>
@@ -25,13 +25,13 @@
       <div class="time fx-sb">
         <div class="tm">{{item.createTime}}</div>
         <div class="actBut">
-          <span class="marg-rt-10" @click="editNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+          <span class="marg-rt-10" @click="editNoteHandle(item)" v-if="userInfo.id == item.authorId ">
             <i class="iconfont zhy-a-icon-xiugai22x"></i> 编辑
           </span>
-          <span @click="gathersHandle(item)" v-if="userInfo.id != item.author.id " :class="{activeLiked:false && item.isGathered}">
+          <span @click="gathersHandle(item)" v-if="userInfo.id != item.authorId " :class="{activeLiked:false && item.isGathered}">
             <i class="iconfont zhy-a-ico-caiji2x"></i> {{item.isGathered ? '已采集' : '采集'}}
           </span>
-          <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.author.id ">
+          <span class="" @click="delNoteHandle(item)" v-if="userInfo.id == item.authorId ">
             <i class="iconfont zhy-a-icon-delete22x" style="font-size: 23px;top: 3px;"></i> 删除
           </span>
           <!-- <span class="" @click="putLikedHandle(item)" >
@@ -58,7 +58,7 @@
 </template>
 <script setup>
 import { onMounted, ref, reactive, watchEffect } from 'vue'
-import { getAllNotes, getMyNotes, addNotes, likeed, delNote, updateNotes, notesGathers, unNotesGathers } from "@/api/notes.js"
+import { getAllNotes, addNotes, likeed, delNote, updateNotes, notesGathers, unNotesGathers } from "@/api/notes.js"
 import {ElMessage} from 'element-plus'
 import { useUserStore, dataCacheStore } from '@/store'
 import Empty from '@/components/Empty.vue'
@@ -102,7 +102,8 @@ const actIndex = ref(1);
 
 // 点击选中
 const activeHandle = (value) => {
-  actIndex.value = value
+  actIndex.value = value;
+  params.value.onlyMine = value === 1;
   getAskListsDataes()
 }
 
@@ -117,24 +118,16 @@ const params = ref({
   pageSize: 1000,
   sectionId: currentPlayData.sectionId,
   courseId: currentPlayData.courseId,
-  sortBy: ''
+  sortBy: '',
+  onlyMine: true
 });
 // 获取笔记列表
 const getAskListsDataes = async () => {
-  const questFun = actIndex.value == 2 ? getAllNotes : getMyNotes
-  await questFun(params.value)
+  await getAllNotes(params.value)
     .then((res) => {
       if (res.code == 200) {
-        if(res.data.list.length > 0){ 
-          console.log(2434,res.data)
-          if (actIndex.value == 2){
-            noteListsDataes.value = res.data.list
-          } else {
-            noteListsDataes.value = res.data.list.map(n => {
-              n.author = {...userInfo.value}
-              return n
-            })
-          }
+        if(res.data.list.length > 0){
+          noteListsDataes.value = res.data.list
         } else {
           noteListsDataes.value = []
         }

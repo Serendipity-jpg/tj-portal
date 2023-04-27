@@ -13,7 +13,7 @@
     </div>
     <div class="ExQuestions" v-infinite-scroll="load" style="overflow: auto">
       <div class="questions" v-for="(item, index) in subjectList" :key="index">
-        <div class="title fx" v-html="` <p>${index+1}. ${subjectTypeWt(item.subjectType)}</p>${item.name}`"></div>
+        <div class="title fx" v-html="` <p>${index+1}. ${subjectTypeWt(item.type)}</p>${item.name}`"></div>
         <!-- 不同的题型展示不同的题 1：单选题，2：多选题，3：不定向选择题，4：判断题，5：主观题 -->
         <div v-if="item.type == 1">
           <el-radio-group v-model="item.answers" class="ml-4">

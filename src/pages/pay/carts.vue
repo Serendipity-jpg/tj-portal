@@ -141,11 +141,11 @@ const delHandle = (item) => {
         });
     return 
   }
-  delCarts({idList: params})
+  delCarts(params)
     .then((res) => {
       if (res.code === 200) {
         ElMessage({
-          message:`课程 ${item.courseName} 删除成功`,
+          message:`课程删除成功`,
           type: 'success'
         });
         getCartsData()
@@ -173,8 +173,8 @@ const goSettlement = () => {
     return false
   } 
   const list = carts.value.filter(n =>checkedList.value.indexOf(n.id) !== -1)
-  store.setOrderClassInfo(list)
-  router.push({path: '/pay/settlement'})
+  // store.setOrderClassInfo(list)
+  router.push({path: '/pay/settlement', query: {courseIds: list.map(c => c.courseId).join()}})
 }
 </script>
 <style lang="scss" src="./index.scss">

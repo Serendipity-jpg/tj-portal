@@ -11,19 +11,18 @@
     <div class="askCont">
       <div class="askLists" v-for="item in askListsDataes">
         <div class="userInfo fx">
-          <img :src="item.author.icon" alt="" srcset="">
-          {{item.author.name}}
+          <img :src="item.authorIcon" alt="" srcset="">
+          {{item.authorName}}
         </div>
         <div class="ask">
           <div class="ft-16">{{item.content}}</div>
-          <div class="font-bt" v-if="item.latestAnswer && item.latestAnswer.content">最新【{{item.latestAnswer.replier.name}}】的回答</div>
         </div>
         <div class="time fx-sb">
           <div>{{item.createTime}}</div>
           <div class="actBut">
             <!-- <span class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-icon_kaoshi2x"></i> 编辑</span> -->
-            <span @click="delNoteHandle(item.id)" class="marg-rt-20" v-if="userInfo.id == item.author.id"><i class="iconfont zhy-a-btn_delete_nor2x" ></i> 删除 </span>
-            <span @click="gathersHandle(item)" class="marg-rt-20" :class="{activeLiked:false}" v-if="userInfo.id != item.author.id "><i class="iconfont zhy-a-btn_caiji_nor2x" styel="font-size: 22px;" ></i> {{item.isGathered ? '已采集' : '采集'}} {{item.answerAmount}}</span>
+            <span @click="delNoteHandle(item.id)" class="marg-rt-20" v-if="userInfo.id == item.authorId"><i class="iconfont zhy-a-btn_delete_nor2x" ></i> 删除 </span>
+            <span @click="gathersHandle(item)" class="marg-rt-20" :class="{activeLiked:false}" v-if="userInfo.id != item.authorId "><i class="iconfont zhy-a-btn_caiji_nor2x" styel="font-size: 22px;" ></i> {{item.isGathered ? '已采集' : '采集'}}</span>
             <span @click="likedHandle(item)" :class="{activeLiked:item.liked}" ><i class="iconfont zhy-a-btn_zan_nor2x"></i> 点赞 {{item.likedTimes || 0}}</span>
           </div>
         </div>
@@ -48,7 +47,7 @@
 import { ref, onMounted } from "vue"
 import { ElMessage } from "element-plus";
 import { getClassChapter } from "@/api/classDetails.js"
-import { getAllNotes, getMyNotes, delNote, notesGathers, unNotesGathers } from "@/api/notes.js"
+import { getAllNotes, delNote, notesGathers, unNotesGathers } from "@/api/notes.js"
 import AskChapterItems from "../../../components/AskChapterItems.vue";
 import { useUserStore, isLogin } from '@/store'
 import { useRoute } from "vue-router";
@@ -81,7 +80,8 @@ const params = ref({
   pageSize: 10,
   sectionId: '',
   courseId: route.query.id,
-  sortBy: ''
+  sortBy: '',
+  onlyMine: false
 });
 // 列表数据
 const askListsDataes =  ref([])
@@ -91,6 +91,7 @@ const askType = ref('all')
 const askCheck = type => {
   params.value.pageNo = 1
   params.value.pageSize = 10
+  params.value.onlyMine = type === 'my'
   askType.value = type
   getAskListsDataes()
 }
@@ -102,19 +103,11 @@ const checkCahpter = (id) => {
 }
 // 获取笔记列表
 const getAskListsDataes = async () => {
-  const questFun = askType.value == 'all' ? getAllNotes : getMyNotes
   params.value.sectionId == 'all' ?  params.value.sectionId = undefined : null
-  await questFun(params.value)
+  await getAllNotes(params.value)
     .then((res) => {
       if (res.code == 200) {
-        if (askType.value == 'all'){
-          askListsDataes.value = res.data.list
-        } else {
-          askListsDataes.value = res.data.list.map(n => {
-            n.author = {...userInfo.value}
-            return n
-          })
-        }
+        askListsDataes.value = res.data.list
         total.value =  Number(res.data.total)
       } else {
         ElMessage({

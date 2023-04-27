@@ -3,7 +3,7 @@ const SEARCH_API_PREFIX = "/ss"
 const COURSE_API_PREFIX = "/cs"
 const LEARNING_API_PREFIX = "/ls"
 const MEDIA_API_PREFIX = "/ms"
-const PROMOTION_API_PREFIX = "/ps"
+const PROMOTION_API_PREFIX = "/prs"
 const EXAM_API_PREFIX = "/es"
 // 课程分类
 export const getClassCategorys = (params) =>
@@ -84,34 +84,51 @@ export const getMediasSignature = (params) =>
 		params
 	})	
 // 优惠券 相关接口
-
+// 格式化规则
+export const formatRule = (d) => {
+	let rule = "";
+	let PER_PRICE_DISCOUNT = 1, RATE_DISCOUNT = 2,NO_THRESHOLD = 3, PRICE_DISCOUNT = 4
+	switch (d.discountType) {
+		case PER_PRICE_DISCOUNT:
+			rule = `每满${d.thresholdAmount / 100}元减${d.discountValue / 100}元，不超过${d.maxDiscountAmount / 100}元`;
+			break;
+		case PRICE_DISCOUNT:
+			rule = `满${d.thresholdAmount / 100}元减${d.discountValue / 100}元`;
+			break;
+		case NO_THRESHOLD:
+			rule = `无门槛抵扣${d.discountValue / 100}元`;
+			break;
+		case RATE_DISCOUNT:
+			rule = `满${ d.thresholdAmount / 100}元打${d.discountValue / 10}折，不超过${d.maxDiscountAmount / 100}元`
+			break;
+	}
+	return rule;
+}
 // 可领优惠券（超值优惠券）
 export const getCollectableCoupon = (params) =>
 request({
-	url: `${PROMOTION_API_PREFIX}/coupon/config/collectable`,
+	url: `${PROMOTION_API_PREFIX}/coupons/list`,
 	method: 'get',
 	params
 })		
 // 我的优惠券（近一年）
 export const getMyCoupon = (params) =>
 request({
-	url: `${PROMOTION_API_PREFIX}/coupon/me`,
+	url: `${PROMOTION_API_PREFIX}/user-coupons/page`,
 	method: 'get',
 	params
 })	
 // 优惠券领取
 export const getCoupon = (params) =>
 request({
-	url: `${PROMOTION_API_PREFIX}/coupon/receive`,
-	method: 'post',
-	data:params
+	url: `${PROMOTION_API_PREFIX}/user-coupons/${params.id}/receive`,
+	method: 'post'
 })	
 // 兑换码兑换优惠券
 export const exchangeCoupon = (data) =>
 request({
-	url: `${PROMOTION_API_PREFIX}/code/exchange`,
-	method: 'post',
-	data
+	url: `${PROMOTION_API_PREFIX}/user-coupons/${data.code}/exchange`,
+	method: 'post'
 })	
 
 // 课程表管理接口
@@ -135,6 +152,13 @@ request({
 	url: `${LEARNING_API_PREFIX}/lessons/plans`,
 	method: 'get',
 })
+/*
+// 重新学习课程
+export const restartMyLesson = (courseId) =>
+	request({
+		url: `${LEARNING_API_PREFIX}/lessons/${courseId}/restart`,
+		method: 'PUT',
+	})*/
 
 // 报名免费课程
 export const signUp = (courseId) =>

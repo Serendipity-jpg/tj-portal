@@ -11,14 +11,7 @@ export const addNotes = params =>
 // 全部笔记
 export const getAllNotes = params =>
 	request({
-		url: `${LEARNING_API_PREFIX}/notes/portal`,
-		method: 'get',
-		params,
-	})
-// 我的笔记
-export const getMyNotes = params =>
-	request({
-		url: `${LEARNING_API_PREFIX}/notes/me`,
+		url: `${LEARNING_API_PREFIX}/notes/page`,
 		method: 'get',
 		params,
 	})

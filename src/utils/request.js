@@ -42,8 +42,8 @@ async function refreshToken(err){
   }
   // refreshing.value = false;
   ElMessageBox.alert(
-    '您的账号登录超时或在其他机器登录，请重新登录或更换账号登录！',
-    '登录超时',
+    '请先登录！',
+    '未登录或登录超时',
     {
       confirmButtonText: '重新登录',
       callback: () => {
@@ -51,7 +51,7 @@ async function refreshToken(err){
       },
     }
   )
-  return false;
+  return true;
 }
 function alertLoginMessage() {
   isLogin = false;
